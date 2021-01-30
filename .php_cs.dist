@@ -1,0 +1,17 @@
+<?php
+
+declare(strict_types=1);
+
+$rules = [
+    '@PSR12'                 => true,
+    'array_syntax'           => ['syntax' => 'short'],
+    'binary_operator_spaces' => ['default' => 'align_single_space_minimal'],
+    'ordered_imports'        => ['imports_order' => ['class', 'function', 'const'], 'sort_algorithm' => 'alpha'],
+    'strict_param'           => true,
+];
+
+$finder = PhpCsFixer\Finder::create()->in(['app', 'config', 'routes', 'tests']);
+
+$config = new PhpCsFixer\Config();
+
+return $config->setRiskyAllowed(true)->setRules($rules)->setFinder($finder);
