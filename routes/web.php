@@ -1,5 +1,6 @@
 <?php
 
+use App\Jobs\UpdateMailgunStatus;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,6 +16,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::get('/mailgun', function () {
+    UpdateMailgunStatus::dispatchNow();
 });
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
