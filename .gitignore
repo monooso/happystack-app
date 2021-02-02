@@ -13,7 +13,9 @@ vendor/
 .php_cs
 
 # Development-specific
+_ide_helper.php
 .php_cs.cache
+.phpstorm.meta.php
 .phpunit.result.cache
 npm-debug.log
 yarn-error.log
