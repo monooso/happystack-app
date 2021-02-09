@@ -7,10 +7,13 @@ use App\Exceptions\UnknownStatusException;
 use App\PlainObjects\ComponentStatus;
 use Carbon\Carbon;
 use DateTime;
-use Tests\TestCase;
+use Illuminate\Foundation\Testing\Concerns\InteractsWithTime;
+use PHPUnit\Framework\TestCase;
 
 class ComponentStatusTest extends TestCase
 {
+    use InteractsWithTime;
+
     /** @test */
     public function set_component_is_fluent()
     {
