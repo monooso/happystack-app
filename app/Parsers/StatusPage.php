@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Parsers;
 
 use App\Constants\Status;
+use App\Contracts\StatusParser;
 use App\PlainObjects\StatusUpdate;
 use DateTime;
 use Illuminate\Support\Arr;
@@ -12,8 +13,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Psr\Http\Message\ResponseInterface;
 
-// @todo Extract interface
-final class StatusPage
+final class StatusPage implements StatusParser
 {
     private string $serviceKey;
 
@@ -27,13 +27,6 @@ final class StatusPage
         $this->serviceKey = $serviceKey;
     }
 
-    /**
-     * Parse the status response
-     *
-     * @param ResponseInterface $response
-     *
-     * @return StatusUpdate[]
-     */
     public function parse(ResponseInterface $response): array
     {
         $json = json_decode((string) $response->getBody());
