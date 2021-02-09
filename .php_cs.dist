@@ -2,16 +2,23 @@
 
 declare(strict_types=1);
 
-$rules = [
-    '@PSR12'                 => true,
-    'array_syntax'           => ['syntax' => 'short'],
-    'binary_operator_spaces' => ['default' => 'align_single_space_minimal'],
-    'ordered_imports'        => ['imports_order' => ['class', 'function', 'const'], 'sort_algorithm' => 'alpha'],
-    'strict_param'           => true,
-];
+use PhpCsFixer\Config;
+use PhpCsFixer\Finder;
 
-$finder = PhpCsFixer\Finder::create()->in(['app', 'config', 'routes', 'tests']);
+$finder = Finder::create()
+    ->in(__DIR__)
+    ->exclude(['bootstrap', 'storage', 'vendor'])
+    ->name('*.php')
+    ->name('_ide_helper')
+    ->notName('*.blade.php')
+    ->ignoreVCS(true);
 
-$config = new PhpCsFixer\Config();
-
-return $config->setRiskyAllowed(true)->setRules($rules)->setFinder($finder);
+return (new Config())
+    ->setRules([
+        '@PSR12'                 => true,
+        'array_syntax'           => ['syntax' => 'short'],
+        'binary_operator_spaces' => ['operators' => ['=>' => 'align_single_space_minimal']],
+        'no_unused_imports'      => true,
+        'ordered_imports'        => ['imports_order' => ['class', 'function', 'const'], 'sort_algorithm' => 'alpha'],
+    ])
+    ->setFinder($finder);
