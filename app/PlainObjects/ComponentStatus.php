@@ -6,6 +6,7 @@ namespace App\PlainObjects;
 
 use App\Constants\Status;
 use App\Exceptions\UnknownStatusException;
+use Carbon\Carbon;
 use DateTime;
 use Exception;
 use Serializable;
@@ -15,9 +16,9 @@ final class ComponentStatus implements Serializable
     /**
      * The component key
      *
-     * @var string $component
+     * @var string|null $component
      */
-    private string $component;
+    private ?string $component;
 
     /**
      * The date and time at which the status was retrieved
@@ -29,9 +30,9 @@ final class ComponentStatus implements Serializable
     /**
      * The service key
      *
-     * @var string $service
+     * @var string|null $service
      */
-    private string $service;
+    private ?string $service;
 
     /**
      * The standardised status
@@ -41,11 +42,22 @@ final class ComponentStatus implements Serializable
     private string $status;
 
     /**
+     * Initialise the instance properties
+     */
+    public function __construct()
+    {
+        $this->component = null;
+        $this->retrievedAt = Carbon::now()->toDateTime();
+        $this->service = null;
+        $this->status = Status::UNKNOWN;
+    }
+
+    /**
      * Get the component key
      *
-     * @return string
+     * @return string|null
      */
-    public function getComponent(): string
+    public function getComponent(): ?string
     {
         return $this->component;
     }
@@ -57,7 +69,7 @@ final class ComponentStatus implements Serializable
      *
      * @return ComponentStatus
      */
-    public function setComponent(string $component): ComponentStatus
+    public function setComponent(string $component): self
     {
         $this->component = $component;
         return $this;
@@ -80,7 +92,7 @@ final class ComponentStatus implements Serializable
      *
      * @return ComponentStatus
      */
-    public function setRetrievedAt(DateTime $retrievedAt): ComponentStatus
+    public function setRetrievedAt(DateTime $retrievedAt): self
     {
         $this->retrievedAt = $retrievedAt;
         return $this;
@@ -89,9 +101,9 @@ final class ComponentStatus implements Serializable
     /**
      * Get the service key
      *
-     * @return string
+     * @return string|null
      */
-    public function getService(): string
+    public function getService(): ?string
     {
         return $this->service;
     }
@@ -103,7 +115,7 @@ final class ComponentStatus implements Serializable
      *
      * @return ComponentStatus
      */
-    public function setService(string $service): ComponentStatus
+    public function setService(string $service): self
     {
         $this->service = $service;
         return $this;
@@ -127,7 +139,7 @@ final class ComponentStatus implements Serializable
      *
      * @return ComponentStatus
      */
-    public function setStatus(string $status): ComponentStatus
+    public function setStatus(string $status): self
     {
         if (!in_array($status, Status::all(), true)) {
             throw new UnknownStatusException($status);
@@ -173,16 +185,16 @@ final class ComponentStatus implements Serializable
      */
     public function unserialize($serialized)
     {
-        $properties = unserialize($serialized);
+        $raw = unserialize($serialized);
 
-        $this->setComponent($properties['component']);
-        $this->setService($properties['service']);
-        $this->setStatus($properties['status']);
+        isset($raw['component']) && $this->setComponent($raw['component']);
+        isset($raw['service']) && $this->setService($raw['service']);
+        isset($raw['status']) && $this->setStatus($raw['status']);
 
         try {
-            $retrievedAt = new DateTime('@' . $properties['retrievedAt']);
+            $retrievedAt = new DateTime('@' . $raw['retrievedAt']);
         } catch (Exception $exception) {
-            $retrievedAt = new DateTime('now');
+            $retrievedAt = Carbon::now()->toDateTime();
         }
 
         $this->setRetrievedAt($retrievedAt);
