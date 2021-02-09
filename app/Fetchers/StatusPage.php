@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace App\Fetchers;
 
+use App\Contracts\StatusFetcher;
 use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Exception\GuzzleException;
 use Psr\Http\Message\ResponseInterface;
 
-// @todo Extract interface
-final class StatusPage
+final class StatusPage implements StatusFetcher
 {
     private ClientInterface $client;
 
@@ -27,18 +26,10 @@ final class StatusPage
         $this->pageId = $pageId;
     }
 
-    /**
-     * Fetch the status update
-     *
-     * @return ResponseInterface
-     *
-     * @throws GuzzleException
-     */
     public function fetch(): ResponseInterface
     {
         $id = $this->pageId;
 
-        // @todo Atlassian may also require a custom domain
         $url = "https://${id}.statuspage.io/api/v2/summary.json";
 
         return $this->client->request('GET', $url);
