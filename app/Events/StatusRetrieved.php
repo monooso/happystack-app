@@ -2,21 +2,21 @@
 
 namespace App\Events;
 
-use App\PlainObjects\StatusUpdate;
+use App\PlainObjects\ComponentStatus;
 use Illuminate\Foundation\Events\Dispatchable;
 
 class StatusRetrieved
 {
     use Dispatchable;
 
-    public StatusUpdate $statusUpdate;
+    public ComponentStatus $statusUpdate;
 
     /**
      * Constructor
      *
-     * @param StatusUpdate $statusUpdate
+     * @param ComponentStatus $statusUpdate
      */
-    public function __construct(StatusUpdate $statusUpdate)
+    public function __construct(ComponentStatus $statusUpdate)
     {
         $this->statusUpdate = $statusUpdate;
     }

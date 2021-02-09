@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Contracts;
 
-use App\PlainObjects\StatusUpdate;
+use App\PlainObjects\ComponentStatus;
 use Psr\Http\Message\ResponseInterface;
 
 interface StatusParser
@@ -14,7 +14,7 @@ interface StatusParser
      *
      * @param ResponseInterface $response
      *
-     * @return StatusUpdate[]
+     * @return ComponentStatus[]
      */
     public function parse(ResponseInterface $response): array;
 }

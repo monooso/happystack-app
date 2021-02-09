@@ -4,8 +4,8 @@ namespace App\Listeners;
 
 use App\Events\StatusRetrieved;
 use App\Events\StatusUpdated;
-use App\Models\StatusUpdate as StatusUpdateModel;
-use App\PlainObjects\StatusUpdate as StatusUpdateObject;
+use App\Models\StatusUpdate;
+use App\PlainObjects\ComponentStatus;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class UpdateComponentStatus implements ShouldQueue
@@ -34,13 +34,13 @@ class UpdateComponentStatus implements ShouldQueue
     /**
      * Get the most recent update from the database
      *
-     * @param StatusUpdateObject $data
+     * @param ComponentStatus $data
      *
-     * @return StatusUpdateModel|null
+     * @return StatusUpdate|null
      */
-    private function getMostRecentUpdate(StatusUpdateObject $data): ?StatusUpdateModel
+    private function getMostRecentUpdate(ComponentStatus $data): ?StatusUpdate
     {
-        return StatusUpdateModel::where([
+        return StatusUpdate::where([
             'service'   => $data->getService(),
             'component' => $data->getComponent(),
         ])->latest('updated_at')->first();
@@ -49,12 +49,12 @@ class UpdateComponentStatus implements ShouldQueue
     /**
      * Has the status changed?
      *
-     * @param StatusUpdateModel|null $previous
-     * @param StatusUpdateObject     $new
+     * @param StatusUpdate|null $previous
+     * @param ComponentStatus   $new
      *
      * @return bool
      */
-    private function statusHasChanged(?StatusUpdateModel $previous, StatusUpdateObject $new): bool
+    private function statusHasChanged(?StatusUpdate $previous, ComponentStatus $new): bool
     {
         if ($previous === null) {
             return true;
@@ -66,13 +66,13 @@ class UpdateComponentStatus implements ShouldQueue
     /**
      * Save a new status update
      *
-     * @param StatusUpdateObject $data
+     * @param ComponentStatus $data
      *
-     * @return StatusUpdateModel
+     * @return StatusUpdate
      */
-    private function saveNewUpdate(StatusUpdateObject $data): StatusUpdateModel
+    private function saveNewUpdate(ComponentStatus $data): StatusUpdate
     {
-        return StatusUpdateModel::create([
+        return StatusUpdate::create([
             'service'   => $data->getService(),
             'component' => $data->getComponent(),
             'status'    => $data->getStatus(),
@@ -82,9 +82,9 @@ class UpdateComponentStatus implements ShouldQueue
     /**
      * Refresh the 'updated at' timestamp for an existing update
      *
-     * @param StatusUpdateModel $model
+     * @param StatusUpdate $model
      */
-    private function refreshUpdate(StatusUpdateModel $model)
+    private function refreshUpdate(StatusUpdate $model)
     {
         $model->touch();
     }

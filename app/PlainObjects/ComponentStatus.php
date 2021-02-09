@@ -10,7 +10,7 @@ use DateTime;
 use Exception;
 use Serializable;
 
-final class StatusUpdate implements Serializable
+final class ComponentStatus implements Serializable
 {
     /**
      * The component key
@@ -55,9 +55,9 @@ final class StatusUpdate implements Serializable
      *
      * @param string $component
      *
-     * @return StatusUpdate
+     * @return ComponentStatus
      */
-    public function setComponent(string $component): StatusUpdate
+    public function setComponent(string $component): ComponentStatus
     {
         $this->component = $component;
         return $this;
@@ -78,9 +78,9 @@ final class StatusUpdate implements Serializable
      *
      * @param DateTime $retrievedAt
      *
-     * @return StatusUpdate
+     * @return ComponentStatus
      */
-    public function setRetrievedAt(DateTime $retrievedAt): StatusUpdate
+    public function setRetrievedAt(DateTime $retrievedAt): ComponentStatus
     {
         $this->retrievedAt = $retrievedAt;
         return $this;
@@ -101,9 +101,9 @@ final class StatusUpdate implements Serializable
      *
      * @param string $service
      *
-     * @return StatusUpdate
+     * @return ComponentStatus
      */
-    public function setService(string $service): StatusUpdate
+    public function setService(string $service): ComponentStatus
     {
         $this->service = $service;
         return $this;
@@ -125,9 +125,9 @@ final class StatusUpdate implements Serializable
      *
      * @param string $status
      *
-     * @return StatusUpdate
+     * @return ComponentStatus
      */
-    public function setStatus(string $status): StatusUpdate
+    public function setStatus(string $status): ComponentStatus
     {
         if (!in_array($status, Status::all(), true)) {
             throw new UnknownStatusException($status);

@@ -6,7 +6,7 @@ namespace App\Parsers;
 
 use App\Constants\Status;
 use App\Contracts\StatusParser;
-use App\PlainObjects\StatusUpdate;
+use App\PlainObjects\ComponentStatus;
 use DateTime;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -87,7 +87,7 @@ final class StatusPage implements StatusParser
      *
      * @param Collection $components
      *
-     * @return StatusUpdate[]
+     * @return ComponentStatus[]
      */
     private function normalizeComponents(Collection $components): array
     {
@@ -99,13 +99,13 @@ final class StatusPage implements StatusParser
      *
      * @param $component
      *
-     * @return StatusUpdate
+     * @return ComponentStatus
      */
-    private function normalizeComponent($component): StatusUpdate
+    private function normalizeComponent($component): ComponentStatus
     {
         $config = $this->getComponentConfigById($component->id);
 
-        return (new StatusUpdate())
+        return (new ComponentStatus())
             ->setComponent($config['key'])
             ->setService($this->serviceKey)
             ->setStatus($this->normalizeStatus($component->status))
