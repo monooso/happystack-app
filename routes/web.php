@@ -1,6 +1,7 @@
 <?php
 
 use App\Jobs\UpdateMailgunStatus;
+use App\Jobs\UpdateManifestStatus;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,10 +19,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/mailgun', function () {
+Route::get('/update-status/mailgun', function () {
     UpdateMailgunStatus::dispatchNow();
 });
 
+Route::get('/update-status/manifest', function () {
+    UpdateManifestStatus::dispatchNow();
+});
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');

@@ -4,20 +4,47 @@ declare(strict_types=1);
 
 use App\Constants\Status;
 
+$statusPageStatusMap = [
+    'operational'          => Status::OKAY,
+    'degraded_performance' => Status::WARN,
+    'partial_outage'       => Status::WARN,
+    'major_outage'         => Status::DOWN,
+];
+
 return [
     // Logos?
     // Public status page? Other links?
     'services' => [
+        'manifest' => [
+            'name'        => 'Manifest',
+            'description' => 'Test account',
+            'statuses'    => $statusPageStatusMap,
+            'components'  => [
+                [
+                    'id'          => 'gy9xsn9gwzx1',
+                    'key'         => 'alfa',
+                    'name'        => 'Alfa',
+                    'description' => 'Component Alfa',
+                ],
+                [
+                    'id'          => 'js4jb7cc85bl',
+                    'key'         => 'bravo',
+                    'name'        => 'Bravo',
+                    'description' => 'Component Bravo',
+                ],
+                [
+                    'id'          => '3bb4g3xgzwsf',
+                    'key'         => 'charlie',
+                    'name'        => 'Charlie',
+                    'description' => 'Component Charlie',
+                ],
+            ],
+        ],
         'mailgun' => [
             'name'        => 'Mailgun',
             'description' => 'Transactional email service',
-            'statuses'    => [
-                'operational'          => Status::OKAY,
-                'degraded_performance' => Status::WARN,
-                'partial_outage'       => Status::WARN,
-                'major_outage'         => Status::DOWN,
-            ],
-            'components' => [
+            'statuses'    => $statusPageStatusMap,
+            'components'  => [
                 [
                     'id'          => 'bwm7lcxpmygd',
                     'key'         => 'api',
