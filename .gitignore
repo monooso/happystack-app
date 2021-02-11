@@ -1,6 +1,7 @@
 # Packages
 node_modules/
 vendor/
+!/resources/views/vendor/
 
 # Temporary
 /public/hot
