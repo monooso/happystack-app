@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ProjectController;
 use App\Jobs\UpdateMailgunStatus;
 use App\Jobs\UpdateManifestStatus;
 use Illuminate\Support\Facades\Route;
@@ -26,6 +27,12 @@ Route::get('/update-status/mailgun', function () {
 Route::get('/update-status/manifest', function () {
     UpdateManifestStatus::dispatchNow();
 });
+
+Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
+    Route::get('/projects/new', [ProjectController::class, 'create'])->name('projects.create');
+});
+
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');

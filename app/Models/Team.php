@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Jetstream\Events\TeamCreated;
 use Laravel\Jetstream\Events\TeamDeleted;
 use Laravel\Jetstream\Events\TeamUpdated;
@@ -17,19 +18,14 @@ class Team extends JetstreamTeam
      *
      * @var array
      */
-    protected $casts = [
-        'personal_team' => 'boolean',
-    ];
+    protected $casts = ['personal_team' => 'boolean'];
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = [
-        'name',
-        'personal_team',
-    ];
+    protected $fillable = ['name', 'personal_team'];
 
     /**
      * The event map for the model.
@@ -41,4 +37,14 @@ class Team extends JetstreamTeam
         'updated' => TeamUpdated::class,
         'deleted' => TeamDeleted::class,
     ];
+
+    /**
+     * Get the projects which belong to this team
+     *
+     * @return HasMany
+     */
+    public function projects(): HasMany
+    {
+        return $this->hasMany(Project::class);
+    }
 }
