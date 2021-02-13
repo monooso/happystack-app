@@ -57,12 +57,16 @@
 
                         <!-- Even row -->
                         <tr class="bg-gray-50">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                Small Corp Ltd.
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Manifest</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                <livewire:component-status service="manifest" component="alfa" />
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">👍</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">⚠️</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">🚨</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                <livewire:component-status service="manifest" component="bravo" />
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                <livewire:component-status service="manifest" component="charlie" />
+                            </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 <a href="#" class="text-indigo-600 hover:text-indigo-900">Edit</a>
                                 <a href="#" class="text-indigo-600 hover:text-indigo-900">Delete</a>

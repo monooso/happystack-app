@@ -1,13 +1,22 @@
-/node_modules
+# Packages
+node_modules/
+vendor/
+!/resources/views/vendor/
+
+# Temporary
 /public/hot
 /public/storage
+
+# Environment-specific
 /storage/*.key
-/vendor
 .env
 .env.backup
+.php_cs
+
+# Development-specific
+_ide_helper.php
+.php_cs.cache
+.phpstorm.meta.php
 .phpunit.result.cache
-docker-compose.override.yml
-Homestead.json
-Homestead.yaml
 npm-debug.log
 yarn-error.log
