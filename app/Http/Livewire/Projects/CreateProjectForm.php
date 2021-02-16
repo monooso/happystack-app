@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire\Projects;
 
 use App\Contracts\CreatesProjects;
@@ -7,7 +9,7 @@ use App\Models\Service;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
-class CreateProjectForm extends Component
+final class CreateProjectForm extends Component
 {
     /**
      * The selected components

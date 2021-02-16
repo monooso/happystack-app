@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Factories;
 
 use App\Models\Component;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class ComponentFactory extends Factory
+final class ComponentFactory extends Factory
 {
     protected $model = Component::class;
 

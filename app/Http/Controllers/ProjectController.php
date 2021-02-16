@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
-class ProjectController extends Controller
+final class ProjectController extends Controller
 {
     /**
      * Display a listing of the resource.
