@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Livewire;
 
 use App\Constants\Status;
@@ -9,7 +11,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Support\Arr;
 use Livewire\Component;
 
-class ComponentStatus extends Component
+final class ComponentStatus extends Component
 {
     /**
      * The service key. For example, 'mailgun'
