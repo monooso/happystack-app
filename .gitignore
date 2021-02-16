@@ -19,4 +19,6 @@ _ide_helper.php
 .phpstorm.meta.php
 .phpunit.result.cache
 npm-debug.log
+supervisord.log
+supervisord.pid
 yarn-error.log
