@@ -7,7 +7,7 @@
 
     <div>
         <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
-            <livewire:create-project-form />
+            @livewire('projects.create-project-form')
         </div>
     </div>
 </x-app-layout>
