@@ -11,19 +11,19 @@ use Illuminate\Http\Response;
 final class ProjectController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a list of team projects
      *
      * @return Response
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $team = auth()->user()->currentTeam;
+        $team = $request->user()->currentTeam;
 
         return response()->view('projects.index', ['projects' => $team->projects]);
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Display the "create project" form
      *
      * @param Request $request
      *
@@ -40,7 +40,7 @@ final class ProjectController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the project details
      *
      * @param Project $project
      *
@@ -52,7 +52,7 @@ final class ProjectController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Display the "edit project" form
      *
      * @param Project $project
      *
