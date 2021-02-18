@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Component extends Model
 {
@@ -31,5 +32,15 @@ class Component extends Model
     public function service(): BelongsTo
     {
         return $this->belongsTo(Service::class);
+    }
+
+    /**
+     * Get the component status history
+     *
+     * @return HasMany
+     */
+    public function statusHistory(): HasMany
+    {
+        return $this->hasMany(StatusHistory::class);
     }
 }
