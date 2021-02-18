@@ -2,9 +2,9 @@
 
 namespace App\Jobs;
 
+use App\Contracts\Fetchers\StatusPageFetcher;
 use App\Events\StatusRetrieved;
-use App\Fetchers\StatusPage as Fetcher;
-use App\Parsers\StatusPage as Parser;
+use App\Models\Component;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
@@ -12,27 +12,39 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\App;
 
-abstract class UpdateStatusPageStatus implements ShouldQueue, ShouldBeUnique
+abstract class FetchStatusPageStatus implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable;
     use InteractsWithQueue;
     use Queueable;
     use SerializesModels;
 
+    /** @var Component */
+    public Component $component;
+
+    /**
+     * Constructor
+     *
+     * @param Component $component
+     */
+    public function __construct(Component $component)
+    {
+        $this->component = $component;
+    }
+
     /**
      * Execute the job.
      *
-     * @return void
+     * @param StatusPageFetcher $fetcher
+     *
      * @throws BindingResolutionException
      */
-    public function handle(): void
+    public function handle(StatusPageFetcher $fetcher)
     {
-        $fetcher = App::makeWith(Fetcher::class, ['pageId' => $this->getPageId()]);
-        $parser  = App::makeWith(Parser::class, ['serviceKey' => $this->getServiceKey()]);
+        $response = $fetcher->fetch($this->getPageId());
 
-        $response   = $fetcher->fetch();
+        $response = $fetcher->fetch();
         $components = $parser->parse($response);
 
         foreach ($components as $component) {
@@ -41,18 +53,16 @@ abstract class UpdateStatusPageStatus implements ShouldQueue, ShouldBeUnique
     }
 
     /**
-     * Get the StatusPage pageId
+     * Get the StatusPage component ID
+     *
+     * @return string
+     */
+    abstract protected function getComponentId(): string;
+
+    /**
+     * Get the StatusPage page ID
      *
      * @return string
      */
     abstract protected function getPageId(): string;
-
-    /**
-     * Get the interval service key
-     *
-     * For example, 'mailgun'
-     *
-     * @return string
-     */
-    abstract protected function getServiceKey(): string;
 }

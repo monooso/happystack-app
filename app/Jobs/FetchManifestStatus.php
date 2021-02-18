@@ -5,15 +5,15 @@ namespace App\Jobs;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class UpdateMailgunStatus extends UpdateStatusPageStatus implements ShouldQueue, ShouldBeUnique
+class FetchManifestStatus extends FetchStatusPageStatus implements ShouldQueue, ShouldBeUnique
 {
     protected function getPageId(): string
     {
-        return '6jp439mdyy0k';
+        return 'w1q1x1xcst54';
     }
 
     protected function getServiceKey(): string
     {
-        return 'mailgun';
+        return 'manifest';
     }
 }
