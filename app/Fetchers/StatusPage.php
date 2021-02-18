@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Fetchers;
 
-use App\Contracts\StatusFetcher;
+use App\Contracts\Fetchers\StatusPageFetcher;
 use GuzzleHttp\ClientInterface;
 use Psr\Http\Message\ResponseInterface;
 
-final class StatusPage implements StatusFetcher
+final class StatusPage implements StatusPageFetcher
 {
     private ClientInterface $client;
 

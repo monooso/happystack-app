@@ -2,19 +2,21 @@
 
 declare(strict_types=1);
 
-namespace App\Contracts;
+namespace App\Contracts\Fetchers;
 
 use GuzzleHttp\Exception\GuzzleException;
 use Psr\Http\Message\ResponseInterface;
 
-interface StatusFetcher
+interface StatusPageFetcher
 {
     /**
-     * Fetch the status update
+     * Fetch the status
+     *
+     * @param string $pageId
      *
      * @return ResponseInterface
      *
      * @throws GuzzleException
      */
-    public function fetch(): ResponseInterface;
+    public function fetch(string $pageId): ResponseInterface;
 }
