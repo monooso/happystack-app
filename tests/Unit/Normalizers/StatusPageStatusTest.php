@@ -3,6 +3,7 @@
 namespace Tests\Unit\Normalizers;
 
 use App\Constants\Status;
+use App\Exceptions\UnknownStatusException;
 use App\Normalizers\StatusPageStatus;
 use PHPUnit\Framework\TestCase;
 
@@ -33,8 +34,10 @@ class StatusPageStatusTest extends TestCase
     }
 
     /** @test */
-    public function itFallsBackToUnknown()
+    public function itThrowsAnExceptionIfTheStatusIsUnknown()
     {
-        $this->assertSame(Status::UNKNOWN, StatusPageStatus::normalize('wibble'));
+        $this->expectExceptionObject(new UnknownStatusException('nope'));
+
+        StatusPageStatus::normalize('nope');
     }
 }

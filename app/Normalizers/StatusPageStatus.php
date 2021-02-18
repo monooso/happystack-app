@@ -6,6 +6,7 @@ namespace App\Normalizers;
 
 use App\Constants\Status;
 use App\Contracts\StatusNormalizer;
+use App\Exceptions\UnknownStatusException;
 
 final class StatusPageStatus implements StatusNormalizer
 {
@@ -18,8 +19,10 @@ final class StatusPageStatus implements StatusNormalizer
             'major_outage'         => Status::DOWN,
         ];
 
-        return array_key_exists($externalStatus, $map)
-            ? $map[$externalStatus]
-            : Status::UNKNOWN;
+        if (array_key_exists($externalStatus, $map)) {
+            return $map[$externalStatus];
+        }
+
+        throw new UnknownStatusException($externalStatus);
     }
 }
