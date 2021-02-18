@@ -4,139 +4,55 @@ declare(strict_types=1);
 
 namespace App\Parsers;
 
-use App\Constants\Status;
-use App\Contracts\StatusParser;
+use App\Contracts\Parsers\StatusPageParser;
+use App\Exceptions\UnknownComponentException;
+use App\Normalizers\StatusPageStatus;
 use App\PlainObjects\ComponentStatus;
-use DateTime;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Config;
 use Psr\Http\Message\ResponseInterface;
 
-final class StatusPage implements StatusParser
+final class StatusPage implements StatusPageParser
 {
-    private string $serviceKey;
-
-    /**
-     * Constructor
-     *
-     * @param string $serviceKey For example, 'mailgun'
-     */
-    public function __construct(string $serviceKey)
+    public function parse(string $componentId, ResponseInterface $payload): ComponentStatus
     {
-        $this->serviceKey = $serviceKey;
-    }
+        $responseBody = $this->getResponseBody($payload);
 
-    public function parse(ResponseInterface $response): array
-    {
-        $json = json_decode((string) $response->getBody());
+        $component = $this->getComponentById($componentId, $responseBody);
 
-        $components = $this->filterComponents(collect($json->components));
+        $status = StatusPageStatus::normalize($component['status']);
 
-        return $this->normalizeComponents($components);
+        return (new ComponentStatus())->setStatus($status);
     }
 
     /**
-     * Remove any unsupported components from the collection
+     * Extract and parse the body of the given response
      *
-     * @param Collection $components
-     *
-     * @return Collection
-     */
-    private function filterComponents(Collection $components): Collection
-    {
-        $map = $this->getComponentIds();
-
-        return $components->filter(fn ($c) => in_array($c->id, $map, true));
-    }
-
-    /**
-     * Get the IDs of the supported StatusPage components
+     * @param ResponseInterface $response
      *
      * @return array
      */
-    private function getComponentIds(): array
+    private function getResponseBody(ResponseInterface $response): array
     {
-        $components = $this->getComponents();
-
-        return collect($components)->map(fn ($c) => $c['id'])->values()->all();
+        return json_decode((string) $response->getBody(), true);
     }
 
     /**
-     * Get the component definitions from the service config file
+     * Extract the component with the given ID from the response body
+     *
+     * @param string $componentId
+     * @param array  $responseBody
      *
      * @return array
+     *
+     * @throws UnknownComponentException
      */
-    private function getComponents(): array
+    private function getComponentById(string $componentId, array $responseBody): array
     {
-        return Arr::get($this->getServiceConfig(), 'components', []);
-    }
+        $component = collect($responseBody['components'])->firstWhere('id', $componentId);
 
-    /**
-     * Get the service config
-     *
-     * @return array
-     */
-    private function getServiceConfig(): array
-    {
-        return Config::get('happystack.services.' . $this->serviceKey, []);
-    }
+        if ($component === null) {
+            throw new UnknownComponentException($componentId);
+        }
 
-    /**
-     * Normalise all of the component status updates
-     *
-     * @param Collection $components
-     *
-     * @return ComponentStatus[]
-     */
-    private function normalizeComponents(Collection $components): array
-    {
-        return $components->map(fn ($c) => $this->normalizeComponent($c))->all();
-    }
-
-    /**
-     * Normalise a single component status update
-     *
-     * @param $component
-     *
-     * @return ComponentStatus
-     */
-    private function normalizeComponent($component): ComponentStatus
-    {
-        $config = $this->getComponentConfigById($component->id);
-
-        return (new ComponentStatus())
-            ->setComponent($config['key'])
-            ->setService($this->serviceKey)
-            ->setStatus($this->normalizeStatus($component->status))
-            ->setRetrievedAt(new DateTime('now'));
-    }
-
-    /**
-     * Get the config for the component with the given StatusPage id
-     *
-     * @param string $id
-     *
-     * @return array
-     */
-    private function getComponentConfigById(string $id): array
-    {
-        $components = $this->getComponents();
-
-        return collect($components)->firstWhere('id', $id);
-    }
-
-    /**
-     * Convert a statuspage.io status into an internal status
-     *
-     * @param string $status
-     *
-     * @return string
-     */
-    private function normalizeStatus(string $status): string
-    {
-        $config = $this->getServiceConfig();
-
-        return Arr::get($config, 'statuses.' . $status, Status::UNKNOWN);
+        return $component;
     }
 }

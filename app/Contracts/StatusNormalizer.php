@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Contracts;
 
+use App\Exceptions\UnknownStatusException;
+
 interface StatusNormalizer
 {
     /**
@@ -12,6 +14,8 @@ interface StatusNormalizer
      * @param string $externalStatus
      *
      * @return string
+     *
+     * @throws UnknownStatusException
      */
     public static function normalize(string $externalStatus): string;
 }
