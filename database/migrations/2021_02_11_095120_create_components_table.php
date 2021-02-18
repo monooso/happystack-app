@@ -1,5 +1,6 @@
 <?php
 
+use App\Constants\Status;
 use App\Models\Service;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -14,6 +15,7 @@ class CreateComponentsTable extends Migration
             $table->foreignIdFor(Service::class)->constrained();
             $table->string('name');
             $table->string('handle');
+            $table->enum('current_status', Status::all())->default(Status::UNKNOWN);
             $table->timestamps();
 
             $table->unique(['service_id', 'name']);
