@@ -47,9 +47,9 @@ class StatusPageTest extends TestCase
     {
         $payload = new Response(200, [], $this->makeResponseBody());
 
-        $result = (new StatusPage())->parse('operational-component', $payload);
+        $status = (new StatusPage())->parse('operational-component', $payload);
 
-        $this->assertSame(Status::OKAY, $result->getStatus());
+        $this->assertSame(Status::OKAY, $status);
     }
 
     /** @test */

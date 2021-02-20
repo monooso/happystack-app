@@ -7,20 +7,17 @@ namespace App\Parsers;
 use App\Contracts\Parsers\StatusPageParser;
 use App\Exceptions\UnknownComponentException;
 use App\Normalizers\StatusPageStatus;
-use App\PlainObjects\ComponentStatus;
 use Psr\Http\Message\ResponseInterface;
 
 final class StatusPage implements StatusPageParser
 {
-    public function parse(string $componentId, ResponseInterface $payload): ComponentStatus
+    public function parse(string $componentId, ResponseInterface $payload): string
     {
         $responseBody = $this->getResponseBody($payload);
 
         $component = $this->getComponentById($componentId, $responseBody);
 
-        $status = StatusPageStatus::normalize($component['status']);
-
-        return (new ComponentStatus())->setStatus($status);
+        return StatusPageStatus::normalize($component['status']);
     }
 
     /**
