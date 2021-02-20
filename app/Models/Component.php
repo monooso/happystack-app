@@ -12,7 +12,7 @@ class Component extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'handle'];
+    protected $fillable = ['current_status', 'handle', 'name'];
 
     /**
      * Get the projects which are monitoring this component
