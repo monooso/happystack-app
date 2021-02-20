@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Feature\Fetchers\Mailgun;
 
 use App\Constants\Status;
@@ -11,7 +13,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 
-class FetchSmtpStatusTest extends TestCase
+final class FetchSmtpStatusTest extends TestCase
 {
     use RefreshDatabase;
     use WithFaker;
