@@ -43,4 +43,21 @@ class Component extends Model
     {
         return $this->hasMany(StatusUpdate::class);
     }
+
+    /**
+     * Update the component status
+     *
+     * @todo wrap updates in a database transaction
+     *
+     * @param string $status
+     */
+    public function updateStatus(string $status)
+    {
+        // Update the component status history
+        $this->statusUpdates()->create(['status' => $status]);
+
+        // Update the current status
+        $this->current_status = $status;
+        $this->save();
+    }
 }

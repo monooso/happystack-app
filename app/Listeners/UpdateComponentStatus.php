@@ -4,8 +4,6 @@ namespace App\Listeners;
 
 use App\Events\StatusRetrieved;
 use App\Events\StatusUpdated;
-use App\Models\StatusUpdate;
-use App\PlainObjects\ComponentStatus;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class UpdateComponentStatus implements ShouldQueue
@@ -19,73 +17,15 @@ class UpdateComponentStatus implements ShouldQueue
      */
     public function handle(StatusRetrieved $event): void
     {
-        $eventUpdate = $event->statusUpdate;
+        $component = $event->component;
+        $newStatus = $event->status;
 
-        $previousUpdate = $this->getMostRecentUpdate($eventUpdate);
-
-        if ($this->statusHasChanged($previousUpdate, $eventUpdate)) {
-            $update = $this->saveNewUpdate($eventUpdate);
-            StatusUpdated::dispatch($update);
+        if ($newStatus !== $component->current_status) {
+            $component->updateStatus($newStatus);
+            StatusUpdated::dispatch($component);
         } else {
-            $this->refreshUpdate($previousUpdate);
+            // Touch the updated_at timestamp of the most recent status update
+            $component->statusUpdates()->latest()->touch();
         }
-    }
-
-    /**
-     * Get the most recent update from the database
-     *
-     * @param ComponentStatus $data
-     *
-     * @return StatusUpdate|null
-     */
-    private function getMostRecentUpdate(ComponentStatus $data): ?StatusUpdate
-    {
-        return StatusUpdate::where([
-            'service'   => $data->getService(),
-            'component' => $data->getComponent(),
-        ])->latest('updated_at')->first();
-    }
-
-    /**
-     * Has the status changed?
-     *
-     * @param StatusUpdate|null $previous
-     * @param ComponentStatus   $new
-     *
-     * @return bool
-     */
-    private function statusHasChanged(?StatusUpdate $previous, ComponentStatus $new): bool
-    {
-        if ($previous === null) {
-            return true;
-        }
-
-        return ($previous->status !== $new->getStatus());
-    }
-
-    /**
-     * Save a new status update
-     *
-     * @param ComponentStatus $data
-     *
-     * @return StatusUpdate
-     */
-    private function saveNewUpdate(ComponentStatus $data): StatusUpdate
-    {
-        return StatusUpdate::create([
-            'service'   => $data->getService(),
-            'component' => $data->getComponent(),
-            'status'    => $data->getStatus(),
-        ]);
-    }
-
-    /**
-     * Refresh the 'updated at' timestamp for an existing update
-     *
-     * @param StatusUpdate $model
-     */
-    private function refreshUpdate(StatusUpdate $model)
-    {
-        $model->touch();
     }
 }

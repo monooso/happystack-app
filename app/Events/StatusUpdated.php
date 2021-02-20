@@ -2,7 +2,7 @@
 
 namespace App\Events;
 
-use App\Models\StatusUpdate;
+use App\Models\Component;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -13,16 +13,16 @@ class StatusUpdated implements ShouldBroadcast
     use Dispatchable;
     use SerializesModels;
 
-    public StatusUpdate $statusUpdate;
+    public Component $component;
 
     /**
      * Constructor
      *
-     * @param StatusUpdate $statusUpdate
+     * @param Component $component
      */
-    public function __construct(StatusUpdate $statusUpdate)
+    public function __construct(Component $component)
     {
-        $this->statusUpdate = $statusUpdate;
+        $this->component = $component;
     }
 
     /**
@@ -34,9 +34,12 @@ class StatusUpdated implements ShouldBroadcast
      */
     public function broadcastOn(): string
     {
-        $name = $this->statusUpdate->service . '.' . $this->statusUpdate->component;
+        $componentHandle = $this->component->handle;
+        $serviceHandle = $this->component->service->handle;
 
-        return new Channel($name);
+        $channelName = "${serviceHandle}.${componentHandle}";
+
+        return new Channel($channelName);
     }
 
     /**
@@ -46,10 +49,6 @@ class StatusUpdated implements ShouldBroadcast
      */
     public function broadcastWith(): array
     {
-        return [
-            'component' => $this->statusUpdate->component,
-            'service'   => $this->statusUpdate->service,
-            'status'    => $this->statusUpdate->status,
-        ];
+        return ['component' => $this->component];
     }
 }
