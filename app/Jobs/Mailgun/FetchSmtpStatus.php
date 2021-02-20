@@ -9,7 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 
 final class FetchSmtpStatus extends FetchStatus implements ShouldQueue, ShouldBeUnique
 {
-    public function getComponentId(): string
+    protected function getComponentId(): string
     {
         return 'pdjtfylt9rv1';
     }
