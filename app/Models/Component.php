@@ -35,12 +35,12 @@ class Component extends Model
     }
 
     /**
-     * Get the component status history
+     * Get the component status updates
      *
      * @return HasMany
      */
-    public function statusHistory(): HasMany
+    public function statusUpdates(): HasMany
     {
-        return $this->hasMany(StatusHistory::class);
+        return $this->hasMany(StatusUpdate::class);
     }
 }

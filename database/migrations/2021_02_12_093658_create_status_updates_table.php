@@ -10,7 +10,7 @@ class CreateStatusUpdatesTable extends Migration
 {
     public function up()
     {
-        Schema::create('status_history', function (Blueprint $table) {
+        Schema::create('status_updates', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Component::class)->constrained();
             $table->enum('status', Status::all());
@@ -20,6 +20,6 @@ class CreateStatusUpdatesTable extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('status_history');
+        Schema::dropIfExists('status_updates');
     }
 }

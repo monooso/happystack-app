@@ -1,13 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class StatusUpdate extends Model
+final class StatusUpdate extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['service', 'component', 'status'];
+    protected $fillable = ['status'];
+
+    /**
+     * Get the component associated with this status
+     *
+     * @return BelongsTo
+     */
+    public function component(): BelongsTo
+    {
+        return $this->belongsTo(Component::class);
+    }
 }
