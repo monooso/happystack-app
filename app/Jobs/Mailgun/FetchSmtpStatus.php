@@ -7,7 +7,7 @@ namespace App\Jobs\Mailgun;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-final class FetchSmtpStatus extends FetchMailgunStatus implements ShouldQueue, ShouldBeUnique
+final class FetchSmtpStatus extends FetchStatus implements ShouldQueue, ShouldBeUnique
 {
     public function getComponentId(): string
     {
