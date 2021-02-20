@@ -3,20 +3,17 @@
 namespace App\Jobs;
 
 use App\Contracts\Fetchers\StatusPageFetcher;
+use App\Contracts\Parsers\StatusPageParser;
 use App\Events\StatusRetrieved;
 use App\Models\Component;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Container\BindingResolutionException;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-abstract class FetchStatusPageStatus implements ShouldQueue, ShouldBeUnique
+abstract class FetchStatusPageStatus
 {
     use Dispatchable;
-    use InteractsWithQueue;
     use Queueable;
     use SerializesModels;
 
@@ -34,22 +31,20 @@ abstract class FetchStatusPageStatus implements ShouldQueue, ShouldBeUnique
     }
 
     /**
-     * Execute the job.
+     * Execute the job
      *
      * @param StatusPageFetcher $fetcher
+     * @param StatusPageParser  $parser
      *
-     * @throws BindingResolutionException
+     * @throws GuzzleException
      */
-    public function handle(StatusPageFetcher $fetcher)
+    public function handle(StatusPageFetcher $fetcher, StatusPageParser $parser)
     {
         $response = $fetcher->fetch($this->getPageId());
 
-        $response = $fetcher->fetch();
-        $components = $parser->parse($response);
+        $status = $parser->parse($this->getComponentId(), $response);
 
-        foreach ($components as $component) {
-            StatusRetrieved::dispatch($component);
-        }
+        StatusRetrieved::dispatch($this->component, $status);
     }
 
     /**

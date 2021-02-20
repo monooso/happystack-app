@@ -12,25 +12,19 @@ final class StatusPage implements StatusPageFetcher
 {
     private ClientInterface $client;
 
-    private string $pageId;
-
     /**
      * Constructor
      *
      * @param ClientInterface $client
-     * @param string          $pageId
      */
-    public function __construct(ClientInterface $client, string $pageId)
+    public function __construct(ClientInterface $client)
     {
         $this->client = $client;
-        $this->pageId = $pageId;
     }
 
-    public function fetch(): ResponseInterface
+    public function fetch(string $pageId): ResponseInterface
     {
-        $id = $this->pageId;
-
-        $url = "https://${id}.statuspage.io/api/v2/summary.json";
+        $url = "https://${pageId}.statuspage.io/api/v2/summary.json";
 
         return $this->client->request('GET', $url);
     }
