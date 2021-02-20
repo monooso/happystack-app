@@ -13,26 +13,14 @@ use Livewire\Component;
 
 final class ComponentStatus extends Component
 {
-    /**
-     * The service key. For example, 'mailgun'
-     *
-     * @var string
-     */
-    public string $service;
+    public string $key;
+    public string $status;
 
-    /**
-     * The service component status
-     *
-     * @var string
-     */
-    public string $status = Status::UNKNOWN;
-
-    /**
-     * The service component key. For example, 'api'
-     *
-     * @var string
-     */
-    public string $component;
+    public function mount(string $key, string $status = Status::UNKNOWN)
+    {
+        $this->key = $key;
+        $this->status = $status;
+    }
 
     /**
      * Subscribe to broadcast events
@@ -41,7 +29,7 @@ final class ComponentStatus extends Component
      */
     public function getListeners(): array
     {
-        $channelName = $this->service . '.' . $this->component;
+        $channelName = 'component-' . $this->key;
 
         return ["echo:${channelName},StatusUpdated" => 'updateStatus'];
     }
