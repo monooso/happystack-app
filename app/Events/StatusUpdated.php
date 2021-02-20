@@ -26,18 +26,15 @@ class StatusUpdated implements ShouldBroadcast
     }
 
     /**
-     * Broadcast the event on a channel named after the service and component
+     * Broadcast the event on a component-specific channel
      *
-     * For example, `mailgun.api`
+     * For example, `component-123`
      *
      * @return string
      */
     public function broadcastOn(): string
     {
-        $componentHandle = $this->component->handle;
-        $serviceHandle = $this->component->service->handle;
-
-        $channelName = "${serviceHandle}.${componentHandle}";
+        $channelName = 'component-' . $this->component->id;
 
         return new Channel($channelName);
     }
@@ -49,6 +46,6 @@ class StatusUpdated implements ShouldBroadcast
      */
     public function broadcastWith(): array
     {
-        return ['component' => $this->component];
+        return ['status' => $this->component->current_status];
     }
 }
