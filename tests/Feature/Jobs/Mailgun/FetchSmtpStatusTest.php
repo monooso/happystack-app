@@ -30,7 +30,7 @@ final class FetchSmtpStatusTest extends TestCase
 
         Event::assertDispatched(function (StatusRetrieved $event) use ($component) {
             return $event->component->id === $component->id
-                && $event->status === Status::OKAY;
+                && in_array($event->status, [Status::OKAY, Status::WARN, Status::DOWN]);
         });
     }
 }
