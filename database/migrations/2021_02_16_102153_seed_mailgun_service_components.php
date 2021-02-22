@@ -60,6 +60,6 @@ class SeedMailgunServiceComponents extends Migration
      */
     private function getServiceId(): ?int
     {
-        return DB::table('services')->whereHandle('mailgun')->value('id');
+        return DB::table('services')->where('handle', 'mailgun')->value('id');
     }
 }
