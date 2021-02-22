@@ -6,9 +6,9 @@ use Illuminate\Support\Facades\DB;
 class SeedAwsS3ServiceComponents extends Migration
 {
     private array $components = [
-        's3-us-standard' => 'North Virginia',
-        's3-us-east-2'   => 'Ohio',
-        's3-us-west-1'   => 'North California',
+        'aws-s3::us-standard' => 'North Virginia',
+        'aws-s3::us-east-2'   => 'Ohio',
+        'aws-s3::us-west-1'   => 'North California',
     ];
 
     public function up()

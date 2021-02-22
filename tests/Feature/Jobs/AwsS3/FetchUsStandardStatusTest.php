@@ -21,7 +21,7 @@ final class FetchUsStandardStatusTest extends TestCase
     {
         Event::fake();
 
-        $component = Component::whereHandle('s3-us-standard')->firstOrFail();
+        $component = Component::whereHandle('aws-s3::us-standard')->firstOrFail();
 
         FetchUsStandardStatus::dispatchNow($component);
 

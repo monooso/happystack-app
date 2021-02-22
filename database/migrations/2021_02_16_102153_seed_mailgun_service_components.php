@@ -6,14 +6,14 @@ use Illuminate\Support\Facades\DB;
 class SeedMailgunServiceComponents extends Migration
 {
     private array $components = [
-        'api'                      => 'API',
-        'control_panel'            => 'Control Panel',
-        'email_validation'         => 'Email Validation',
-        'events_logs'              => 'Events and Logs',
-        'inbound_email_processing' => 'Inbound Email Processing',
-        'inbox_placement'          => 'Inbox Placement',
-        'outbound_delivery'        => 'Outbound Delivery',
-        'smtp'                     => 'SMTP',
+        'mailgun::api'                      => 'API',
+        'mailgun::control-panel'            => 'Control Panel',
+        'mailgun::email-validation'         => 'Email Validation',
+        'mailgun::events-logs'              => 'Events and Logs',
+        'mailgun::inbound-email-processing' => 'Inbound Email Processing',
+        'mailgun::inbox-placement'          => 'Inbox Placement',
+        'mailgun::outbound-delivery'        => 'Outbound Delivery',
+        'mailgun::smtp'                     => 'SMTP',
     ];
 
     public function up()
