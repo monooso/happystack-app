@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\ProjectController;
-use App\Jobs\FetchManifestStatus;
-use App\Jobs\UpdateMailgunStatus;
+use App\Jobs\AwsS3\FetchUsStandardStatus;
+use App\Jobs\Mailgun\FetchSmtpStatus;
+use App\Models\Component;
+use App\Models\Service;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,12 +22,17 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/update-status/mailgun', function () {
-    UpdateMailgunStatus::dispatchNow();
+Route::get('/update-status/aws-s3/us-standard', function () {
+    $component = Component::where('handle', 's3-us-standard')->firstOrFail();
+
+    FetchUsStandardStatus::dispatchNow($component);
 });
 
-Route::get('/update-status/manifest', function () {
-    FetchManifestStatus::dispatchNow();
+Route::get('/update-status/mailgun/smtp', function () {
+    $service = Service::where('handle', 'mailgun')->firstOrFail();
+    $component = $service->components()->where('handle', 'smtp')->firstOrFail();
+
+    FetchSmtpStatus::dispatchNow($component);
 });
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
