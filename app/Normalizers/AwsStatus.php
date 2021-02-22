@@ -8,21 +8,16 @@ use App\Constants\Status;
 use App\Contracts\StatusNormalizer;
 use App\Exceptions\UnknownStatusException;
 
-final class StatusPageStatus implements StatusNormalizer
+final class AwsStatus implements StatusNormalizer
 {
     public static function normalize($externalStatus): string
     {
-        $map = [
-            'operational'          => Status::OKAY,
-            'degraded_performance' => Status::WARN,
-            'partial_outage'       => Status::WARN,
-            'major_outage'         => Status::DOWN,
-        ];
+        $map = [1 => Status::OKAY, 2 => Status::WARN, 3 => Status::DOWN];
 
         if (array_key_exists($externalStatus, $map)) {
             return $map[$externalStatus];
         }
 
-        throw new UnknownStatusException($externalStatus);
+        throw new UnknownStatusException((string) $externalStatus);
     }
 }

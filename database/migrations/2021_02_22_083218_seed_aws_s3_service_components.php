@@ -3,17 +3,12 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
-class SeedMailgunServiceComponents extends Migration
+class SeedAwsS3ServiceComponents extends Migration
 {
     private array $components = [
-        'api'                      => 'API',
-        'control_panel'            => 'Control Panel',
-        'email_validation'         => 'Email Validation',
-        'events_logs'              => 'Events and Logs',
-        'inbound_email_processing' => 'Inbound Email Processing',
-        'inbox_placement'          => 'Inbox Placement',
-        'outbound_delivery'        => 'Outbound Delivery',
-        'smtp'                     => 'SMTP',
+        's3-us-standard' => 'North Virginia',
+        's3-us-east-2'   => 'Ohio',
+        's3-us-west-1'   => 'North California',
     ];
 
     public function up()
@@ -21,7 +16,7 @@ class SeedMailgunServiceComponents extends Migration
         $serviceId = $this->getServiceId();
 
         if (!$serviceId) {
-            throw new Exception('Mailgun service does not exist');
+            throw new Exception('AWS S3 service does not exist');
         }
 
         $now = now();
@@ -52,7 +47,7 @@ class SeedMailgunServiceComponents extends Migration
     }
 
     /**
-     * Get the Mailgun service ID from the database
+     * Get the AWS S3 service ID from the database
      *
      * @return null|int
      *
@@ -60,6 +55,6 @@ class SeedMailgunServiceComponents extends Migration
      */
     private function getServiceId(): ?int
     {
-        return DB::table('services')->where('handle', 'mailgun')->value('id');
+        return DB::table('services')->where('handle', 'aws-s3')->value('id');
     }
 }
