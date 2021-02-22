@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Feature\Fetchers\Mailgun;
+namespace Tests\Feature\Jobs\Mailgun;
 
 use App\Constants\Status;
 use App\Events\StatusRetrieved;
