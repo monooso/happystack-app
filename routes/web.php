@@ -26,6 +26,11 @@ Route::get('/update-status/aws-s3/us-standard', function () {
     FetchUsStandardStatus::dispatchNow($component);
 });
 
+Route::get('/update-status/aws-s3/ap-south-1', function () {
+    $component = Component::where('handle', 'aws-s3::ap-south-1')->firstOrFail();
+    FetchUsStandardStatus::dispatchNow($component);
+});
+
 Route::get('/update-status/mailgun/smtp', function () {
     $component = Component::where('handle', 'mailgun::smtp')->firstOrFail();
     FetchSmtpStatus::dispatchNow($component);
