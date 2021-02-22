@@ -11,11 +11,11 @@ interface StatusNormalizer
     /**
      * Convert an external status into an internal status
      *
-     * @param string $externalStatus
+     * @param mixed $externalStatus
      *
      * @return string
      *
      * @throws UnknownStatusException
      */
-    public static function normalize(string $externalStatus): string;
+    public static function normalize($externalStatus): string;
 }

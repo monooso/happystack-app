@@ -10,7 +10,7 @@ use App\Exceptions\UnknownStatusException;
 
 final class StatusPageStatus implements StatusNormalizer
 {
-    public static function normalize(string $externalStatus): string
+    public static function normalize($externalStatus): string
     {
         $map = [
             'operational'          => Status::OKAY,
