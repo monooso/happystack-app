@@ -9,6 +9,7 @@ vendor/
 
 # Environment-specific
 /storage/*.key
+auth.json
 .env
 .env.backup
 .php_cs
