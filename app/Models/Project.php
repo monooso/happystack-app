@@ -11,7 +11,13 @@ class Project extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name'];
+    protected $fillable = [
+        'name',
+        'client_notification_name',
+        'client_notification_email',
+        'notification_email',
+        'should_notify_client',
+    ];
 
     /**
      * Get the components this project is monitoring

@@ -41,7 +41,14 @@ final class CreateProject implements CreatesProjects
         $team = $user->currentTeam;
 
         /** @var Project $project */
-        $project = $team->projects()->create(['name' => $attributes['projectName']]);
+        $project = $team->projects()->create([
+            'name'                      => $attributes['projectName'],
+            'notification_email'        => $attributes['notificationEmail'],
+            'should_notify_client'      => $attributes['notifyClient'],
+            'client_notification_name'  => $attributes['clientNotificationName'],
+            'client_notification_email' => $attributes['clientNotificationEmail'],
+        ]);
+
         $project->components()->sync($components);
 
         return $project;
