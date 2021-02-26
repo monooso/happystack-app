@@ -37,10 +37,12 @@
 
                             <x-slot name="content">
                                 <div class="w-60">
-                                    <!-- Team Management -->
-                                    <div class="block px-4 py-2 text-sm text-gray-400">
-                                        {{ __('Manage Team') }}
-                                    </div>
+                                    <!-- Manage Billing -->
+                                    @if (Auth::user()->ownsTeam(Auth::user()->currentTeam))
+                                        <x-jet-dropdown-link href="{{ route('spark.portal') }}">
+                                            {{ __('Manage Subscription') }}
+                                        </x-jet-dropdown-link>
+                                    @endif
 
                                     <!-- Team Settings -->
                                     <x-jet-dropdown-link href="{{ route('teams.show', Auth::user()->currentTeam->id) }}">

@@ -86,6 +86,8 @@ final class CreateProjectForm extends Component
      */
     public function render()
     {
-        return view('projects.create-project-form', ['services' => Service::all()]);
+        $services = Service::all()->sortBy(fn (Service $service) => $service->name);
+
+        return view('projects.create-project-form', compact('services'));
     }
 }

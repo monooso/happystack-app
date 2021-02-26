@@ -35,7 +35,7 @@
                 <div class="bg-white overflow-hidden shadow sm:rounded-lg">
                     <div class="divide-gray-100 divide-y">
                         @foreach($services as $service)
-                            <label class="block flex items-center justify-between px-4 py-5 select-none sm:p-6">
+                            <label class="block cursor-pointer flex items-center justify-between px-4 py-5 select-none sm:p-6">
                                 <div class="flex items-start justify-start">
                                     <div class="flex-0 mr-2 mt-1 w-4">
                                         {!! $service->logoSvg !!}
