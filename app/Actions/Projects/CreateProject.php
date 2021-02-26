@@ -10,6 +10,7 @@ use App\Models\Project;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 final class CreateProject implements CreatesProjects
 {
@@ -17,9 +18,10 @@ final class CreateProject implements CreatesProjects
      * Create a new project for the given user
      *
      * @param User  $user
-     * @param array $input
+     * @param array $attributes
      *
      * @return Project
+     * @throws ValidationException
      */
     public function create(User $user, array $attributes): Project
     {

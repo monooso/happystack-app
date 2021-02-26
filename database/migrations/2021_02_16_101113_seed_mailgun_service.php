@@ -8,10 +8,11 @@ class SeedMailgunService extends Migration
     public function up()
     {
         DB::table('services')->insert([
-            'name'       => 'Mailgun',
-            'handle'     => 'mailgun',
-            'created_at' => now(),
-            'updated_at' => now(),
+            'name'        => 'Mailgun',
+            'description' => 'The email service for developers',
+            'handle'      => 'mailgun',
+            'created_at'  => now(),
+            'updated_at'  => now(),
         ]);
     }
 
