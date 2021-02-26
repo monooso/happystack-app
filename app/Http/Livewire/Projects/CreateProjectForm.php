@@ -12,18 +12,53 @@ use Livewire\Component;
 final class CreateProjectForm extends Component
 {
     /**
-     * The selected components
-     *
-     * @var array $components
-     */
-    public array $components = [];
-
-    /**
      * The project name
      *
-     * @var string $name
+     * @var string
      */
-    public string $name = '';
+    public string $projectName = '';
+
+    /**
+     * The services to monitor
+     *
+     * @var array
+     */
+    public array $projectServices = [];
+
+    /**
+     * The email to which we will send notifications
+     *
+     * @var string
+     */
+    public string $notificationEmail = '';
+
+    /**
+     * The email to which we will send client notifications
+     *
+     * @var string
+     */
+    public string $clientNotificationEmail = '';
+
+    /**
+     * The client name, used in notification emails
+     *
+     * @var string
+     */
+    public string $clientNotificationName = '';
+
+    /**
+     * Whether we should notify the client of any issues
+     *
+     * @var bool
+     */
+    public bool $notifyClient = false;
+
+    /**
+     * Show or hide the client notification email preview
+     *
+     * @var bool
+     */
+    public bool $showClientNotificationEmailPreview = false;
 
     /**
      * Create a new project
@@ -35,8 +70,12 @@ final class CreateProjectForm extends Component
         $this->resetErrorBag();
 
         $creator->create(Auth::user(), [
-            'components' => $this->components,
-            'name'       => $this->name,
+            'projectName'             => $this->projectName,
+            'projectServices'         => $this->projectServices,
+            'notificationEmail'       => $this->notificationEmail,
+            'notifyClient'            => $this->notifyClient,
+            'clientNotificationEmail' => $this->clientNotificationEmail,
+            'clientNotificationName'  => $this->clientNotificationName,
         ]);
 
         return redirect()->route('projects.index');
