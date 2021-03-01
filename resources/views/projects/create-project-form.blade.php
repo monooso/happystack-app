@@ -35,26 +35,39 @@
                 <div class="bg-white overflow-hidden shadow sm:rounded-lg">
                     <div class="divide-gray-100 divide-y">
                         @foreach($services as $service)
-                            <label class="block cursor-pointer flex items-center justify-between px-4 py-5 select-none sm:p-6">
-                                <div class="flex items-start justify-start">
-                                    <div class="flex-0 mr-2 mt-1 w-4">
-                                        {!! $service->logoSvg !!}
+                            <div x-data="{ expanded: false }">
+                                <button @click.prevent="expanded = ! expanded" class="flex items-center justify-between px-4 py-5 w-full sm:p-6">
+                                    <div class="flex items-start">
+                                        <div class="flex-0 mr-2 mt-1 w-4">
+                                            {!! $service->logoSvg !!}
+                                        </div>
+
+                                        <div class="flex-1 text-left">
+                                            <span class="block font-medium text-gray-900">{{ $service->name }}</span>
+                                            <span class="block text-sm text-gray-500">{{ trans_choice('app.selected_components', count($this->selectedServiceComponents($service))) }}</span>
+                                        </div>
                                     </div>
 
-                                    <div class="flex-1">
-                                        <span class="block font-medium text-gray-900">{{ $service->name }}</span>
-                                        <span class="block text-sm text-gray-500">{{ $service->description }}</span>
+                                    <div>
+                                        <span class="text-sm text-gray-500" x-text="expanded ? 'Hide components' : 'Show components'" />
+                                    </div>
+                                </button>
+
+                                <div x-show="expanded === true" class="bg-gray-100 border-b border-gray-200 p-4 shadow-inner sm:p-6">
+                                    <div class="grid grid-cols-3 gap-3">
+                                        @foreach ($service->components as $projectComponent)
+                                            <label class="col-span-1 flex items-center p-1">
+                                                <x-jet-input type="checkbox" wire:model="projectComponents" value="{{ $projectComponent->id }}"/>
+                                                <span class="ml-2">{{ $projectComponent->name }}</span>
+                                            </label>
+                                        @endforeach
                                     </div>
                                 </div>
-
-                                <div>
-                                    <x-jet-input id="projectServices.{{ $service->id }}" name="projectServices.{{ $service->id }}" type="checkbox" wire:model="projectServices.{{ $service->id }}"/>
-                                </div>
-                            </label>
+                            </div>
                         @endforeach
                     </div>
 
-                    <x-jet-input-error for="projectServices" class="mt-2"/>
+                    <x-jet-input-error for="projectComponents" class="mt-2 p-4 sm:p-6"/>
                 </div>
             </x-slot>
         </x-jet-action-section>
@@ -126,20 +139,14 @@
                             </div>
                         @endif
 
-                        <div>
-                            <label class="flex items-center">
-                                <input class="sr-only mr-1" type="checkbox" wire:model="showClientNotificationEmailPreview"/>
-                                <span class="block">{{ __('Show preview') }}</span>
-                            </label>
-                        </div>
-
-                        @if ($showClientNotificationEmailPreview)
-                            <div>
+                        <div x-data="{ showPreview: false }">
+                            <button @click.prevent="showPreview = ! showPreview" x-text="showPreview ? 'Hide preview' : 'Show preview'"></button>
+                            <div x-show="showPreview">
                                 <p>Hi John,</p>
                                 <p>One of the services your site relies on is having a few issues. We’re monitoring the situation, and will let you know once it’s resolved.</p>
                                 <p>Best regards,<br/>Your name</p>
                             </div>
-                        @endif
+                        </div>
                     </div>
                 </x-section-content>
             </x-slot>
