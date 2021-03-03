@@ -42,8 +42,8 @@ final class CreateProject implements CreatesProjects
             'name'                      => $attributes['projectName'],
             'notification_email'        => $attributes['notificationEmail'],
             'should_notify_client'      => $attributes['notifyClient'],
-            'client_notification_name'  => $attributes['clientNotificationName'],
-            'client_notification_email' => $attributes['clientNotificationEmail'],
+            'client_notification_email' => $attributes['clientNotificationEmail'] ?? '',
+            'client_notification_name'  => $attributes['clientNotificationName'] ?? '',
         ]);
 
         $project->components()->sync($attributes['projectComponents']);
