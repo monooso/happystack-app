@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProjectController;
-use App\Jobs\AwsS3\FetchUsStandardStatus;
+use App\Jobs\AwsS3\FetchUsEast1Status;
 use App\Jobs\Mailgun\FetchSmtpStatus;
 use App\Models\Component;
 use Illuminate\Support\Facades\Route;
@@ -23,12 +23,12 @@ Route::get('/', function () {
 
 Route::get('/update-status/aws-s3/us-standard', function () {
     $component = Component::where('handle', 'aws-s3::us-standard')->firstOrFail();
-    FetchUsStandardStatus::dispatchNow($component);
+    FetchUsEast1Status::dispatchNow($component);
 });
 
 Route::get('/update-status/aws-s3/ap-south-1', function () {
     $component = Component::where('handle', 'aws-s3::ap-south-1')->firstOrFail();
-    FetchUsStandardStatus::dispatchNow($component);
+    FetchUsEast1Status::dispatchNow($component);
 });
 
 Route::get('/update-status/mailgun/smtp', function () {

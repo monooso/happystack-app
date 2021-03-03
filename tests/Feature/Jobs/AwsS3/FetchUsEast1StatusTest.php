@@ -6,13 +6,13 @@ namespace Tests\Feature\Jobs\AwsS3;
 
 use App\Constants\Status;
 use App\Events\StatusRetrieved;
-use App\Jobs\AwsS3\FetchUsStandardStatus;
+use App\Jobs\AwsS3\FetchUsEast1Status;
 use App\Models\Component;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 
-final class FetchUsStandardStatusTest extends TestCase
+final class FetchUsEast1StatusTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -21,9 +21,9 @@ final class FetchUsStandardStatusTest extends TestCase
     {
         Event::fake();
 
-        $component = Component::whereHandle('aws-s3::us-standard')->firstOrFail();
+        $component = Component::whereHandle('aws-s3::us-east-1')->firstOrFail();
 
-        FetchUsStandardStatus::dispatchNow($component);
+        FetchUsEast1Status::dispatchNow($component);
 
         Event::assertDispatched(function (StatusRetrieved $event) use ($component) {
             return $event->component->id === $component->id

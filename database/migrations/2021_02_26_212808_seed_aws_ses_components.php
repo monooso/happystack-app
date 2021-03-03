@@ -4,14 +4,14 @@ use App\Constants\AwsRegion;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
-class SeedAwsS3ServiceComponents extends Migration
+class SeedAwsSesComponents extends Migration
 {
     public function up()
     {
         $serviceId = $this->getServiceId();
 
         if (! $serviceId) {
-            throw new Exception('AWS S3 service does not exist');
+            throw new Exception('AWS SES service does not exist');
         }
 
         $now = now();
@@ -42,7 +42,7 @@ class SeedAwsS3ServiceComponents extends Migration
     }
 
     /**
-     * Get the AWS S3 service ID from the database
+     * Get the AWS SES service ID from the database
      *
      * @return null|int
      *
@@ -50,7 +50,7 @@ class SeedAwsS3ServiceComponents extends Migration
      */
     private function getServiceId(): ?int
     {
-        return DB::table('services')->where('handle', 'aws-s3')->value('id');
+        return DB::table('services')->where('handle', 'aws-ses')->value('id');
     }
 
     /**
@@ -62,7 +62,7 @@ class SeedAwsS3ServiceComponents extends Migration
     {
         $regions = AwsRegion::map();
 
-        $keys = array_map(fn ($k) => 'aws-s3::' . $k, array_keys($regions));
+        $keys = array_map(fn ($k) => 'aws-ses::' . $k, array_keys($regions));
 
         return array_combine($keys, array_values($regions));
     }
