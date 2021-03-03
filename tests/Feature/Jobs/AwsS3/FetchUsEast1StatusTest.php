@@ -12,7 +12,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 
-final class FetchUsStandardStatusTest extends TestCase
+final class FetchUsEast1StatusTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -21,7 +21,7 @@ final class FetchUsStandardStatusTest extends TestCase
     {
         Event::fake();
 
-        $component = Component::whereHandle('aws-s3::us-standard')->firstOrFail();
+        $component = Component::whereHandle('aws-s3::us-east-1')->firstOrFail();
 
         FetchUsEast1Status::dispatchNow($component);
 
