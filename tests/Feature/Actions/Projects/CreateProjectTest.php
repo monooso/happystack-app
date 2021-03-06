@@ -22,63 +22,40 @@ final class CreateProjectTest extends TestCase
     /** @test */
     public function itCreatesANewProject()
     {
-        $team = Team::factory()->create();
-        $projectName = $this->faker->company;
+        $attributes = $this->makeAttributes();
 
-        $componentIds = $this->createComponents()->pluck('id')->all();
+        $this->createProject($attributes);
 
-        $attributes = [
-            'notificationEmail' => $this->faker->email,
-            'notifyClient'      => false,
-            'projectComponents' => $componentIds,
-            'projectName'       => $projectName,
-        ];
-
-        (new CreateProject())->create($team->owner, $attributes);
-
-        $this->assertDatabaseHas('projects', ['team_id' => $team->id, 'name' => $projectName]);
+        $this->assertDatabaseHas('projects', [
+            'name'           => $attributes['name'],
+            'notify_client'  => $attributes['notifyClient'],
+            'client_email'   => $attributes['clientEmail'],
+            'client_message' => $attributes['clientMessage'],
+        ]);
     }
 
     /** @test */
     public function itReturnsTheNewProject(): void
     {
-        $team = Team::factory()->create();
-
-        $project = (new CreateProject())->create($team->owner, [
-            'notificationEmail' => $this->faker->email,
-            'notifyClient'      => false,
-            'projectComponents' => $this->createComponents()->pluck('id')->all(),
-            'projectName'       => $this->faker->company,
-        ]);
-
-        $this->assertInstanceOf(Project::class, $project);
+        $this->assertInstanceOf(Project::class, $this->createProject());
     }
 
     /** @test */
     public function itAssociatesComponentsWithTheProject(): void
     {
-        $team = Team::factory()->create();
+        $components = $this->createComponents(5)->pluck('id')->random(2)->all();
 
-        $componentIds = $this->createComponents(5)->pluck('id')->random(2)->all();
-
-        $attributes = [
-            'notificationEmail' => $this->faker->email,
-            'notifyClient'      => false,
-            'projectComponents' => $componentIds,
-            'projectName'       => $this->faker->company,
-        ];
-
-        $project = (new CreateProject())->create($team->owner, $attributes);
+        $project = $this->createProject(['components' => $components]);
 
         $this->assertDatabaseCount('component_project', 2);
 
         $this->assertDatabaseHas('component_project', [
-            'component_id' => $componentIds[0],
+            'component_id' => $components[0],
             'project_id'   => $project->id,
         ]);
 
         $this->assertDatabaseHas('component_project', [
-            'component_id' => $componentIds[1],
+            'component_id' => $components[1],
             'project_id'   => $project->id,
         ]);
     }
@@ -86,51 +63,30 @@ final class CreateProjectTest extends TestCase
     /** @test */
     public function itThrowsAValidationErrorIfTheProjectNameIsEmpty(): void
     {
-        $team = Team::factory()->create();
-
         try {
-            (new CreateProject())->create($team->owner, [
-                'notificationEmail' => $this->faker->email,
-                'notifyClient'      => false,
-                'projectComponents' => $this->createComponents()->pluck('id')->all(),
-                'projectName'       => '',
-            ]);
+            $this->createProject(['name' => '']);
         } catch (ValidationException $e) {
-            $this->assertTrue($e->validator->getMessageBag()->has('projectName'));
+            $this->assertTrue($e->validator->getMessageBag()->has('name'));
         }
     }
 
     /** @test */
     public function itThrowsAValidationErrorIfTheProjectNameIsTooLong(): void
     {
-        $team = Team::factory()->create();
-
         try {
-            (new CreateProject())->create($team->owner, [
-                'notificationEmail' => $this->faker->email,
-                'notifyClient'      => false,
-                'projectComponents' => $this->createComponents()->pluck('id')->all(),
-                'projectName'       => str_repeat('x', 256),
-            ]);
+            $this->createProject(['name' => str_repeat('x', 256)]);
         } catch (ValidationException $e) {
-            $this->assertTrue($e->validator->getMessageBag()->has('projectName'));
+            $this->assertTrue($e->validator->getMessageBag()->has('name'));
         }
     }
 
     /** @test */
     public function itThrowsAValidationErrorIfTheNotificationEmailIsMissing(): void
     {
-        $team = Team::factory()->create();
-
         try {
-            (new CreateProject())->create($team->owner, [
-                'notificationEmail' => '',
-                'notifyClient'      => false,
-                'projectComponents' => $this->createComponents()->pluck('id')->all(),
-                'projectName'       => $this->faker->company,
-            ]);
+            $this->createProject(['channels' => null]);
         } catch (ValidationException $e) {
-            $this->assertTrue($e->validator->getMessageBag()->has('notificationEmail'));
+            $this->assertTrue($e->validator->getMessageBag()->has('channels.email'));
         }
     }
 
@@ -140,183 +96,119 @@ final class CreateProjectTest extends TestCase
         $team = Team::factory()->create();
 
         try {
-            (new CreateProject())->create($team->owner, [
-                'notificationEmail' => $this->faker->word,
-                'notifyClient'      => false,
-                'projectComponents' => $this->createComponents()->pluck('id')->all(),
-                'projectName'       => $this->faker->company,
-            ]);
+            $this->createProject(['channels' => ['email' => $this->faker->word]]);
         } catch (ValidationException $e) {
-            $this->assertTrue($e->validator->getMessageBag()->has('notificationEmail'));
+            $this->assertTrue($e->validator->getMessageBag()->has('channels.email'));
         }
     }
 
     /** @test */
     public function itThrowsAValidationErrorIfTheNotificationEmailIsTooLong(): void
     {
-        $team = Team::factory()->create();
-
         try {
-            (new CreateProject())->create($team->owner, [
-                'notificationEmail' => str_repeat('x', 256) . '@example.com',
-                'notifyClient'      => false,
-                'projectComponents' => $this->createComponents()->pluck('id')->all(),
-                'projectName'       => $this->faker->company,
-            ]);
+            $email = str_repeat('x', 256) . '@example.com';
+            $this->createProject(['channels' => ['email' => $email]]);
         } catch (ValidationException $e) {
-            $this->assertTrue($e->validator->getMessageBag()->has('notificationEmail'));
+            $this->assertTrue($e->validator->getMessageBag()->has('channels.email'));
         }
     }
 
     /** @test */
     public function itThrowsAValidationErrorIfThereAreNoSelectedComponents(): void
     {
-        $team = Team::factory()->create();
-
         try {
-            (new CreateProject())->create($team->owner, [
-                'notificationEmail' => $this->faker->email,
-                'notifyClient'      => false,
-                'projectComponents' => [],
-                'projectName'       => $this->faker->company,
-            ]);
+            $this->createProject(['components' => []]);
         } catch (ValidationException $e) {
-            $this->assertTrue($e->validator->getMessageBag()->has('projectComponents'));
+            $this->assertTrue($e->validator->getMessageBag()->has('components'));
         }
     }
 
     /** @test */
     public function itThrowsAValidationErrorIfAComponentDoesNotExist()
     {
-        $team = Team::factory()->create();
-
         try {
-            (new CreateProject())->create($team->owner, [
-                'notificationEmail' => $this->faker->email,
-                'notifyClient'      => false,
-                'projectComponents' => [$this->faker->randomNumber(6)],
-                'projectName'       => $this->faker->company,
-            ]);
+            $this->createProject(['components' => [$this->faker->randomNumber(6)]]);
         } catch (ValidationException $e) {
-            $this->assertTrue($e->validator->getMessageBag()->has('projectComponents.0'));
-        }
-    }
-
-    /** @test */
-    public function itThrowsAValidationErrorIfNotifyClientIsTrueAndTheClientNameIsMissing()
-    {
-        $team = Team::factory()->create();
-
-        try {
-            (new CreateProject())->create($team->owner, [
-                'clientNotificationEmail' => $this->faker->email,
-                'clientNotificationName'  => '',
-                'notificationEmail'       => $this->faker->email,
-                'notifyClient'            => true,
-                'projectComponents'       => $this->createComponents()->pluck('id')->all(),
-                'projectName'             => $this->faker->company,
-            ]);
-        } catch (ValidationException $e) {
-            $this->assertTrue($e->validator->getMessageBag()->has('clientNotificationName'));
-        }
-    }
-
-    /** @test */
-    public function itThrowsAValidationErrorIfNotifyClientIsTrueAndTheClientNameIsTooLong()
-    {
-        $team = Team::factory()->create();
-
-        try {
-            (new CreateProject())->create($team->owner, [
-                'clientNotificationEmail' => $this->faker->email,
-                'clientNotificationName'  => str_repeat('x', 256),
-                'notificationEmail'       => $this->faker->email,
-                'notifyClient'            => true,
-                'projectComponents'       => $this->createComponents()->pluck('id')->all(),
-                'projectName'             => $this->faker->company,
-            ]);
-        } catch (ValidationException $e) {
-            $this->assertTrue($e->validator->getMessageBag()->has('clientNotificationName'));
+            $this->assertTrue($e->validator->getMessageBag()->has('components.0'));
         }
     }
 
     /** @test */
     public function itThrowsAValidationErrorIfNotifyClientIsTrueAndTheClientEmailIsMissing()
     {
-        $team = Team::factory()->create();
-
         try {
-            (new CreateProject())->create($team->owner, [
-                'clientNotificationEmail' => '',
-                'clientNotificationName'  => $this->faker->name,
-                'notificationEmail'       => $this->faker->email,
-                'notifyClient'            => true,
-                'projectComponents'       => $this->createComponents()->pluck('id')->all(),
-                'projectName'             => $this->faker->company,
-            ]);
+            $this->createProject(['notifyClient' => true, 'clientEmail' => null]);
         } catch (ValidationException $e) {
-            $this->assertTrue($e->validator->getMessageBag()->has('clientNotificationEmail'));
+            $this->assertTrue($e->validator->getMessageBag()->has('clientEmail'));
         }
     }
 
     /** @test */
     public function itThrowsAValidationErrorIfNotifyClientIsTrueAndTheClientEmailIsInvalid()
     {
-        $team = Team::factory()->create();
-
         try {
-            (new CreateProject())->create($team->owner, [
-                'clientNotificationEmail' => $this->faker->word,
-                'clientNotificationName'  => $this->faker->name,
-                'notificationEmail'       => $this->faker->email,
-                'notifyClient'            => true,
-                'projectComponents'       => $this->createComponents()->pluck('id')->all(),
-                'projectName'             => $this->faker->company,
+            $this->createProject([
+                'notifyClient' => true,
+                'clientEmail'  => $this->faker->word,
             ]);
         } catch (ValidationException $e) {
-            $this->assertTrue($e->validator->getMessageBag()->has('clientNotificationEmail'));
+            $this->assertTrue($e->validator->getMessageBag()->has('clientEmail'));
         }
     }
 
     /** @test */
     public function itThrowsAValidationErrorIfNotifyClientIsTrueAndTheClientEmailIsTooLong()
     {
-        $team = Team::factory()->create();
-
         try {
-            (new CreateProject())->create($team->owner, [
-                'clientNotificationEmail' => str_repeat('x', 256) . '@example.com',
-                'clientNotificationName'  => $this->faker->name,
-                'notificationEmail'       => $this->faker->email,
-                'notifyClient'            => true,
-                'projectComponents'       => $this->createComponents()->pluck('id')->all(),
-                'projectName'             => $this->faker->company,
+            $this->createProject([
+                'notifyClient' => true,
+                'clientEmail'  => str_repeat('x', 256) . '@example.com',
             ]);
         } catch (ValidationException $e) {
-            $this->assertTrue($e->validator->getMessageBag()->has('clientNotificationEmail'));
+            $this->assertTrue($e->validator->getMessageBag()->has('clientEmail'));
+        }
+    }
+
+    /** @test */
+    public function itThrowsAValidationErrorIfNotifyClientIsTrueAndTheClientMessageIsMissing()
+    {
+        try {
+            $this->createProject(['notifyClient' => true, 'clientMessage' => null]);
+        } catch (ValidationException $e) {
+            $this->assertTrue($e->validator->getMessageBag()->has('clientMessage'));
+        }
+    }
+
+    /** @test */
+    public function itThrowsAValidationErrorIfNotifyClientIsTrueAndTheClientMessageIsTooLong()
+    {
+        try {
+            $this->createProject([
+                'notifyClient'  => true,
+                'clientMessage' => str_repeat('x', 70000),
+            ]);
+        } catch (ValidationException $e) {
+            $this->assertTrue($e->validator->getMessageBag()->has('clientMessage'));
         }
     }
 
     /** @test */
     public function itAllowsEmptyClientDetailsIfNotifyClientIsFalse()
     {
-        $team = Team::factory()->create();
-        $projectName = $this->faker->company;
+        $name = $this->faker->company;
 
-        (new CreateProject())->create($team->owner, [
-            'clientNotificationEmail' => '',
-            'clientNotificationName'  => '',
-            'notificationEmail'       => $this->faker->email,
-            'notifyClient'            => false,
-            'projectComponents'       => $this->createComponents()->pluck('id')->all(),
-            'projectName'             => $projectName,
+        $this->createProject([
+            'name'          => $name,
+            'notifyClient'  => false,
+            'clientEmail'   => '',
+            'clientMessage' => '',
         ]);
 
         $this->assertDatabaseHas('projects', [
-            'team_id'                   => $team->id,
-            'name'                      => $projectName,
-            'client_notification_email' => '',
-            'client_notification_name'  => '',
+            'name'           => $name,
+            'notify_client'  => false,
+            'client_email'   => '',
+            'client_message' => '',
         ]);
     }
 
@@ -330,5 +222,44 @@ final class CreateProjectTest extends TestCase
     private function createComponents(int $count = 3): Collection
     {
         return Component::factory()->count($count)->forService()->create();
+    }
+
+    /**
+     * Create a project
+     *
+     * @param array $attributes
+     *
+     * @return Project
+     * @throws ValidationException
+     */
+    private function createProject(array $attributes = []): Project
+    {
+        $team = Team::factory()->create();
+
+        return (new CreateProject())->create(
+            $team->owner,
+            $this->makeAttributes($attributes)
+        );
+    }
+
+    /**
+     * Get an array of valid project attributes
+     *
+     * @param array $attributes
+     *
+     * @return array
+     */
+    private function makeAttributes(array $attributes = []): array
+    {
+        $defaults = [
+            'name'          => $this->faker->company,
+            'channels'      => ['email' => $this->faker->email],
+            'components'    => $this->createComponents()->pluck('id')->all(),
+            'notifyClient'  => $this->faker->boolean,
+            'clientEmail'   => $this->faker->email,
+            'clientMessage' => $this->faker->text,
+        ];
+
+        return array_merge($defaults, $attributes);
     }
 }

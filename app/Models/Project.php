@@ -15,10 +15,10 @@ class Project extends Model
 
     protected $fillable = [
         'name',
-        'client_notification_name',
-        'client_notification_email',
         'notification_email',
-        'should_notify_client',
+        'notify_client',
+        'client_email',
+        'client_message',
     ];
 
     protected $with = ['components'];

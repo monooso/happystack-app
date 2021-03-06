@@ -13,6 +13,8 @@ final class ProjectController extends Controller
     /**
      * Display a list of team projects
      *
+     * @param Request $request
+     *
      * @return Response
      */
     public function index(Request $request): Response
@@ -20,7 +22,7 @@ final class ProjectController extends Controller
         $team = $request->user()->currentTeam;
 
         return response()->view('projects.index', [
-            'projects' => $team->projects()->orderBy('name', 'asc')->get()
+            'projects' => $team->projects()->orderBy('name', 'asc')->get(),
         ]);
     }
 

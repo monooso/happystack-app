@@ -13,61 +13,40 @@ use Livewire\Component;
 
 final class CreateProjectForm extends Component
 {
-    /**
-     * The email to which we will send client notifications
-     *
-     * @var string
-     */
-    public string $clientNotificationEmail = '';
+    /** @var string $name The project name */
+    public string $name = '';
 
-    /**
-     * The client name, used in notification emails
-     *
-     * @var string
-     */
-    public string $clientNotificationName = '';
+    /** @var array $channels The notification channels */
+    public array $channels = [];
 
-    /**
-     * The email to which we will send notifications
-     *
-     * @var string
-     */
-    public string $notificationEmail = '';
+    /** @var array $components The components to monitor */
+    public array $components = [];
 
-    /**
-     * Whether we should notify the client of any issues
-     *
-     * @var bool
-     */
+    /** @var bool $notifyClient Whether we should notify the client */
     public bool $notifyClient = false;
 
-    /**
-     * The components to monitor
-     *
-     * @var array
-     */
-    public array $projectComponents = [];
+    /** @var string $clientEmail The client's email address */
+    public string $clientEmail = '';
 
-    /**
-     * The project name
-     *
-     * @var string
-     */
-    public string $projectName = '';
-
-    /**
-     * The available services
-     *
-     * @var Collection $services
-     */
-    public Collection $services;
+    /** @var string $clientMessage The message we will send to the client */
+    public string $clientMessage = '';
 
     /**
      * Initialise the available services
      */
     public function mount()
     {
-        $this->services = Service::with('components')->get()->sortBy('name');
+        $this->clientMessage = $this->clientMessage ?: (string) trans(
+            'app.client_notification',
+            ['sender_name' => Auth::user()->name]
+        );
+
+        $this->channels = $this->resetChannels($this->channels ?? []);
+    }
+
+    private function resetChannels(array $overrides): array
+    {
+        return array_merge(['email' => Auth::user()->email], $overrides);
     }
 
     /**
@@ -79,9 +58,11 @@ final class CreateProjectForm extends Component
      */
     public function selectedServiceComponents(Service $service): Collection
     {
-        $selectedComponentIds = array_values($this->projectComponents);
+        $selectedComponentIds = array_values($this->components);
 
-        return $service->components->filter(fn ($component) => in_array($component->id, $selectedComponentIds));
+        return $service->components->filter(
+            fn ($component) => in_array($component->id, $selectedComponentIds)
+        );
     }
 
     /**
@@ -96,22 +77,21 @@ final class CreateProjectForm extends Component
         $this->resetErrorBag();
 
         $creator->create(Auth::user(), [
-            'clientNotificationEmail' => $this->clientNotificationEmail,
-            'clientNotificationName'  => $this->clientNotificationName,
-            'notificationEmail'       => $this->notificationEmail,
-            'notifyClient'            => $this->notifyClient,
-            'projectComponents'       => $this->projectComponents,
-            'projectName'             => $this->projectName,
+            'name'          => $this->name,
+            'components'    => $this->components,
+            'channels'      => $this->channels,
+            'notifyClient'  => $this->notifyClient,
+            'clientEmail'   => $this->clientEmail,
+            'clientMessage' => $this->clientMessage,
         ]);
 
-        return redirect()->route('projects.index');
+        return redirect()->route('dashboard');
     }
 
-    /**
-     * Render the component
-     */
     public function render()
     {
-        return view('projects.create-project-form', ['services' => $this->services]);
+        return view('projects.create-project-form', [
+            'services' => Service::with('components')->get()->sortBy('name'),
+        ]);
     }
 }
