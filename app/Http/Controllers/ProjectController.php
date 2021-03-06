@@ -19,7 +19,9 @@ final class ProjectController extends Controller
     {
         $team = $request->user()->currentTeam;
 
-        return response()->view('projects.index', ['projects' => $team->projects]);
+        return response()->view('projects.index', [
+            'projects' => $team->projects()->orderBy('name', 'asc')->get()
+        ]);
     }
 
     /**

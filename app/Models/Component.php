@@ -14,6 +14,8 @@ class Component extends Model
 
     protected $fillable = ['current_status', 'handle', 'name'];
 
+    protected $touches = ['projects'];
+
     /**
      * Get the projects which are monitoring this component
      *
