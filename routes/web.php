@@ -3,7 +3,9 @@
 use App\Http\Controllers\ProjectController;
 use App\Jobs\AwsS3\FetchUsEast1Status;
 use App\Jobs\Mailgun\FetchSmtpStatus;
+use App\Mail\AgencyComponentStatusChanged;
 use App\Models\Component;
+use App\Models\Project;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,6 +21,16 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::get('/agency-mail', function () {
+    /** @var Project $project */
+    $project = Project::query()->inRandomOrder()->first();
+
+    /** @var Component $component */
+    $component = $project->components()->first();
+
+    return new AgencyComponentStatusChanged($project, $component);
 });
 
 Route::get('/update-status/aws-s3/us-east-1', function () {

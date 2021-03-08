@@ -6,6 +6,7 @@ namespace Database\Factories;
 
 use App\Constants\Status;
 use App\Models\Component;
+use App\Models\Service;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 final class ComponentFactory extends Factory
@@ -15,6 +16,7 @@ final class ComponentFactory extends Factory
     public function definition()
     {
         return [
+            'service_id'     => Service::factory(),
             'handle'         => $this->faker->unique()->slug,
             'name'           => $this->faker->unique()->words(3, true),
             'current_status' => $this->faker->randomElement(Status::all()),
