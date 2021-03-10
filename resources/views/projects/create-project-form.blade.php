@@ -73,8 +73,8 @@
             <x-slot name="content">
                 <x-section-content>
                     <x-jet-label class="block" for="channels.email" value="{{ __('Who should we email if there’s a problem?') }}"/>
-                    <x-jet-input class="block mt-2 w-full" id="channels.email" type="email" placeholder="alert@domain.com" wire:model.defer="channels.email"/>
-                    <x-jet-input-error for="channels.email" class="mt-2"/>
+                    <x-jet-input class="block mt-2 w-full" id="agencyChannels.email.route" type="email" placeholder="alert@domain.com" wire:model.defer="agencyChannels.email.route"/>
+                    <x-jet-input-error for="agencyChannels.email.route" class="mt-2"/>
                 </x-section-content>
             </x-slot>
         </x-jet-action-section>
@@ -85,7 +85,7 @@
     <div class="mt-10 sm:mt-0">
         <x-jet-action-section>
             <x-slot name="title">{{ __('Client notifications') }}</x-slot>
-            <x-slot name="description">{{ __('Control whether we notify your client when there’s a problem.') }}</x-slot>
+            <x-slot name="description">{{ __('Control how we notify your client when there’s a problem.') }}</x-slot>
 
             <x-slot name="content">
                 <x-section-content>
@@ -98,29 +98,29 @@
 
                             <div class="flex items-center justify-start space-x-8">
                                 <label class="flex items-center select-none">
-                                    <input name="notify_client" type="radio" value="1" wire:model="notifyClient"/>
+                                    <input name="emailClient" type="radio" value="{{ \App\Constants\ToggleValue::ENABLED }}" wire:model="clientChannels.email.enabled"/>
                                     <span class="block ml-1">{{ __('Yes') }}</span>
                                 </label>
 
                                 <label class="flex items-center select-none">
-                                    <input name="notify_client" type="radio" value="0" wire:model="notifyClient"/>
+                                    <input name="emailClient" type="radio" value="{{ \App\Constants\ToggleValue::DISABLED }}" wire:model="clientChannels.email.enabled"/>
                                     <span class="block ml-1">{{ __('No') }}</span>
                                 </label>
                             </div>
                         </fieldset>
 
-                        @if ($notifyClient)
+                        @if ($this->clientEmailNotificationsEnabled)
                             <div class="mt-8 space-y-6">
                                 <div class="mt-4">
-                                    <x-jet-label class="block" for="client_email" value="{{ __('What is your client’s email address?') }}"/>
-                                    <x-jet-input class="block mt-2 w-full" id="client_email" type="email" placeholder="john@bigcorp.com" wire:model.defer="clientEmail"/>
-                                    <x-jet-input-error for="client_email" class="mt-2"/>
+                                    <x-jet-label class="block" for="clientEmailRoute" value="{{ __('What is your client’s email address?') }}"/>
+                                    <x-jet-input class="block mt-2 w-full" id="clientEmailRoute" type="email" placeholder="john@bigcorp.com" wire:model.defer="clientChannels.email.route"/>
+                                    <x-jet-input-error for="clientChannels.email.route" class="mt-2"/>
                                 </div>
 
                                 <div>
-                                    <x-jet-label class="block" for="client_message" value="{{ __('What would you like us to say?') }}"/>
-                                    <x-textarea class="mt-2" id="client_message" wire:model.defer="clientMessage"></x-textarea>
-                                    <x-jet-input-error for="client_message" class="mt-2"/>
+                                    <x-jet-label class="block" for="clientEmailMessage" value="{{ __('What would you like us to say?') }}"/>
+                                    <x-textarea class="mt-2" id="clientEmailMessage" wire:model.defer="clientChannels.email.message"></x-textarea>
+                                    <x-jet-input-error for="clientChannels.email.message" class="mt-2"/>
                                 </div>
                             </div>
                         @endif

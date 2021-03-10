@@ -13,10 +13,6 @@ class CreateProjectsTable extends Migration
             $table->id();
             $table->foreignIdFor(Team::class)->constrained();
             $table->string('name');
-            $table->string('notification_email');
-            $table->boolean('notify_client');
-            $table->string('client_email')->nullable();
-            $table->text('client_message')->nullable();
             $table->timestamps();
         });
     }

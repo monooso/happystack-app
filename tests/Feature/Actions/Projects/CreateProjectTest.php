@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Tests\Feature\Actions\Projects;
 
 use App\Actions\Projects\CreateProject;
+use App\Constants\NotificationChannel;
+use App\Constants\ToggleValue;
 use App\Models\Component;
 use App\Models\Project;
 use App\Models\Team;
@@ -26,12 +28,7 @@ final class CreateProjectTest extends TestCase
 
         $this->createProject($attributes);
 
-        $this->assertDatabaseHas('projects', [
-            'name'           => $attributes['name'],
-            'notify_client'  => $attributes['notifyClient'],
-            'client_email'   => $attributes['clientEmail'],
-            'client_message' => $attributes['clientMessage'],
-        ]);
+        $this->assertDatabaseHas('projects', ['name' => $attributes['name']]);
     }
 
     /** @test */
@@ -61,6 +58,36 @@ final class CreateProjectTest extends TestCase
     }
 
     /** @test */
+    public function itCreatesTheAgencyEmailChannel()
+    {
+        $attributes = $this->makeAttributes();
+
+        $project = $this->createProject($attributes);
+
+        $this->assertDatabaseHas('agency_channels', [
+            'project_id' => $project->id,
+            'type'       => NotificationChannel::EMAIL,
+            'route'      => $attributes['agencyChannels']['email']['route'],
+        ]);
+    }
+
+    /** @test */
+    public function itCreatesTheClientEmailChannel()
+    {
+        $attributes = $this->makeAttributes();
+        $attributes['clientChannels']['email']['enabled'] = ToggleValue::ENABLED;
+
+        $project = $this->createProject($attributes);
+
+        $this->assertDatabaseHas('client_channels', [
+            'project_id' => $project->id,
+            'type'       => NotificationChannel::EMAIL,
+            'route'      => $attributes['clientChannels']['email']['route'],
+            'message'    => $attributes['clientChannels']['email']['message'],
+        ]);
+    }
+
+    /** @test */
     public function itThrowsAValidationErrorIfTheProjectNameIsEmpty(): void
     {
         try {
@@ -81,36 +108,142 @@ final class CreateProjectTest extends TestCase
     }
 
     /** @test */
-    public function itThrowsAValidationErrorIfTheNotificationEmailIsMissing(): void
+    public function itThrowsAValidationErrorIfTheAgencyEmailChannelRouteIsMissing(): void
     {
+        $attributes = $this->makeAttributes();
+        $attributes['agencyChannels']['email']['enabled'] = ToggleValue::ENABLED;
+        $attributes['agencyChannels']['email']['route'] = null;
+
         try {
-            $this->createProject(['channels' => null]);
+            $this->createProject($attributes);
         } catch (ValidationException $e) {
-            $this->assertTrue($e->validator->getMessageBag()->has('channels.email'));
+            $this->assertTrue($e->validator->getMessageBag()->has('agencyChannels.email.route'));
         }
     }
 
     /** @test */
-    public function itThrowsAValidationErrorIfTheNotificationEmailIsInvalid(): void
+    public function itThrowsAValidationErrorIfTheAgencyEmailChannelRouteIsInvalid(): void
     {
-        $team = Team::factory()->create();
+        $attributes = $this->makeAttributes();
+        $attributes['agencyChannels']['email']['enabled'] = ToggleValue::ENABLED;
+        $attributes['agencyChannels']['email']['route'] = 'not-a-email';
 
         try {
-            $this->createProject(['channels' => ['email' => $this->faker->word]]);
+            $this->createProject($attributes);
         } catch (ValidationException $e) {
-            $this->assertTrue($e->validator->getMessageBag()->has('channels.email'));
+            $this->assertTrue($e->validator->getMessageBag()->has('agencyChannels.email.route'));
         }
     }
 
     /** @test */
-    public function itThrowsAValidationErrorIfTheNotificationEmailIsTooLong(): void
+    public function itThrowsAValidationErrorIfTheAgencyEmailChannelRouteIsTooLong(): void
     {
+        $attributes = $this->makeAttributes();
+        $attributes['agencyChannels']['email']['enabled'] = ToggleValue::ENABLED;
+        $attributes['agencyChannels']['email']['route'] = str_repeat('x', 255) . '@example.com';
+
         try {
-            $email = str_repeat('x', 256) . '@example.com';
-            $this->createProject(['channels' => ['email' => $email]]);
+            $this->createProject($attributes);
         } catch (ValidationException $e) {
-            $this->assertTrue($e->validator->getMessageBag()->has('channels.email'));
+            $this->assertTrue($e->validator->getMessageBag()->has('agencyChannels.email.route'));
         }
+    }
+
+    /** @test */
+    public function itAllowsEmptyAgencyEmailChannelDetailsIfEmailNotificationsAreDisabled(): void
+    {
+        $attributes = $this->makeAttributes();
+        $attributes['agencyChannels']['email']['enabled'] = ToggleValue::DISABLED;
+        $attributes['agencyChannels']['email']['route'] = '';
+
+        $project = $this->createProject($attributes);
+
+        $this->assertDatabaseHas('projects', ['name' => $attributes['name']]);
+        $this->assertDatabaseMissing('agency_channels', ['project_id' => $project->id]);
+    }
+
+    /** @test */
+    public function itThrowsAValidationErrorIfTheClientEmailChannelRouteIsMissing(): void
+    {
+        $attributes = $this->makeAttributes();
+        $attributes['clientChannels']['email']['enabled'] = ToggleValue::ENABLED;
+        $attributes['clientChannels']['email']['route'] = null;
+
+        try {
+            $this->createProject($attributes);
+        } catch (ValidationException $e) {
+            $this->assertTrue($e->validator->getMessageBag()->has('clientChannels.email.route'));
+        }
+    }
+
+    /** @test */
+    public function itThrowsAValidationErrorIfTheClientEmailChannelRouteIsInvalid(): void
+    {
+        $attributes = $this->makeAttributes();
+        $attributes['clientChannels']['email']['enabled'] = ToggleValue::ENABLED;
+        $attributes['clientChannels']['email']['route'] = 'not-an-email';
+
+        try {
+            $this->createProject($attributes);
+        } catch (ValidationException $e) {
+            $this->assertTrue($e->validator->getMessageBag()->has('clientChannels.email.route'));
+        }
+    }
+
+    /** @test */
+    public function itThrowsAValidationErrorIfTheClientEmailChannelRouteIsTooLong(): void
+    {
+        $attributes = $this->makeAttributes();
+        $attributes['clientChannels']['email']['enabled'] = ToggleValue::ENABLED;
+        $attributes['clientChannels']['email']['route'] = str_repeat('x', 256) . '@example.com';
+
+        try {
+            $this->createProject($attributes);
+        } catch (ValidationException $e) {
+            $this->assertTrue($e->validator->getMessageBag()->has('clientChannels.email.route'));
+        }
+    }
+
+    /** @test */
+    public function itThrowsAValidationErrorIfTheClientEmailChannelMessageIsMissing(): void
+    {
+        $attributes = $this->makeAttributes();
+        $attributes['clientChannels']['email']['enabled'] = ToggleValue::ENABLED;
+        $attributes['clientChannels']['email']['message'] = null;
+
+        try {
+            $this->createProject($attributes);
+        } catch (ValidationException $e) {
+            $this->assertTrue($e->validator->getMessageBag()->has('clientChannels.email.message'));
+        }
+    }
+
+    /** @test */
+    public function itThrowsAValidationErrorIfTheClientEmailChannelMessageIsTooLong(): void
+    {
+        $attributes = $this->makeAttributes();
+        $attributes['clientChannels']['email']['enabled'] = ToggleValue::ENABLED;
+        $attributes['clientChannels']['email']['message'] = str_repeat('x', 60001);
+
+        try {
+            $this->createProject($attributes);
+        } catch (ValidationException $e) {
+            $this->assertTrue($e->validator->getMessageBag()->has('clientChannels.email.message'));
+        }
+    }
+
+    /** @test */
+    public function itAllowsEmptyClientEmailChannelDetailsIfEmailNotificationsAreDisabled(): void
+    {
+        $attributes = $this->makeAttributes();
+        $attributes['clientChannels']['email']['enabled'] = ToggleValue::DISABLED;
+        $attributes['clientChannels']['email']['route'] = '';
+        $attributes['clientChannels']['email']['message'] = '';
+
+        $project = $this->createProject($attributes);
+
+        $this->assertDatabaseHas('projects', ['name' => $attributes['name']]);
+        $this->assertDatabaseMissing('client_channels', ['project_id' => $project->id]);
     }
 
     /** @test */
@@ -131,85 +264,6 @@ final class CreateProjectTest extends TestCase
         } catch (ValidationException $e) {
             $this->assertTrue($e->validator->getMessageBag()->has('components.0'));
         }
-    }
-
-    /** @test */
-    public function itThrowsAValidationErrorIfNotifyClientIsTrueAndTheClientEmailIsMissing()
-    {
-        try {
-            $this->createProject(['notifyClient' => true, 'clientEmail' => null]);
-        } catch (ValidationException $e) {
-            $this->assertTrue($e->validator->getMessageBag()->has('clientEmail'));
-        }
-    }
-
-    /** @test */
-    public function itThrowsAValidationErrorIfNotifyClientIsTrueAndTheClientEmailIsInvalid()
-    {
-        try {
-            $this->createProject([
-                'notifyClient' => true,
-                'clientEmail'  => $this->faker->word,
-            ]);
-        } catch (ValidationException $e) {
-            $this->assertTrue($e->validator->getMessageBag()->has('clientEmail'));
-        }
-    }
-
-    /** @test */
-    public function itThrowsAValidationErrorIfNotifyClientIsTrueAndTheClientEmailIsTooLong()
-    {
-        try {
-            $this->createProject([
-                'notifyClient' => true,
-                'clientEmail'  => str_repeat('x', 256) . '@example.com',
-            ]);
-        } catch (ValidationException $e) {
-            $this->assertTrue($e->validator->getMessageBag()->has('clientEmail'));
-        }
-    }
-
-    /** @test */
-    public function itThrowsAValidationErrorIfNotifyClientIsTrueAndTheClientMessageIsMissing()
-    {
-        try {
-            $this->createProject(['notifyClient' => true, 'clientMessage' => null]);
-        } catch (ValidationException $e) {
-            $this->assertTrue($e->validator->getMessageBag()->has('clientMessage'));
-        }
-    }
-
-    /** @test */
-    public function itThrowsAValidationErrorIfNotifyClientIsTrueAndTheClientMessageIsTooLong()
-    {
-        try {
-            $this->createProject([
-                'notifyClient'  => true,
-                'clientMessage' => str_repeat('x', 70000),
-            ]);
-        } catch (ValidationException $e) {
-            $this->assertTrue($e->validator->getMessageBag()->has('clientMessage'));
-        }
-    }
-
-    /** @test */
-    public function itAllowsEmptyClientDetailsIfNotifyClientIsFalse()
-    {
-        $name = $this->faker->company;
-
-        $this->createProject([
-            'name'          => $name,
-            'notifyClient'  => false,
-            'clientEmail'   => '',
-            'clientMessage' => '',
-        ]);
-
-        $this->assertDatabaseHas('projects', [
-            'name'           => $name,
-            'notify_client'  => false,
-            'client_email'   => '',
-            'client_message' => '',
-        ]);
     }
 
     /**
@@ -252,12 +306,21 @@ final class CreateProjectTest extends TestCase
     private function makeAttributes(array $attributes = []): array
     {
         $defaults = [
-            'name'          => $this->faker->company,
-            'channels'      => ['email' => $this->faker->email],
-            'components'    => $this->createComponents()->pluck('id')->all(),
-            'notifyClient'  => $this->faker->boolean,
-            'clientEmail'   => $this->faker->email,
-            'clientMessage' => $this->faker->text,
+            'name'           => $this->faker->company,
+            'components'     => $this->createComponents()->pluck('id')->all(),
+            'agencyChannels' => [
+                'email' => [
+                    'enabled' => ToggleValue::ENABLED,
+                    'route'   => $this->faker->email,
+                ],
+            ],
+            'clientChannels' => [
+                'email' => [
+                    'enabled' => $this->faker->randomElement(ToggleValue::all()),
+                    'route'   => $this->faker->email,
+                    'message' => $this->faker->text,
+                ],
+            ],
         ];
 
         return array_merge($defaults, $attributes);

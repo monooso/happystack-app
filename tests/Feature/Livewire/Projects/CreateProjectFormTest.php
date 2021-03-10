@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Livewire\Projects;
 
+use App\Constants\ToggleValue;
 use App\Contracts\CreatesProjects;
 use App\Http\Livewire\Projects\CreateProjectForm;
 use App\Models\Project;
@@ -26,12 +27,18 @@ final class CreateProjectFormTest extends TestCase
         $this->actingAs($user);
 
         $expected = [
-            'name'          => $this->faker->company,
-            'channels'      => ['email' => $this->faker->email],
-            'components'    => [$this->faker->randomNumber()],
-            'notifyClient'  => $this->faker->boolean,
-            'clientEmail'   => $this->faker->email,
-            'clientMessage' => $this->faker->text,
+            'name'           => $this->faker->company,
+            'agencyChannels' => [
+                'email' => ['enabled' => true, 'route' => $this->faker->email],
+            ],
+            'clientChannels' => [
+                'email' => [
+                    'enabled' => $this->faker->randomElement(ToggleValue::all()),
+                    'route'   => $this->faker->email,
+                    'message' => $this->faker->text,
+                ],
+            ],
+            'components' => [$this->faker->randomNumber()],
         ];
 
         $action = $this->mock(CreatesProjects::class);
@@ -44,11 +51,9 @@ final class CreateProjectFormTest extends TestCase
 
         return Livewire::test(CreateProjectForm::class)
             ->set('name', $expected['name'])
-            ->set('channels', $expected['channels'])
+            ->set('agencyChannels', $expected['agencyChannels'])
+            ->set('clientChannels', $expected['clientChannels'])
             ->set('components', $expected['components'])
-            ->set('notifyClient', $expected['notifyClient'])
-            ->set('clientEmail', $expected['clientEmail'])
-            ->set('clientMessage', $expected['clientMessage'])
             ->call('create', $action);
     }
 }
