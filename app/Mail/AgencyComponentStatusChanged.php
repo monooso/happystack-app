@@ -16,8 +16,8 @@ final class AgencyComponentStatusChanged extends Mailable
     use SerializesModels;
 
     public function __construct(
-        private Project $project,
-        private Component $component
+        public Project $project,
+        public Component $component
     ) {
     }
 
