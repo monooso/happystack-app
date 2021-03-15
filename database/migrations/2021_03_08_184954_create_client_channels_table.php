@@ -17,6 +17,7 @@ final class CreateClientChannelsTable extends Migration
             $table->string('type');
             $table->string('route');
             $table->text('message');
+            $table->timestamp('last_notified_at')->nullable();
             $table->timestamps();
         });
     }

@@ -15,10 +15,11 @@ final class ClientChannelFactory extends Factory
     public function definition()
     {
         return [
-            'project_id' => Project::factory(),
-            'type'       => 'mail',
-            'route'      => $this->faker->email,
-            'message'    => $this->faker->realText(),
+            'project_id'       => Project::factory(),
+            'type'             => 'mail',
+            'route'            => $this->faker->email,
+            'message'          => $this->faker->realText(),
+            'last_notified_at' => null,
         ];
     }
 }
