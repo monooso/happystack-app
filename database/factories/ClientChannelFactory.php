@@ -18,6 +18,7 @@ final class ClientChannelFactory extends Factory
             'project_id' => Project::factory(),
             'type'       => 'mail',
             'route'      => $this->faker->email,
+            'message'    => $this->faker->realText(),
         ];
     }
 }

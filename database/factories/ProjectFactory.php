@@ -15,12 +15,8 @@ final class ProjectFactory extends Factory
     public function definition()
     {
         return [
-            'team_id'            => Team::factory(),
-            'name'               => $this->faker->company,
-            'notification_email' => $this->faker->email,
-            'notify_client'      => $this->faker->boolean,
-            'client_email'       => $this->faker->email,
-            'client_message'     => $this->faker->sentences(3, asText: true),
+            'team_id' => Team::factory(),
+            'name'    => $this->faker->company,
         ];
     }
 }

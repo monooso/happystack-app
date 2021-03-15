@@ -6,70 +6,71 @@ namespace Tests\Feature\Listeners;
 
 use App\Events\StatusUpdated;
 use App\Listeners\SendAgencyNotifications;
-use App\Mail\AgencyComponentStatusChanged;
+use App\Models\AgencyChannel;
+use App\Models\ClientChannel;
 use App\Models\Component;
 use App\Models\Project;
+use App\Notifications\AgencyComponentStatusChanged;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Notifications\AnonymousNotifiable;
+use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
 final class SendAgencyNotificationsTest extends TestCase
 {
     use RefreshDatabase;
+    use WithFaker;
 
     /** @test */
     public function itSendsAnEmailForEachAffectedProject()
     {
-        Mail::fake();
+        Notification::fake();
 
         $component = Component::factory()->create();
-        Project::factory()->count(3)->hasAttached($component)->create();
+
+        Project::factory()->count(3)
+            ->has(AgencyChannel::factory())
+            ->hasAttached($component)
+            ->create();
 
         (new SendAgencyNotifications())->handle(new StatusUpdated($component));
 
-        Mail::assertSent(AgencyComponentStatusChanged::class, 3);
-    }
-
-    /** @test */
-    public function itSendsTheEmailToTheProjectNotificationEmail()
-    {
-        Mail::fake();
-
-        $component = Component::factory()->create();
-        $project = Project::factory()->hasAttached($component)->create();
-
-        (new SendAgencyNotifications())->handle(new StatusUpdated($component));
-
-        Mail::assertSent(
+        Notification::assertSentToTimes(
+            new AnonymousNotifiable(),
             AgencyComponentStatusChanged::class,
-            fn ($mail) => $mail->hasTo($project->notification_email)
+            3
         );
     }
 
     /** @test */
-    public function eachEmailHasASingleRecipient()
+    public function itSendsTheEmailToTheAgencyChannel()
     {
-        Mail::fake();
+        Notification::fake();
+
+        $address = $this->faker->unique()->email;
+        $herring = $this->faker->unique()->email;
 
         $component = Component::factory()->create();
-        $projects = Project::factory()->count(2)->hasAttached($component)->create();
+
+        Project::factory()
+            ->has(AgencyChannel::factory(['type' => 'mail', 'route' => $address]))
+            ->has(ClientChannel::factory(['type' => 'mail', 'route' => $herring]))
+            ->hasAttached($component)
+            ->create();
 
         (new SendAgencyNotifications())->handle(new StatusUpdated($component));
 
-        Mail::assertSent(
+        Notification::assertSentTo(
+            new AnonymousNotifiable(),
             AgencyComponentStatusChanged::class,
-            function ($mail) use ($projects) {
-                return $mail->hasTo($projects[0]->notification_email)
-                    && !$mail->hasTo($projects[1]->notification_email);
-            }
+            fn ($a, $b, $notifiable) => $notifiable->routes['mail'] === $address
         );
 
-        Mail::assertSent(
+        Notification::assertNotSentTo(
+            new AnonymousNotifiable(),
             AgencyComponentStatusChanged::class,
-            function ($mail) use ($projects) {
-                return $mail->hasTo($projects[1]->notification_email)
-                    && !$mail->hasTo($projects[0]->notification_email);
-            }
+            fn ($a, $b, $notifiable) => $notifiable->routes['mail'] === $herring
         );
     }
 }

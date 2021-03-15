@@ -5,20 +5,38 @@ declare(strict_types=1);
 namespace App\Listeners;
 
 use App\Events\StatusUpdated;
-use App\Mail\AgencyComponentStatusChanged;
-use Illuminate\Support\Facades\Mail;
+use App\Models\Project;
+use App\Notifications\AgencyComponentStatusChanged;
+use Illuminate\Notifications\AnonymousNotifiable;
 
 final class SendAgencyNotifications
 {
     public function handle(StatusUpdated $event): void
     {
         $component = $event->component;
+        $projects = $component->projects()->with('agencyChannels')->get();
 
-        $projects = $component->projects()->get();
-
+        /** @var Project $project */
         foreach ($projects as $project) {
-            $mailable = new AgencyComponentStatusChanged($project, $component);
-            Mail::to($project->notification_email)->send($mailable);
+            $channels = $project->agencyChannels()->get();
+
+            if ($channels->count() === 0) {
+                continue;
+            }
+
+            /** @var AnonymousNotifiable $notifiable */
+            $notifiable = $channels->reduce(
+                fn ($notifiable, $channel) => $notifiable->route(
+                    $channel->type,
+                    $channel->route
+                ),
+                new AnonymousNotifiable()
+            );
+
+            $notifiable->notify(new AgencyComponentStatusChanged(
+                $project,
+                $component
+            ));
         }
     }
 }
