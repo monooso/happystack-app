@@ -6,5 +6,5 @@ namespace App\Constants;
 
 abstract class NotificationChannel
 {
-    public const EMAIL = 'email';
+    public const MAIL = 'mail';
 }

@@ -115,7 +115,7 @@ final class CreateProject implements CreatesProjects
 
         if ($agencyEmail['enabled'] === ToggleValue::ENABLED) {
             $project->agencyChannels()->create([
-                'type'  => NotificationChannel::EMAIL,
+                'type'  => NotificationChannel::MAIL,
                 'route' => $agencyEmail['route'],
             ]);
         }
@@ -133,7 +133,7 @@ final class CreateProject implements CreatesProjects
 
         if ($clientEmail['enabled'] === ToggleValue::ENABLED) {
             $project->clientChannels()->create([
-                'type'    => NotificationChannel::EMAIL,
+                'type'    => NotificationChannel::MAIL,
                 'route'   => $clientEmail['route'],
                 'message' => $clientEmail['message'],
             ]);

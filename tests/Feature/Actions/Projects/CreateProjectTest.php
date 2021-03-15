@@ -66,7 +66,7 @@ final class CreateProjectTest extends TestCase
 
         $this->assertDatabaseHas('agency_channels', [
             'project_id' => $project->id,
-            'type'       => NotificationChannel::EMAIL,
+            'type'       => NotificationChannel::MAIL,
             'route'      => $attributes['agencyChannels']['email']['route'],
         ]);
     }
@@ -81,7 +81,7 @@ final class CreateProjectTest extends TestCase
 
         $this->assertDatabaseHas('client_channels', [
             'project_id' => $project->id,
-            'type'       => NotificationChannel::EMAIL,
+            'type'       => NotificationChannel::MAIL,
             'route'      => $attributes['clientChannels']['email']['route'],
             'message'    => $attributes['clientChannels']['email']['message'],
         ]);

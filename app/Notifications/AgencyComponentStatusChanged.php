@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Constants\NotificationChannel;
 use App\Mail\AgencyComponentStatusChanged as Mailable;
 use App\Models\Component;
 use App\Models\Project;
@@ -22,7 +23,7 @@ class AgencyComponentStatusChanged extends Notification implements ShouldQueue
 
     public function toMail(AnonymousNotifiable $notifiable): Mailable
     {
-        $address = $notifiable->routeNotificationFor('mail');
+        $address = $notifiable->routeNotificationFor(NotificationChannel::MAIL);
 
         return (new Mailable($this->project, $this->component))
             ->subject('Happy Stack Status Alert')
@@ -31,6 +32,6 @@ class AgencyComponentStatusChanged extends Notification implements ShouldQueue
 
     public function via(): array
     {
-        return ['mail'];
+        return [NotificationChannel::MAIL];
     }
 }
