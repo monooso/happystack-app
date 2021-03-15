@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
-use App\Models\AgencyChannel;
+use App\Models\Agency;
 use App\Models\Project;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-final class AgencyChannelFactory extends Factory
+final class AgencyFactory extends Factory
 {
-    protected $model = AgencyChannel::class;
+    protected $model = Agency::class;
 
     public function definition()
     {
         return [
             'project_id' => Project::factory(),
-            'type'       => 'mail',
-            'route'      => $this->faker->email,
+            'via_mail'   => $this->faker->boolean,
+            'mail_route' => $this->faker->email,
         ];
     }
 }

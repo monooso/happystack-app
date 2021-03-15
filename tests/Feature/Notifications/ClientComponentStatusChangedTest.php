@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Notifications;
 
-use App\Models\ClientChannel;
+use App\Constants\NotificationChannel;
+use App\Models\Client;
 use App\Models\Component;
 use App\Models\Project;
 use App\Notifications\ClientComponentStatusChanged;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Notifications\AnonymousNotifiable;
+use Illuminate\Support\Carbon;
 use Tests\TestCase;
 
 final class ClientComponentStatusChangedTest extends TestCase
@@ -21,16 +22,9 @@ final class ClientComponentStatusChangedTest extends TestCase
     /** @test */
     public function toMailSetsTheSubject()
     {
-        $mail = $this->faker->email;
         $component = Component::factory()->create();
-
-        $project = Project::factory()
-            ->has(ClientChannel::factory(['type' => 'mail', 'route' => $mail]))
-            ->hasAttached($component)
-            ->create();
-
-        $notifiable = new AnonymousNotifiable();
-        $notifiable->routes = ['mail' => $this->faker->email];
+        $project = Project::factory()->hasAttached($component)->create();
+        $notifiable = Client::factory()->for($project)->create();
 
         $mailable = (new ClientComponentStatusChanged(
             $project,
@@ -41,45 +35,16 @@ final class ClientComponentStatusChangedTest extends TestCase
     }
 
     /** @test */
-    public function toMailSetsTheRecipient()
-    {
-        $mail = $this->faker->email;
-        $component = Component::factory()->create();
-
-        $project = Project::factory()
-            ->has(ClientChannel::factory(['type' => 'mail', 'route' => $mail]))
-            ->hasAttached($component)
-            ->create();
-
-        $notifiable = new AnonymousNotifiable();
-        $notifiable->routes = ['mail' => $mail];
-
-        $mailable = (new ClientComponentStatusChanged(
-            $project,
-            $component
-        ))->toMail($notifiable);
-
-        $this->assertTrue($mailable->hasTo($mail));
-    }
-
-    /** @test */
     public function toMailSetsTheMessageText()
     {
-        $mail = $this->faker->email;
         $message = $this->faker->realText();
+
         $component = Component::factory()->create();
+        $project = Project::factory()->hasAttached($component)->create();
 
-        $project = Project::factory()
-            ->has(ClientChannel::factory([
-                'type'    => 'mail',
-                'route'   => $mail,
-                'message' => $message,
-            ]))
-            ->hasAttached($component)
-            ->create();
-
-        $notifiable = new AnonymousNotifiable();
-        $notifiable->routes = ['mail' => $mail];
+        $notifiable = Client::factory()->for($project)->create([
+            'mail_message' => $message,
+        ]);
 
         $mailable = (new ClientComponentStatusChanged(
             $project,
@@ -87,5 +52,61 @@ final class ClientComponentStatusChangedTest extends TestCase
         ))->toMail($notifiable);
 
         $mailable->assertSeeInText($message);
+    }
+
+    /** @test */
+    public function viaReturnsAnEmptyArrayIfCanBeNotifiedIsFalse()
+    {
+        $project = Project::factory()->make();
+        $component = Component::factory()->make();
+
+        $notifiable = Client::factory()->make([
+            'last_notified_at' => Carbon::now(),
+        ]);
+
+        $result = (new ClientComponentStatusChanged(
+            $project,
+            $component
+        ))->via($notifiable);
+
+        $this->assertSame([], $result);
+    }
+
+    /** @test */
+    public function viaReturnsAnEmptyArrayIfViaMailIsFalse()
+    {
+        $project = Project::factory()->make();
+        $component = Component::factory()->make();
+
+        $notifiable = Client::factory()->make([
+            'last_notified_at' => null,
+            'via_mail'         => false,
+        ]);
+
+        $result = (new ClientComponentStatusChanged(
+            $project,
+            $component
+        ))->via($notifiable);
+
+        $this->assertSame([], $result);
+    }
+
+    /** @test */
+    public function viaReturnsAnArrayContainingMailIfViaMailIsTrue()
+    {
+        $project = Project::factory()->make();
+        $component = Component::factory()->make();
+
+        $notifiable = Client::factory()->make([
+            'last_notified_at' => null,
+            'via_mail'         => true,
+        ]);
+
+        $result = (new ClientComponentStatusChanged(
+            $project,
+            $component
+        ))->via($notifiable);
+
+        $this->assertSame([NotificationChannel::MAIL], $result);
     }
 }

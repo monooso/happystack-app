@@ -8,8 +8,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
+/**
+ * Project
+ *
+ * @package App\Models
+ *
+ * @property-read Agency $agency
+ * @property-read Client $client
+ */
 class Project extends Model
 {
     use HasFactory;
@@ -19,23 +27,23 @@ class Project extends Model
     protected $with = ['components'];
 
     /**
-     * Get the agency notification channels for this project
+     * Get the project agency
      *
-     * @return HasMany
+     * @return HasOne
      */
-    public function agencyChannels(): HasMany
+    public function agency(): HasOne
     {
-        return $this->hasMany(AgencyChannel::class);
+        return $this->hasOne(Agency::class);
     }
 
     /**
-     * Get the client notification channels for this project
+     * Get the project client
      *
-     * @return HasMany
+     * @return HasOne
      */
-    public function clientChannels(): HasMany
+    public function client(): HasOne
     {
-        return $this->hasMany(ClientChannel::class);
+        return $this->hasOne(Client::class);
     }
 
     /**

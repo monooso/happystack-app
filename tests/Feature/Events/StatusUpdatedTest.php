@@ -6,15 +6,14 @@ namespace Tests\Feature\Events;
 
 use App\Constants\Status;
 use App\Events\StatusUpdated;
-use App\Models\AgencyChannel;
-use App\Models\ClientChannel;
+use App\Models\Agency;
+use App\Models\Client;
 use App\Models\Component;
 use App\Models\Project;
 use App\Notifications\AgencyComponentStatusChanged;
 use App\Notifications\ClientComponentStatusChanged;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Notifications\AnonymousNotifiable;
 use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
@@ -28,22 +27,13 @@ final class StatusUpdatedTest extends TestCase
     {
         Notification::fake();
 
-        $mail = $this->faker->unique()->email;
-
         $component = Component::factory()->create();
-
-        Project::factory()
-            ->has(AgencyChannel::factory(['type' => 'mail', 'route' => $mail]))
-            ->hasAttached($component)
-            ->create();
+        $project = Project::factory()->hasAttached($component)->create();
+        $agency = Agency::factory()->for($project)->create();
 
         StatusUpdated::dispatch($component);
 
-        Notification::assertSentTo(
-            new AnonymousNotifiable(),
-            AgencyComponentStatusChanged::class,
-            fn ($a, $b, $notifiable) => $notifiable->routes['mail'] === $mail
-        );
+        Notification::assertSentTo($agency, AgencyComponentStatusChanged::class);
     }
 
     /** @test */
@@ -51,23 +41,15 @@ final class StatusUpdatedTest extends TestCase
     {
         Notification::fake();
 
-        $mail = $this->faker->unique()->email;
-
         $component = Component::factory()->create([
             'current_status' => Status::DOWN,
         ]);
 
-        Project::factory()
-            ->has(ClientChannel::factory(['type' => 'mail', 'route' => $mail]))
-            ->hasAttached($component)
-            ->create();
+        $project = Project::factory()->hasAttached($component)->create();
+        $client = Client::factory()->for($project)->create();
 
         StatusUpdated::dispatch($component);
 
-        Notification::assertSentTo(
-            new AnonymousNotifiable(),
-            ClientComponentStatusChanged::class,
-            fn ($a, $b, $notifiable) => $notifiable->routes['mail'] === $mail
-        );
+        Notification::assertSentTo($client, ClientComponentStatusChanged::class);
     }
 }

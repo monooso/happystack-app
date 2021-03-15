@@ -8,7 +8,6 @@ use App\Constants\Status;
 use App\Events\StatusUpdated;
 use App\Models\Project;
 use App\Notifications\ClientComponentStatusChanged;
-use Illuminate\Notifications\AnonymousNotifiable;
 
 final class SendClientNotifications
 {
@@ -21,29 +20,22 @@ final class SendClientNotifications
             return;
         }
 
-        $projects = $component->projects()->with('clientChannels')->get();
+        $projects = $component->projects()->with('client')->get();
 
         /** @var Project $project */
         foreach ($projects as $project) {
-            $channels = $project->clientChannels()->canReceiveNotification()->get();
+            $client = $project->client;
 
-            if ($channels->count() === 0) {
+            if ($client === null) {
                 continue;
             }
 
-            /** @var AnonymousNotifiable $notifiable */
-            $notifiable = $channels->reduce(
-                fn ($notifiable, $channel) => $notifiable->route(
-                    $channel->type,
-                    $channel->route
-                ),
-                new AnonymousNotifiable()
-            );
-
-            $notifiable->notify(new ClientComponentStatusChanged(
+            $client->notify(new ClientComponentStatusChanged(
                 $project,
                 $component
             ));
+
+            // @todo Set last_updated_at here, or in notification event
         }
     }
 }

@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Notifications;
 
+use App\Constants\NotificationChannel;
+use App\Models\Agency;
 use App\Models\Component;
 use App\Models\Project;
 use App\Notifications\AgencyComponentStatusChanged;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Notifications\AnonymousNotifiable;
 use Tests\TestCase;
 
 final class AgencyComponentStatusChangedTest extends TestCase
@@ -18,37 +19,46 @@ final class AgencyComponentStatusChangedTest extends TestCase
     use WithFaker;
 
     /** @test */
-    public function itSetsTheSubject()
+    public function toMailSetsTheSubject()
     {
         $component = Component::factory()->create();
         $project = Project::factory()->hasAttached($component)->create();
 
-        $notifiable = new AnonymousNotifiable();
-        $notifiable->routes = ['mail' => $this->faker->email];
-
         $mailable = (new AgencyComponentStatusChanged(
             $project,
             $component
-        ))->toMail($notifiable);
+        ))->toMail();
 
         $this->assertSame('Happy Stack Status Alert', $mailable->subject);
     }
 
     /** @test */
-    public function itSetsTheRecipient()
+    public function viaReturnsAnEmptyArrayIfViaMailIsFalse()
     {
-        $component = Component::factory()->create();
-        $project = Project::factory()->hasAttached($component)->create();
+        $project = Project::factory()->make();
+        $component = Component::factory()->make();
+        $notifiable = Agency::factory()->make(['via_mail' => false]);
 
-        $recipient = $this->faker->email;
-        $notifiable = new AnonymousNotifiable();
-        $notifiable->routes = ['mail' => $recipient];
-
-        $mailable = (new AgencyComponentStatusChanged(
+        $result = (new AgencyComponentStatusChanged(
             $project,
             $component
-        ))->toMail($notifiable);
+        ))->via($notifiable);
 
-        $this->assertTrue($mailable->hasTo($recipient));
+        $this->assertSame([], $result);
+    }
+
+    /** @test */
+    public function viaReturnsAnArrayContainingMailIfViaMailIsTrue()
+    {
+        $project = Project::factory()->make();
+        $component = Component::factory()->make();
+        $notifiable = Agency::factory()->make(['via_mail' => true]);
+
+        $result = (new AgencyComponentStatusChanged(
+            $project,
+            $component
+        ))->via($notifiable);
+
+        $this->assertSame([NotificationChannel::MAIL], $result);
     }
 }

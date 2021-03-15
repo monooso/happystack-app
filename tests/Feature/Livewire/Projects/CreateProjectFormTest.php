@@ -27,16 +27,15 @@ final class CreateProjectFormTest extends TestCase
         $this->actingAs($user);
 
         $expected = [
-            'name'           => $this->faker->company,
-            'agencyChannels' => [
-                'email' => ['enabled' => true, 'route' => $this->faker->email],
+            'name'   => $this->faker->company,
+            'agency' => [
+                'via_email'  => ToggleValue::ENABLED,
+                'mail_route' => $this->faker->email,
             ],
-            'clientChannels' => [
-                'email' => [
-                    'enabled' => $this->faker->randomElement(ToggleValue::all()),
-                    'route'   => $this->faker->email,
-                    'message' => $this->faker->text,
-                ],
+            'client' => [
+                'via_mail'     => $this->faker->randomElement(ToggleValue::all()),
+                'mail_route'   => $this->faker->email,
+                'mail_message' => $this->faker->text,
             ],
             'components' => [$this->faker->randomNumber()],
         ];
@@ -51,8 +50,8 @@ final class CreateProjectFormTest extends TestCase
 
         return Livewire::test(CreateProjectForm::class)
             ->set('name', $expected['name'])
-            ->set('agencyChannels', $expected['agencyChannels'])
-            ->set('clientChannels', $expected['clientChannels'])
+            ->set('agency', $expected['agency'])
+            ->set('client', $expected['client'])
             ->set('components', $expected['components'])
             ->call('create', $action);
     }

@@ -132,26 +132,29 @@ return [
 
     'custom' => [
         'createProject' => [
-            'agencyChannels.email.route' => [
-                'email'       => 'The notification email must be a valid email address',
-                'max'         => 'The notification email cannot be more than :max characters',
-                'required_if' => 'The notification email field is required',
+            'agency' => [
+                'mail_route' => [
+                    'email'       => 'The notification email must be a valid email address',
+                    'max'         => 'The notification email cannot be more than :max characters',
+                    'required_if' => 'The notification email field is required',
+                ],
             ],
-            'clientChannels.email.route' => [
-                'email'       => 'The notification email must be a valid email address',
-                'max'         => 'The notification email cannot be more than :max characters',
-                'required_if' => 'The notification email field is required',
-            ],
-            'clientChannels.email.message' => [
-                'min'         => 'The notification message cannot be empty',
-                'max'         => 'The notification message cannot be more than :max characters',
-                'required_if' => 'The notification message field is required',
+            'client' => [
+                'mail_message' => [
+                    'min'         => 'The notification message cannot be empty',
+                    'max'         => 'The notification message cannot be more than :max characters',
+                    'required_if' => 'The notification message field is required',
+                ],
+                'mail_route' => [
+                    'email'       => 'The notification email must be a valid email address',
+                    'max'         => 'The notification email cannot be more than :max characters',
+                    'required_if' => 'The notification email field is required',
+                ],
             ],
             'components' => [
                 'required' => 'Select at least one component to monitor',
                 'min:1'    => 'Select at least one component to monitor',
             ],
-            // @todo Figure out if there's any way to namespace this
             'name' => [
                 'required' => 'The project name is required',
                 'min'      => 'The project name cannot be empty',

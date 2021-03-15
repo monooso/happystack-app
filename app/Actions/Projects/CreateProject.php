@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Actions\Projects;
 
-use App\Constants\NotificationChannel;
 use App\Constants\ToggleValue;
 use App\Contracts\CreatesProjects;
 use App\Models\Project;
@@ -38,8 +37,8 @@ final class CreateProject implements CreatesProjects
         $project = $team->projects()->create(['name' => $attributes['name']]);
 
         $this->createComponents($project, $attributes);
-        $this->createAgencyChannels($project, $attributes);
-        $this->createClientChannels($project, $attributes);
+        $this->createAgency($project, $attributes);
+        $this->createClient($project, $attributes);
 
         return $project;
     }
@@ -59,27 +58,24 @@ final class CreateProject implements CreatesProjects
             'components'   => ['required', 'array', 'min:1'],
             'components.*' => ['exists:components,id'],
 
-            'agencyChannels.email.enabled' => [
-                'required',
-                Rule::in(ToggleValue::all()),
-            ],
-            'agencyChannels.email.route' => [
-                'required_if:agencyChannels.email.enabled,' . ToggleValue::ENABLED,
+            'agency.via_mail' => ['required', Rule::in(ToggleValue::all())],
+
+            'agency.mail_route' => [
+                'required_if:agency.via_email,' . ToggleValue::ENABLED,
                 'email',
                 'max:255',
             ],
 
-            'clientChannels.email.enabled' => [
-                'required',
-                Rule::in(ToggleValue::all()),
-            ],
-            'clientChannels.email.route' => [
-                'required_if:clientChannels.email.enabled,' . ToggleValue::ENABLED,
+            'client.via_mail' => ['required', Rule::in(ToggleValue::all())],
+
+            'client.mail_route' => [
+                'required_if:client.via_mail,' . ToggleValue::ENABLED,
                 'email',
                 'max:255',
             ],
-            'clientChannels.email.message' => [
-                'required_if:clientChannels.email.enabled,' . ToggleValue::ENABLED,
+
+            'client.mail_message' => [
+                'required_if:client.via_mail,' . ToggleValue::ENABLED,
                 'string',
                 'min:1',
                 'max:60000',
@@ -104,39 +100,35 @@ final class CreateProject implements CreatesProjects
     }
 
     /**
-     * Create the project agency notification channels
+     * Create the project agency
      *
      * @param Project $project
      * @param array   $attributes
      */
-    private function createAgencyChannels(Project $project, array $attributes)
+    private function createAgency(Project $project, array $attributes)
     {
-        $agencyEmail = $attributes['agencyChannels']['email'];
+        $agency = $attributes['agency'];
 
-        if ($agencyEmail['enabled'] === ToggleValue::ENABLED) {
-            $project->agencyChannels()->create([
-                'type'  => NotificationChannel::MAIL,
-                'route' => $agencyEmail['route'],
-            ]);
-        }
+        $project->agency()->create([
+            'via_mail'   => $agency['via_mail'] === ToggleValue::ENABLED,
+            'mail_route' => $agency['mail_route'] ?? '',
+        ]);
     }
 
     /**
-     * Create the project client notification channels
+     * Create the project client
      *
      * @param Project $project
      * @param array   $attributes
      */
-    private function createClientChannels(Project $project, array $attributes)
+    private function createClient(Project $project, array $attributes)
     {
-        $clientEmail = $attributes['clientChannels']['email'];
+        $client = $attributes['client'];
 
-        if ($clientEmail['enabled'] === ToggleValue::ENABLED) {
-            $project->clientChannels()->create([
-                'type'    => NotificationChannel::MAIL,
-                'route'   => $clientEmail['route'],
-                'message' => $clientEmail['message'],
-            ]);
-        }
+        $project->client()->create([
+            'via_mail'     => $client['via_mail'] === ToggleValue::ENABLED,
+            'mail_route'   => $client['mail_route'] ?? '',
+            'mail_message' => $client['mail_message'] ?? '',
+        ]);
     }
 }

@@ -23,69 +23,65 @@ final class CreateProjectForm extends Component
     /** @var array The components to monitor */
     public array $components = [];
 
-    /** @var array $agencyChannels The agency notification channels */
-    public array $agencyChannels = [];
+    /** @var array $agency The project agency notifications */
+    public array $agency = [];
 
-    /** @var array $clientChannels The client notification channels */
-    public array $clientChannels = [];
+    /** @var array $client The project client notifications */
+    public array $client = [];
 
     /**
      * Initialise the available services
      */
     public function mount()
     {
-        $this->agencyChannels = $this->resetAgencyChannels($this->agencyChannels ?? []);
-        $this->clientChannels = $this->resetClientChannels($this->clientChannels ?? []);
+        $this->agency = $this->resetAgency($this->agency ?? []);
+        $this->client = $this->resetClient($this->client ?? []);
     }
 
     /**
-     * Get a "reset" agency channels array
+     * Get a "reset" agency array
      *
      * @param array $overrides
      *
      * @return array
      */
-    private function resetAgencyChannels(array $overrides): array
+    private function resetAgency(array $overrides): array
     {
         return array_merge([
-            'email' => [
-                'enabled' => ToggleValue::ENABLED,
-                'route'   => Auth::user()->email,
-            ],
+            'via_mail'   => ToggleValue::ENABLED,
+            'mail_route' => Auth::user()->email,
         ], $overrides);
     }
 
     /**
-     * Get a "reset" client channels array
+     * Get a "reset" client array
      *
      * @param array $overrides
      *
      * @return array
      */
-    private function resetClientChannels(array $overrides): array
+    private function resetClient(array $overrides): array
     {
         $message = (string) trans('app.client_notification', [
             'sender_name' => Auth::user()->name,
         ]);
 
         return array_merge([
-            'email' => [
-                'enabled' => ToggleValue::DISABLED,
-                'route'   => '',
-                'message' => $message,
-            ],
+            'via_mail'     => ToggleValue::DISABLED,
+            'mail_route'   => '',
+            'mail_message' => $message,
         ], $overrides);
     }
 
     /**
-     * Computed property `clientEmailNotificationsEnabled`
+     * Computed property `notifyClient`
      *
      * @return bool
      */
-    public function getClientEmailNotificationsEnabledProperty(): bool
+    public function getNotifyClientProperty(): bool
     {
-        return isset($this->clientChannels['email']['enabled'])
-            && $this->clientChannels['email']['enabled'] === ToggleValue::ENABLED;
+        return isset($this->client['via_mail'])
+            && $this->client['via_mail'] === ToggleValue::ENABLED;
     }
 
     /**
@@ -116,10 +112,10 @@ final class CreateProjectForm extends Component
         $this->resetErrorBag();
 
         $creator->create(Auth::user(), [
-            'name'           => $this->name,
-            'components'     => $this->components,
-            'agencyChannels' => $this->agencyChannels,
-            'clientChannels' => $this->clientChannels,
+            'name'       => $this->name,
+            'components' => $this->components,
+            'agency'     => $this->agency,
+            'client'     => $this->client,
         ]);
 
         return redirect()->route('dashboard');

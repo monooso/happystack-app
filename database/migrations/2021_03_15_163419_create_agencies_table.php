@@ -7,21 +7,21 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-final class CreateAgencyChannelsTable extends Migration
+final class CreateAgenciesTable extends Migration
 {
     public function up()
     {
-        Schema::create('agency_channels', function (Blueprint $table) {
+        Schema::create('agencies', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Project::class)->constrained();
-            $table->string('type');
-            $table->string('route');
+            $table->boolean('via_mail')->default(false);
+            $table->string('mail_route')->nullable();
             $table->timestamps();
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('agency_channels');
+        Schema::dropIfExists('agencies');
     }
 }

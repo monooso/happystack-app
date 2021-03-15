@@ -7,33 +7,23 @@ namespace App\Listeners;
 use App\Events\StatusUpdated;
 use App\Models\Project;
 use App\Notifications\AgencyComponentStatusChanged;
-use Illuminate\Notifications\AnonymousNotifiable;
 
 final class SendAgencyNotifications
 {
     public function handle(StatusUpdated $event): void
     {
         $component = $event->component;
-        $projects = $component->projects()->with('agencyChannels')->get();
+        $projects = $component->projects()->with('agency')->get();
 
         /** @var Project $project */
         foreach ($projects as $project) {
-            $channels = $project->agencyChannels()->get();
+            $agency = $project->agency;
 
-            if ($channels->count() === 0) {
+            if ($agency === null) {
                 continue;
             }
 
-            /** @var AnonymousNotifiable $notifiable */
-            $notifiable = $channels->reduce(
-                fn ($notifiable, $channel) => $notifiable->route(
-                    $channel->type,
-                    $channel->route
-                ),
-                new AnonymousNotifiable()
-            );
-
-            $notifiable->notify(new AgencyComponentStatusChanged(
+            $agency->notify(new AgencyComponentStatusChanged(
                 $project,
                 $component
             ));
