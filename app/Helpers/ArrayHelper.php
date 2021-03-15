@@ -44,11 +44,11 @@ final class ArrayHelper
 
         foreach ($array as $key => $value) {
             if (is_array($value) && Arr::isAssoc($value)) {
-                $prefix = $prefix ? $prefix . '.' . $key : $key;
+                $subPrefix = $prefix ? $prefix . '.' . $key : $key;
 
                 $flattened = array_merge(
                     $flattened,
-                    self::recursivelyFlattenAssoc($value, $prefix)
+                    self::recursivelyFlattenAssoc($value, $subPrefix)
                 );
 
                 continue;
