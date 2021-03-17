@@ -28,9 +28,7 @@
                             <div x-data="{ expanded: false }">
                                 <button @click.prevent="expanded = ! expanded" class="flex items-center justify-between px-4 py-5 w-full sm:p-6">
                                     <div class="flex items-start">
-                                        <div class="flex-0 mr-2 mt-1 w-4">
-                                            {!! $service->logoSvg !!}
-                                        </div>
+                                        <div class="flex-0 mr-4 mt-1 w-6">@svg('logo-' . $service->handle)</div>
 
                                         <div class="flex-1 text-left">
                                             <span class="block font-medium text-gray-900">{{ $service->name }}</span>
@@ -46,8 +44,8 @@
                                 <div x-show="expanded === true" class="bg-gray-100 border-b border-gray-200 p-4 shadow-inner sm:p-6">
                                     <div class="grid grid-cols-3 gap-3">
                                         @foreach ($service->components as $target)
-                                            <label class="col-span-1 flex items-center p-1 select-none">
-                                                <x-jet-input type="checkbox" wire:model="components" value="{{ $target->id }}"/>
+                                            <label class="col-span-1 flex items-start p-1 select-none">
+                                                <x-jet-input class="mt-1" type="checkbox" wire:model="components" value="{{ $target->id }}"/>
                                                 <span class="ml-2">{{ $target->name }}</span>
                                             </label>
                                         @endforeach
