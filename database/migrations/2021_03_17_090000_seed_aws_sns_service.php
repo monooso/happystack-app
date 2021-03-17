@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
-class SeedAwsSnsService extends Migration
+final class SeedAwsSnsService extends Migration
 {
     public function up()
     {

@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Database\Migrations\SeedAwsComponentsMigration;
 
-class SeedAwsSnsComponents extends SeedAwsComponentsMigration
+final class SeedAwsSnsComponents extends SeedAwsComponentsMigration
 {
     protected function getServiceKey(): string
     {

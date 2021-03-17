@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
-class SeedMailgunServiceComponents extends Migration
+final class SeedMailgunServiceComponents extends Migration
 {
     private array $components = [
         'mailgun::api'                      => 'API',

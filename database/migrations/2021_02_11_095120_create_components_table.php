@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Constants\Status;
 use App\Models\Service;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateComponentsTable extends Migration
+final class CreateComponentsTable extends Migration
 {
     public function up()
     {
