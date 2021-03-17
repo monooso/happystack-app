@@ -4,6 +4,7 @@ use App\Http\Controllers\ProjectController;
 use App\Jobs\Arcustech\FetchV2PlatformEuNl;
 use App\Jobs\AwsS3\FetchUsEast1Status;
 use App\Jobs\Digitalocean\FetchDropletsStatus;
+use App\Jobs\GoogleCloud\FetchComputeEngineStatus;
 use App\Jobs\Mailgun\FetchSmtpStatus;
 use App\Jobs\Sendgrid\FetchParseApiStatus;
 use App\Mail\AgencyComponentStatusChanged;
@@ -54,6 +55,11 @@ Route::get('/update-status/aws-s3/ap-south-1', function () {
 Route::get('/update-status/digitalocean/droplets', function () {
     $component = Component::where('handle', 'digitalocean::droplets')->firstOrFail();
     FetchDropletsStatus::dispatchNow($component);
+});
+
+Route::get('/update-status/google-cloud/compute-engine', function () {
+    $component = Component::where('handle', 'google-cloud::compute-engine')->firstOrFail();
+    FetchComputeEngineStatus::dispatchNow($component);
 });
 
 Route::get('/update-status/mailgun/smtp', function () {
