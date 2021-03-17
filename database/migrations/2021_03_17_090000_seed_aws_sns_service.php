@@ -3,14 +3,14 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
-class SeedAwsSesService extends Migration
+class SeedAwsSnsService extends Migration
 {
     public function up()
     {
         DB::table('services')->insert([
-            'name'        => 'AWS SES',
-            'description' => 'Amazon Simple Email Service',
-            'handle'      => 'aws-ses',
+            'name'        => 'AWS SNS',
+            'description' => 'Amazon Simple Notification Service',
+            'handle'      => 'aws-sns',
             'created_at'  => now(),
             'updated_at'  => now(),
         ]);
@@ -18,6 +18,6 @@ class SeedAwsSesService extends Migration
 
     public function down()
     {
-        DB::table('services')->where('handle', 'aws-ses')->delete();
+        DB::table('services')->where('handle', 'aws-sns')->delete();
     }
 }

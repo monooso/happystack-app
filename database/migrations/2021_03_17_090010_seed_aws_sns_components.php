@@ -2,10 +2,10 @@
 
 use App\Database\Migrations\SeedAwsComponentsMigration;
 
-class SeedAwsSesComponents extends SeedAwsComponentsMigration
+class SeedAwsSnsComponents extends SeedAwsComponentsMigration
 {
     protected function getServiceKey(): string
     {
-        return 'aws-ses';
+        return 'aws-sns';
     }
 }

@@ -9,7 +9,7 @@ class SeedAwsS3Service extends Migration
     {
         DB::table('services')->insert([
             'name'        => 'AWS S3',
-            'description' => 'Amazon Simple Storage Service.',
+            'description' => 'Amazon Simple Storage Service',
             'handle'      => 'aws-s3',
             'created_at'  => now(),
             'updated_at'  => now(),
