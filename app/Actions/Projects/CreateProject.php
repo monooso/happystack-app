@@ -83,7 +83,7 @@ final class CreateProject implements CreatesProjects
         ];
 
         $messages = Lang::get('validation.custom.createProject');
-        $flattened = Arr::flattenAssoc($messages);
+        $flattened = Arr::dot($messages);
 
         return Validator::make($attributes, $rules, $flattened)->validate();
     }
