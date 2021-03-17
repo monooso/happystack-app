@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\ProjectController;
+use App\Jobs\Arcustech\FetchV2PlatformEuNl;
 use App\Jobs\AwsS3\FetchUsEast1Status;
 use App\Jobs\Digitalocean\FetchDropletsStatus;
 use App\Jobs\Mailgun\FetchSmtpStatus;
+use App\Jobs\Sendgrid\FetchParseApiStatus;
 use App\Mail\AgencyComponentStatusChanged;
 use App\Models\Component;
 use App\Models\Project;
@@ -34,6 +36,11 @@ Route::get('/agency-mail', function () {
     return new AgencyComponentStatusChanged($project, $component);
 });
 
+Route::get('/update-status/arcustech/platform', function () {
+    $component = Component::where('handle', 'arcustech::v2-platform-eu-nl')->firstOrFail();
+    FetchV2PlatformEuNl::dispatchNow($component);
+});
+
 Route::get('/update-status/aws-s3/us-east-1', function () {
     $component = Component::where('handle', 'aws-s3::us-east-1')->firstOrFail();
     FetchUsEast1Status::dispatchNow($component);
@@ -56,7 +63,7 @@ Route::get('/update-status/mailgun/smtp', function () {
 
 Route::get('/update-status/sendgrid/parse-api', function () {
     $component = Component::where('handle', 'sendgrid::parse-api')->firstOrFail();
-    FetchSmtpStatus::dispatchNow($component);
+    FetchParseApiStatus::dispatchNow($component);
 });
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
