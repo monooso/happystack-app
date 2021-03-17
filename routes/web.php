@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProjectController;
 use App\Jobs\AwsS3\FetchUsEast1Status;
+use App\Jobs\Digitalocean\FetchDropletsStatus;
 use App\Jobs\Mailgun\FetchSmtpStatus;
 use App\Mail\AgencyComponentStatusChanged;
 use App\Models\Component;
@@ -41,6 +42,11 @@ Route::get('/update-status/aws-s3/us-east-1', function () {
 Route::get('/update-status/aws-s3/ap-south-1', function () {
     $component = Component::where('handle', 'aws-s3::ap-south-1')->firstOrFail();
     FetchUsEast1Status::dispatchNow($component);
+});
+
+Route::get('/update-status/digitalocean/droplets', function () {
+    $component = Component::where('handle', 'digitalocean::droplets')->firstOrFail();
+    FetchDropletsStatus::dispatchNow($component);
 });
 
 Route::get('/update-status/mailgun/smtp', function () {
