@@ -5,12 +5,16 @@ namespace App\Providers;
 use App\Actions\Projects\CreateProject;
 use App\Contracts\CreatesProjects;
 use App\Contracts\Fetchers\AwsFetcher as AwsFetcherContract;
+use App\Contracts\Fetchers\GoogleCloudFetcher as GoogleCloudFetcherContract;
 use App\Contracts\Fetchers\StatusPageFetcher as StatusPageFetcherContract;
 use App\Contracts\Parsers\AwsParser as AwsParserContract;
+use App\Contracts\Parsers\GoogleCloudParser as GoogleCloudParserContract;
 use App\Contracts\Parsers\StatusPageParser as StatusPageParserContract;
 use App\Fetchers\Aws as AwsFetcher;
+use App\Fetchers\GoogleCloud as GoogleCloudFetcher;
 use App\Fetchers\StatusPage as StatusPageFetcher;
 use App\Parsers\Aws as AwsParser;
+use App\Parsers\GoogleCloud as GoogleCloudParser;
 use App\Parsers\StatusPage as StatusPageParser;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
@@ -57,8 +61,11 @@ class AppServiceProvider extends ServiceProvider
      */
     private function registerFetchers()
     {
-        $this->app->bind(AwsFetcherContract::class, AwsFetcher::class);
-        $this->app->bind(StatusPageFetcherContract::class, StatusPageFetcher::class);
+        $app = $this->app;
+
+        $app->bind(AwsFetcherContract::class, AwsFetcher::class);
+        $app->bind(GoogleCloudFetcherContract::class, GoogleCloudFetcher::class);
+        $app->bind(StatusPageFetcherContract::class, StatusPageFetcher::class);
     }
 
     /**
@@ -66,8 +73,11 @@ class AppServiceProvider extends ServiceProvider
      */
     private function registerParsers()
     {
-        $this->app->bind(AwsParserContract::class, AwsParser::class);
-        $this->app->bind(StatusPageParserContract::class, StatusPageParser::class);
+        $app = $this->app;
+
+        $app->bind(AwsParserContract::class, AwsParser::class);
+        $app->bind(GoogleCloudParserContract::class, GoogleCloudParser::class);
+        $app->bind(StatusPageParserContract::class, StatusPageParser::class);
     }
 
     /**
