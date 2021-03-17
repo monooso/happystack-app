@@ -4,6 +4,7 @@ use App\Http\Controllers\ProjectController;
 use App\Jobs\AwsS3\FetchUsEast1Status;
 use App\Jobs\Digitalocean\FetchDropletsStatus;
 use App\Jobs\Mailgun\FetchSmtpStatus;
+use App\Jobs\Sendgrid\FetchParseApiStatus;
 use App\Mail\AgencyComponentStatusChanged;
 use App\Models\Component;
 use App\Models\Project;
@@ -56,7 +57,7 @@ Route::get('/update-status/mailgun/smtp', function () {
 
 Route::get('/update-status/sendgrid/parse-api', function () {
     $component = Component::where('handle', 'sendgrid::parse-api')->firstOrFail();
-    FetchSmtpStatus::dispatchNow($component);
+    FetchParseApiStatus::dispatchNow($component);
 });
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
