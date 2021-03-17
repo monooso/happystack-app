@@ -5,34 +5,27 @@
         </h2>
     </x-slot>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div>
         <ul class="mt-3 grid grid-cols-1 gap-5 sm:gap-6 lg:grid-cols-3">
             @foreach($projects as $project)
-            <li class="col-span-1 flex shadow-sm rounded-md">
-                <div class="flex-shrink-0 flex items-center justify-center w-16 bg-pink-600 text-white text-sm font-medium rounded-l-md">
-                    Status
-                </div>
-                <div class="flex-1 flex items-center justify-between border-t border-r border-b border-gray-200 bg-white rounded-r-md truncate">
-                    <div class="flex-1 px-4 py-2 text-sm truncate">
-                        <a href="#" class="text-gray-900 font-medium hover:text-gray-600">{{ $project->name }}</a>
-                        <p class="text-gray-500">Looking good</p>
-                    </div>
-                    <div class="flex-shrink-0 pr-2">
-                        <button class="w-8 h-8 bg-white inline-flex items-center justify-center text-gray-400 rounded-full bg-transparent hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                            <span class="sr-only">Open options</span>
-                            <!-- Heroicon name: solid/dots-vertical -->
-                            <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-            </li>
+                <li class="col-span-1 flex overflow-hidden shadow-sm rounded-md">
+                    <livewire:projects.project-status :project="$project"></livewire:projects.project-status>
+                </li>
             @endforeach
 
-            <a class="border border-yellow-700 col-span-1 flex items-center justify-center rounded-sm" href="{{ route('projects.create') }}">
-                <span class="text-yellow-700">{{ __('Create project') }}</span>
-            </a>
+            <div class="flex items-center justify-center">
+                <a class="block bg-white border border-green-200 flex items-center p-3 rounded-full shadow-md" href="{{ route('projects.create') }}">
+                    <div class="h-6 mr-3 text-green-500 w-auto">
+                        <svg height="100%" viewBox="0 0 140 140" width="100%" xmlns="http://www.w3.org/2000/svg">
+                            <g transform="matrix(5.833333333333333,0,0,5.833333333333333,0,0)">
+                                <path d="M12,23.5A11.5,11.5,0,1,0,.5,12,11.513,11.513,0,0,0,12,23.5ZM6,11h4.75a.25.25,0,0,0,.25-.25V6a1,1,0,0,1,2,0v4.75a.25.25,0,0,0,.25.25H18a1,1,0,0,1,0,2H13.25a.25.25,0,0,0-.25.25V18a1,1,0,0,1-2,0V13.25a.25.25,0,0,0-.25-.25H6a1,1,0,0,1,0-2Z" fill="currentColor" stroke="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="0"></path>
+                            </g>
+                        </svg>
+                    </div>
+
+                    <span class="font-bold pr-2 text-green-800">{{ __('Create project') }}</span>
+                </a>
+            </div>
         </ul>
     </div>
 </x-app-layout>

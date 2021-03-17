@@ -8,8 +8,9 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^7.4|^8.0",
+        "php": "^8.0",
         "ext-json": "*",
+        "aws/aws-sdk-php": "^3.173",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",

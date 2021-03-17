@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Livewire\Projects;
 
+use App\Constants\ToggleValue;
 use App\Contracts\CreatesProjects;
 use App\Models\Service;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -13,61 +17,71 @@ use Livewire\Component;
 
 final class CreateProjectForm extends Component
 {
-    /**
-     * The email to which we will send client notifications
-     *
-     * @var string
-     */
-    public string $clientNotificationEmail = '';
+    /** @var string $name The project name */
+    public string $name = '';
 
-    /**
-     * The client name, used in notification emails
-     *
-     * @var string
-     */
-    public string $clientNotificationName = '';
+    /** @var array The components to monitor */
+    public array $components = [];
 
-    /**
-     * The email to which we will send notifications
-     *
-     * @var string
-     */
-    public string $notificationEmail = '';
+    /** @var array $agency The project agency notifications */
+    public array $agency = [];
 
-    /**
-     * Whether we should notify the client of any issues
-     *
-     * @var bool
-     */
-    public bool $notifyClient = false;
-
-    /**
-     * The components to monitor
-     *
-     * @var array
-     */
-    public array $projectComponents = [];
-
-    /**
-     * The project name
-     *
-     * @var string
-     */
-    public string $projectName = '';
-
-    /**
-     * The available services
-     *
-     * @var Collection $services
-     */
-    public Collection $services;
+    /** @var array $client The project client notifications */
+    public array $client = [];
 
     /**
      * Initialise the available services
      */
     public function mount()
     {
-        $this->services = Service::with('components')->get()->sortBy('name');
+        $this->agency = $this->resetAgency($this->agency ?? []);
+        $this->client = $this->resetClient($this->client ?? []);
+    }
+
+    /**
+     * Get a "reset" agency array
+     *
+     * @param array $overrides
+     *
+     * @return array
+     */
+    private function resetAgency(array $overrides): array
+    {
+        return array_merge([
+            'via_mail'   => ToggleValue::ENABLED,
+            'mail_route' => Auth::user()->email,
+        ], $overrides);
+    }
+
+    /**
+     * Get a "reset" client array
+     *
+     * @param array $overrides
+     *
+     * @return array
+     */
+    private function resetClient(array $overrides): array
+    {
+        $message = (string) trans('app.client_notification', [
+            'sender_name' => Auth::user()->name,
+        ]);
+
+        return array_merge([
+            'via_mail'     => ToggleValue::DISABLED,
+            'mail_route'   => '',
+            'mail_message' => $message,
+        ], $overrides);
+    }
+
+    /**
+     * Computed property `notifyClient`
+     *
+     * @return bool
+     */
+    public function getNotifyClientProperty(): bool
+    {
+        return isset($this->client['via_mail'])
+            && $this->client['via_mail'] === ToggleValue::ENABLED;
     }
 
     /**
@@ -79,9 +93,11 @@ final class CreateProjectForm extends Component
      */
     public function selectedServiceComponents(Service $service): Collection
     {
-        $selectedComponentIds = array_values($this->projectComponents);
+        $selectedComponentIds = array_values($this->components);
 
-        return $service->components->filter(fn ($component) => in_array($component->id, $selectedComponentIds));
+        return $service->components->filter(
+            fn ($component) => in_array($component->id, $selectedComponentIds)
+        );
     }
 
     /**
@@ -96,22 +112,24 @@ final class CreateProjectForm extends Component
         $this->resetErrorBag();
 
         $creator->create(Auth::user(), [
-            'clientNotificationEmail' => $this->clientNotificationEmail,
-            'clientNotificationName'  => $this->clientNotificationName,
-            'notificationEmail'       => $this->notificationEmail,
-            'notifyClient'            => $this->notifyClient,
-            'projectComponents'       => $this->projectComponents,
-            'projectName'             => $this->projectName,
+            'name'       => $this->name,
+            'components' => $this->components,
+            'agency'     => $this->agency,
+            'client'     => $this->client,
         ]);
 
-        return redirect()->route('projects.index');
+        return redirect()->route('dashboard');
     }
 
     /**
      * Render the component
+     *
+     * @return Application|Factory|View
      */
     public function render()
     {
-        return view('projects.create-project-form', ['services' => $this->services]);
+        return view('projects.create-project-form', [
+            'services' => Service::with('components')->get()->sortBy('name'),
+        ]);
     }
 }

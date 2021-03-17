@@ -13,13 +13,17 @@ final class ProjectController extends Controller
     /**
      * Display a list of team projects
      *
+     * @param Request $request
+     *
      * @return Response
      */
     public function index(Request $request): Response
     {
         $team = $request->user()->currentTeam;
 
-        return response()->view('projects.index', ['projects' => $team->projects]);
+        return response()->view('projects.index', [
+            'projects' => $team->projects()->orderBy('name', 'asc')->get(),
+        ]);
     }
 
     /**
