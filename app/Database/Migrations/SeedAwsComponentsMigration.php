@@ -1,17 +1,29 @@
 <?php
 
+declare(strict_types=1);
+
+namespace App\Database\Migrations;
+
 use App\Constants\AwsRegion;
+use Exception;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
+use InvalidArgumentException;
 
-class SeedAwsS3ServiceComponents extends Migration
+abstract class SeedAwsComponentsMigration extends Migration
 {
+    /**
+     * Run the migration
+     *
+     * @throws Exception
+     */
     public function up()
     {
         $serviceId = $this->getServiceId();
 
         if (! $serviceId) {
-            throw new Exception('AWS S3 service does not exist');
+            $serviceKey = $this->getServiceKey();
+            throw new Exception("The '${serviceKey}' service does not exist");
         }
 
         $now = now();
@@ -27,6 +39,9 @@ class SeedAwsS3ServiceComponents extends Migration
         }
     }
 
+    /**
+     * Reverse the migration
+     */
     public function down()
     {
         $serviceId = $this->getServiceId();
@@ -42,15 +57,17 @@ class SeedAwsS3ServiceComponents extends Migration
     }
 
     /**
-     * Get the AWS S3 service ID from the database
+     * Get the service ID from the database
      *
      * @return null|int
      *
      * @throws InvalidArgumentException
      */
-    private function getServiceId(): ?int
+    protected function getServiceId(): ?int
     {
-        return DB::table('services')->where('handle', 'aws-s3')->value('id');
+        return DB::table('services')
+            ->where('handle', $this->getServiceKey())
+            ->value('id');
     }
 
     /**
@@ -58,12 +75,22 @@ class SeedAwsS3ServiceComponents extends Migration
      *
      * @return array
      */
-    private function getComponents(): array
+    protected function getComponents(): array
     {
         $regions = AwsRegion::map();
+        $prefix = $this->getServiceKey() . '::';
 
-        $keys = array_map(fn ($k) => 'aws-s3::' . $k, array_keys($regions));
+        $keys = array_map(fn ($key) => $prefix . $key, array_keys($regions));
 
         return array_combine($keys, array_values($regions));
     }
+
+    /**
+     * Get the service key
+     *
+     * For example, "aws-sns".
+     *
+     * @return string
+     */
+    abstract protected function getServiceKey(): string;
 }
