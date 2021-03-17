@@ -54,6 +54,11 @@ Route::get('/update-status/mailgun/smtp', function () {
     FetchSmtpStatus::dispatchNow($component);
 });
 
+Route::get('/update-status/sendgrid/parse-api', function () {
+    $component = Component::where('handle', 'sendgrid::parse-api')->firstOrFail();
+    FetchSmtpStatus::dispatchNow($component);
+});
+
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/projects', fn () => redirect()->route('dashboard'));
     Route::get('/projects/new', [ProjectController::class, 'create'])->name('projects.create');
