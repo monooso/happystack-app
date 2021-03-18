@@ -4,20 +4,19 @@ declare(strict_types=1);
 
 namespace App\Listeners;
 
-use App\Constants\Status;
-use App\Events\StatusUpdated;
+use App\Events\StatusChanged;
 use App\Models\Project;
 use App\Notifications\ClientComponentStatusChanged;
 use Illuminate\Support\Carbon;
 
 final class SendClientNotifications
 {
-    public function handle(StatusUpdated $event): void
+    public function handle(StatusChanged $event): void
     {
         $component = $event->component;
 
         // We don't notify clients when a problem is resolved
-        if ($component->current_status === Status::OKAY) {
+        if ($component->isHealthy) {
             return;
         }
 

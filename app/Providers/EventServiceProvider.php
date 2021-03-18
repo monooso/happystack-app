@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use App\Events\StatusRetrieved;
-use App\Events\StatusUpdated;
+use App\Events\StatusChanged;
+use App\Events\StatusFetched;
 use App\Listeners\SendAgencyNotifications;
 use App\Listeners\SendClientNotifications;
 use App\Listeners\UpdateComponentStatus;
@@ -14,9 +14,9 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvi
 class EventServiceProvider extends ServiceProvider
 {
     protected $listen = [
-        Registered::class      => [SendEmailVerificationNotification::class],
-        StatusRetrieved::class => [UpdateComponentStatus::class],
-        StatusUpdated::class   => [
+        Registered::class    => [SendEmailVerificationNotification::class],
+        StatusFetched::class => [UpdateComponentStatus::class],
+        StatusChanged::class => [
             SendAgencyNotifications::class,
             SendClientNotifications::class,
         ],

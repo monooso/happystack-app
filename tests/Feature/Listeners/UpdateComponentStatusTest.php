@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Tests\Feature\Listeners;
 
 use App\Constants\Status;
-use App\Events\StatusRetrieved;
-use App\Events\StatusUpdated;
+use App\Events\StatusChanged;
+use App\Events\StatusFetched;
 use App\Listeners\UpdateComponentStatus;
 use App\Models\Component;
-use App\Models\StatusUpdate;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
@@ -18,22 +18,71 @@ use Tests\TestCase;
 final class UpdateComponentStatusTest extends TestCase
 {
     use RefreshDatabase;
+    use WithFaker;
 
     /** @test */
-    public function itUpdatesTheComponentStatusIfTheStatusHasChanged()
+    public function itUpdatesTheComponentStatus()
     {
         Event::fake();
 
-        $component = Component::factory()->forService()->create(['current_status' => Status::DOWN]);
+        $component = Component::factory()->create(['status' => Status::DOWN]);
 
-        $event = new StatusRetrieved($component, Status::OKAY);
+        $event = new StatusFetched($component, Status::OKAY);
 
         (new UpdateComponentStatus())->handle($event);
 
         $this->assertDatabaseHas('components', [
-            'id'             => $component->id,
-            'current_status' => Status::OKAY,
+            'id'     => $component->id,
+            'status' => Status::OKAY,
         ]);
+    }
+
+    /** @test */
+    public function itUpdatesTheComponentStatusUpdatedAtTimestamp()
+    {
+        Event::fake();
+
+        $this->travel($this->faker->randomNumber())->minutes();
+
+        $component = Component::factory()->create([
+            'status' => $this->faker->randomElement(Status::all()),
+        ]);
+
+        $event = new StatusFetched(
+            $component,
+            $this->faker->randomElement(Status::all())
+        );
+
+        (new UpdateComponentStatus())->handle($event);
+
+        $this->assertDatabaseHas('components', [
+            'id'                => $component->id,
+            'status_updated_at' => Carbon::now(),
+        ]);
+
+        $this->travelBack();
+    }
+
+    /** @test */
+    public function itCreatesANewStatusHistoryRecord()
+    {
+        Event::fake();
+
+        $this->travel($this->faker->randomNumber())->minutes();
+
+        $component = Component::factory()->create(['status' => Status::DOWN]);
+
+        $event = new StatusFetched($component, Status::OKAY);
+
+        (new UpdateComponentStatus())->handle($event);
+
+        $this->assertDatabaseHas('status_updates', [
+            'component_id' => $component->id,
+            'status'       => Status::OKAY,
+            'created_at'   => Carbon::now(),
+        ]);
+
+        $this->travelBack();
     }
 
     /** @test */
@@ -41,55 +90,28 @@ final class UpdateComponentStatusTest extends TestCase
     {
         Event::fake();
 
-        $component = Component::factory()->forService()->create(['current_status' => Status::DOWN]);
+        $component = Component::factory()->create(['status' => Status::WARN]);
 
-        $event = new StatusRetrieved($component, Status::OKAY);
+        $event = new StatusFetched($component, Status::DOWN);
 
         (new UpdateComponentStatus())->handle($event);
 
-        Event::assertDispatched(function (StatusUpdated $event) use ($component) {
+        Event::assertDispatched(function (StatusChanged $event) use ($component) {
             return $event->component->id === $component->id;
         });
     }
 
     /** @test */
-    public function itTouchesTheMostRecentStatusUpdateIfTheStatusHasNotChanged()
+    public function itDoesNotDispatchTheStatusUpdatedEventIfTheStatusHasNotChanged()
     {
         Event::fake();
 
-        $this->travel(-5)->hours();
-        $lastUpdated = Carbon::now()->subWeeks(3);
+        $component = Component::factory()->create(['status' => Status::OKAY]);
 
-        $component = Component::factory()->forService()->create(['current_status' => Status::OKAY]);
-
-        $statusUpdate = StatusUpdate::factory()->for($component)->create([
-            'status'     => Status::OKAY,
-            'created_at' => $lastUpdated,
-            'updated_at' => $lastUpdated,
-        ]);
-
-        $event = new StatusRetrieved($component, Status::OKAY);
+        $event = new StatusFetched($component, Status::OKAY);
 
         (new UpdateComponentStatus())->handle($event);
 
-        $this->assertDatabaseHas('status_updates', [
-            'id'         => $statusUpdate->id,
-            'updated_at' => Carbon::now(),
-        ]);
-    }
-
-    /** @test */
-    public function itDoesNotDispatchAnEventIfTheStatusHasNotChanged()
-    {
-        Event::fake();
-
-        $component = Component::factory()->forService()->create(['current_status' => Status::OKAY]);
-        StatusUpdate::factory()->for($component)->create(['status' => Status::OKAY]);
-
-        $event = new StatusRetrieved($component, Status::OKAY);
-
-        (new UpdateComponentStatus())->handle($event);
-
-        Event::assertNotDispatched(StatusUpdated::class);
+        Event::assertNotDispatched(StatusChanged::class);
     }
 }

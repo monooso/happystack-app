@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Listeners;
 
 use App\Constants\Status;
-use App\Events\StatusUpdated;
+use App\Events\StatusChanged;
 use App\Listeners\SendClientNotifications;
 use App\Models\Client;
 use App\Models\Component;
@@ -27,9 +27,7 @@ final class SendClientNotificationsTest extends TestCase
     {
         Notification::fake();
 
-        $component = Component::factory()->create([
-            'current_status' => Status::DOWN,
-        ]);
+        $component = Component::factory()->create(['status' => Status::DOWN]);
 
         $projects = Project::factory()->count(3)->hasAttached($component)->create();
 
@@ -37,7 +35,7 @@ final class SendClientNotificationsTest extends TestCase
             fn ($project) => Client::factory()->for($project)->create()
         );
 
-        (new SendClientNotifications())->handle(new StatusUpdated($component));
+        (new SendClientNotifications())->handle(new StatusChanged($component));
 
         $clients->each(fn ($client) => Notification::assertSentTo(
             $client,
@@ -50,15 +48,13 @@ final class SendClientNotificationsTest extends TestCase
     {
         Notification::fake();
 
-        $component = Component::factory()->create([
-            'current_status' => Status::OKAY,
-        ]);
+        $component = Component::factory()->create(['status' => Status::OKAY]);
 
         $project = Project::factory()->hasAttached($component)->create();
 
         Client::factory()->for($project)->create();
 
-        (new SendClientNotifications())->handle(new StatusUpdated($component));
+        (new SendClientNotifications())->handle(new StatusChanged($component));
 
         Notification::assertNothingSent();
     }
@@ -70,14 +66,12 @@ final class SendClientNotificationsTest extends TestCase
 
         $this->travel(2)->days();
 
-        $component = Component::factory()->create([
-            'current_status' => Status::WARN,
-        ]);
+        $component = Component::factory()->create(['status' => Status::WARN]);
 
         $project = Project::factory()->hasAttached($component)->create();
         $client = Client::factory()->for($project)->create();
 
-        (new SendClientNotifications())->handle(new StatusUpdated($component));
+        (new SendClientNotifications())->handle(new StatusChanged($component));
 
         $this->assertDatabaseHas('clients', [
             'id'               => $client->id,

@@ -4,7 +4,7 @@ namespace App\Jobs\GoogleCloud;
 
 use App\Contracts\Fetchers\GoogleCloudFetcher;
 use App\Contracts\Parsers\GoogleCloudParser;
-use App\Events\StatusRetrieved;
+use App\Events\StatusFetched;
 use App\Models\Component;
 use Illuminate\Bus\Queueable;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -37,7 +37,7 @@ abstract class FetchStatus
 
         $status = $parser->parse($this->getComponentId(), $crawler);
 
-        StatusRetrieved::dispatch($this->component, $status);
+        StatusFetched::dispatch($this->component, $status);
     }
 
     /**

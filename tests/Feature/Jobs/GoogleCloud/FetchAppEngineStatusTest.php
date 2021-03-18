@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Jobs\GoogleCloud;
 
 use App\Constants\Status;
-use App\Events\StatusRetrieved;
+use App\Events\StatusFetched;
 use App\Jobs\GoogleCloud\FetchAppEngineStatus;
 use App\Models\Component;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -27,7 +27,7 @@ final class FetchAppEngineStatusTest extends TestCase
 
         FetchAppEngineStatus::dispatchNow($component);
 
-        Event::assertDispatched(function (StatusRetrieved $event) use ($component) {
+        Event::assertDispatched(function (StatusFetched $event) use ($component) {
             return $event->component->id === $component->id
                 && in_array($event->status, Status::known());
         });

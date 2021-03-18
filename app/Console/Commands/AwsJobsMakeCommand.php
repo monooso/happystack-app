@@ -13,7 +13,7 @@ use Illuminate\Support\Str;
 
 final class AwsJobsMakeCommand extends Command
 {
-    protected $signature = 'make:aws-jobs {service : The AWS service (e.g. ses)}';
+    protected $signature = 'happy:make-aws-jobs {service : The AWS service (e.g. ses)}';
 
     protected $description = 'Create the jobs for a given AWS service';
 

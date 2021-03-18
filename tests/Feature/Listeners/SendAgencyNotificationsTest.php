@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Listeners;
 
-use App\Events\StatusUpdated;
+use App\Events\StatusChanged;
 use App\Listeners\SendAgencyNotifications;
 use App\Models\Agency;
 use App\Models\Component;
@@ -33,7 +33,7 @@ final class SendAgencyNotificationsTest extends TestCase
             fn ($project) => Agency::factory()->for($project)->create()
         );
 
-        (new SendAgencyNotifications())->handle(new StatusUpdated($component));
+        (new SendAgencyNotifications())->handle(new StatusChanged($component));
 
         $agencies->each(fn ($agency) => Notification::assertSentTo(
             $agency,

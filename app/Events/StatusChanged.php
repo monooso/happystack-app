@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Events;
 
 use App\Models\Component;
@@ -8,7 +10,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class StatusUpdated implements ShouldBroadcast
+final class StatusChanged implements ShouldBroadcast
 {
     use Dispatchable;
     use SerializesModels;
@@ -30,9 +32,9 @@ class StatusUpdated implements ShouldBroadcast
      *
      * For example, `component-123`
      *
-     * @return string
+     * @return Channel
      */
-    public function broadcastOn(): string
+    public function broadcastOn(): Channel
     {
         $channelName = 'component-' . $this->component->id;
 
@@ -46,6 +48,6 @@ class StatusUpdated implements ShouldBroadcast
      */
     public function broadcastWith(): array
     {
-        return ['status' => $this->component->current_status];
+        return ['status' => $this->component->status];
     }
 }

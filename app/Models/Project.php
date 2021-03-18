@@ -96,11 +96,11 @@ class Project extends Model
 
     public function getComponentsWithWarningsAttribute(): Collection
     {
-        return $this->components()->where('current_status', Status::WARN)->get();
+        return $this->components()->where('status', Status::WARN)->get();
     }
 
     public function getComponentsWithErrorsAttribute(): Collection
     {
-        return $this->components()->where('current_status', Status::DOWN)->get();
+        return $this->components()->where('status', Status::DOWN)->get();
     }
 }

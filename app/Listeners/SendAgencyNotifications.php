@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Listeners;
 
-use App\Events\StatusUpdated;
+use App\Events\StatusChanged;
 use App\Models\Project;
 use App\Notifications\AgencyComponentStatusChanged;
 
 final class SendAgencyNotifications
 {
-    public function handle(StatusUpdated $event): void
+    public function handle(StatusChanged $event): void
     {
         $component = $event->component;
         $projects = $component->projects()->with('agency')->get();

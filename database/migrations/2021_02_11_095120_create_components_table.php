@@ -17,11 +17,15 @@ final class CreateComponentsTable extends Migration
             $table->foreignIdFor(Service::class)->constrained();
             $table->string('name');
             $table->string('handle');
-            $table->enum('current_status', Status::all())->default(Status::UNKNOWN);
+            $table->enum('status', Status::all())->default(Status::UNKNOWN);
+            $table->timestamp('status_updated_at')->nullable();
             $table->timestamps();
 
             $table->unique(['service_id', 'name']);
             $table->unique(['service_id', 'handle']);
+
+            $table->index('status');
+            $table->index('status_updated_at');
         });
     }
 

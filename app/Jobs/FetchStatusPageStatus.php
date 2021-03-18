@@ -4,7 +4,7 @@ namespace App\Jobs;
 
 use App\Contracts\Fetchers\StatusPageFetcher;
 use App\Contracts\Parsers\StatusPageParser;
-use App\Events\StatusRetrieved;
+use App\Events\StatusFetched;
 use App\Models\Component;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Bus\Queueable;
@@ -44,7 +44,7 @@ abstract class FetchStatusPageStatus
 
         $status = $parser->parse($this->getComponentId(), $response);
 
-        StatusRetrieved::dispatch($this->component, $status);
+        StatusFetched::dispatch($this->component, $status);
     }
 
     /**

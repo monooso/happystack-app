@@ -30,7 +30,7 @@ final class AgencyComponentStatusChanged extends Mailable
         return $this->markdown('emails.status.agency', [
             'project' => $project->name,
             'service' => $service->name . ' ' . $component->name,
-            'status'  => $component->current_status,
+            'status'  => $component->status,
         ]);
     }
 }

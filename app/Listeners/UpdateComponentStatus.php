@@ -1,31 +1,32 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Listeners;
 
-use App\Events\StatusRetrieved;
-use App\Events\StatusUpdated;
+use App\Events\StatusChanged;
+use App\Events\StatusFetched;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class UpdateComponentStatus implements ShouldQueue
+final class UpdateComponentStatus implements ShouldQueue
 {
     /**
      * Handle the event
      *
-     * @param  StatusRetrieved  $event
+     * @param  StatusFetched $event
      *
      * @return void
      */
-    public function handle(StatusRetrieved $event): void
+    public function handle(StatusFetched $event): void
     {
         $component = $event->component;
         $newStatus = $event->status;
+        $oldStatus = $component->status;
 
-        if ($newStatus !== $component->current_status) {
-            $component->updateStatus($newStatus);
-            StatusUpdated::dispatch($component);
-        } else {
-            // Touch the updated_at timestamp of the most recent status update
-            $component->statusUpdates()->latest()->touch();
+        $component->updateStatus($newStatus);
+
+        if ($newStatus !== $oldStatus) {
+            StatusChanged::dispatch($component);
         }
     }
 }

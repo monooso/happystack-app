@@ -11,41 +11,22 @@ use Illuminate\Support\Str;
 
 final class RefreshStatuses extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
     protected $signature = 'happy:refresh-statuses';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Refresh outdated component statuses.';
 
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
         parent::__construct();
     }
 
-    /**
-     * Execute the console command.
-     *
-     * @return int
-     */
     public function handle()
     {
         // Retrieve all of the outdated (?) components from the database
         // @todo set as environment or config variable
         $threshold = Carbon::now()->subMinutes(5);
 
+        $components = Component::query()->stale()->get();
         $components = Component::where('updated_at', '<=', $threshold)->get();
 
         // For each component:
