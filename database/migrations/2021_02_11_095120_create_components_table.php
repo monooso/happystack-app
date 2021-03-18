@@ -14,7 +14,7 @@ final class CreateComponentsTable extends Migration
     {
         Schema::create('components', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Service::class)->constrained();
+            $table->foreignIdFor(Service::class)->constrained()->cascadeOnDelete();
             $table->string('name');
             $table->string('handle');
             $table->enum('status', Status::all())->default(Status::UNKNOWN);

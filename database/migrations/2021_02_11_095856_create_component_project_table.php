@@ -14,8 +14,8 @@ final class CreateComponentProjectTable extends Migration
     {
         Schema::create('component_project', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Project::class)->constrained();
-            $table->foreignIdFor(Component::class)->constrained();
+            $table->foreignIdFor(Project::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Component::class)->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }

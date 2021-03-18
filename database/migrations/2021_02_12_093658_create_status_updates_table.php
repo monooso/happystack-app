@@ -14,7 +14,7 @@ final class CreateStatusUpdatesTable extends Migration
     {
         Schema::create('status_updates', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Component::class)->constrained();
+            $table->foreignIdFor(Component::class)->constrained()->cascadeOnDelete();
             $table->enum('status', Status::all());
             $table->timestamps();
         });

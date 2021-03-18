@@ -13,7 +13,7 @@ final class CreateAgenciesTable extends Migration
     {
         Schema::create('agencies', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Project::class)->constrained();
+            $table->foreignIdFor(Project::class)->constrained()->cascadeOnDelete();
             $table->boolean('via_mail')->default(false);
             $table->string('mail_route')->nullable();
             $table->timestamps();
