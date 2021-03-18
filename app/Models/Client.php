@@ -13,14 +13,18 @@ use Illuminate\Support\Carbon;
 final class Client extends Model
 {
     use HasFactory;
-    use Notifiable;
 
-    protected $casts = ['last_updated_at' => 'datetime'];
+    use Notifiable {
+        notify as traitNotify;
+        notifyNow as traitNotifyNow;
+    }
+
+    protected $dates = ['notified_at'];
 
     protected $fillable = [
-        'last_updated_at',
         'mail_message',
         'mail_route',
+        'notified_at',
         'via_mail',
     ];
 
@@ -43,11 +47,11 @@ final class Client extends Model
      */
     public function getCanBeNotifiedAttribute(): bool
     {
-        if ($this->last_notified_at === null) {
+        if ($this->notified_at === null) {
             return true;
         }
 
-        return Carbon::now()->subDay()->isAfter($this->last_notified_at);
+        return Carbon::now()->subDay()->isAfter($this->notified_at);
     }
 
     /**
@@ -58,5 +62,32 @@ final class Client extends Model
     public function routeNotificationForMail(): string
     {
         return $this->mail_route ?? '';
+    }
+
+    /**
+     * Update the "notified_at" timestamp when notifying a client
+     *
+     * @param  mixed  $instance
+     */
+    public function notify($instance)
+    {
+        $this->notified_at = Carbon::now();
+        $this->save();
+
+        $this->traitNotify($instance);
+    }
+
+    /**
+     * Update the "notified_at" timestamp when notifying a client
+     *
+     * @param  mixed  $instance
+     * @param  array|null  $channels
+     */
+    public function notifyNow($instance, array $channels = null)
+    {
+        $this->notified_at = Carbon::now();
+        $this->save();
+
+        $this->traitNotifyNow($instance, $channels);
     }
 }

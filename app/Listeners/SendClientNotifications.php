@@ -7,7 +7,6 @@ namespace App\Listeners;
 use App\Events\StatusChanged;
 use App\Models\Project;
 use App\Notifications\ClientComponentStatusChanged;
-use Illuminate\Support\Carbon;
 
 final class SendClientNotifications
 {
@@ -34,11 +33,6 @@ final class SendClientNotifications
                 $project,
                 $component
             ));
-
-            // Make a note that the client was notified. This will probably move
-            // at some point, but this is the easiest solution for now.
-            $client->last_notified_at = Carbon::now();
-            $client->save();
         }
     }
 }

@@ -17,8 +17,10 @@ final class CreateClientsTable extends Migration
             $table->boolean('via_mail')->default(false);
             $table->string('mail_route')->nullable();
             $table->text('mail_message')->nullable();
-            $table->timestamp('last_notified_at')->nullable();
+            $table->timestamp('notified_at')->nullable();
             $table->timestamps();
+
+            $table->index('notified_at');
         });
     }
 

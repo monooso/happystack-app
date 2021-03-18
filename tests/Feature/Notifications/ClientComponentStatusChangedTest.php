@@ -60,9 +60,7 @@ final class ClientComponentStatusChangedTest extends TestCase
         $project = Project::factory()->make();
         $component = Component::factory()->make();
 
-        $notifiable = Client::factory()->make([
-            'last_notified_at' => Carbon::now(),
-        ]);
+        $notifiable = Client::factory()->make(['notified_at' => Carbon::now()]);
 
         $result = (new ClientComponentStatusChanged(
             $project,
@@ -79,8 +77,8 @@ final class ClientComponentStatusChangedTest extends TestCase
         $component = Component::factory()->make();
 
         $notifiable = Client::factory()->make([
-            'last_notified_at' => null,
-            'via_mail'         => false,
+            'notified_at' => null,
+            'via_mail'    => false,
         ]);
 
         $result = (new ClientComponentStatusChanged(
@@ -98,8 +96,8 @@ final class ClientComponentStatusChangedTest extends TestCase
         $component = Component::factory()->make();
 
         $notifiable = Client::factory()->make([
-            'last_notified_at' => null,
-            'via_mail'         => true,
+            'notified_at' => null,
+            'via_mail'    => true,
         ]);
 
         $result = (new ClientComponentStatusChanged(

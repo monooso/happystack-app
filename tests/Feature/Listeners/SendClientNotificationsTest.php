@@ -13,7 +13,6 @@ use App\Models\Project;
 use App\Notifications\ClientComponentStatusChanged;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
@@ -57,27 +56,5 @@ final class SendClientNotificationsTest extends TestCase
         (new SendClientNotifications())->handle(new StatusChanged($component));
 
         Notification::assertNothingSent();
-    }
-
-    /** @test */
-    public function itUpdatesTheNotifiableLastNotifiedAtDateTime()
-    {
-        Notification::fake();
-
-        $this->travel(2)->days();
-
-        $component = Component::factory()->create(['status' => Status::WARN]);
-
-        $project = Project::factory()->hasAttached($component)->create();
-        $client = Client::factory()->for($project)->create();
-
-        (new SendClientNotifications())->handle(new StatusChanged($component));
-
-        $this->assertDatabaseHas('clients', [
-            'id'               => $client->id,
-            'last_notified_at' => Carbon::now(),
-        ]);
-
-        $this->travelBack();
     }
 }
