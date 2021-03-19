@@ -56,9 +56,24 @@ final class GoogleCloud implements GoogleCloudParser
             return null;
         }
 
-        $key = Str::kebab($keyCell->text());
+        $key = $this->convertServiceNameToKey($keyCell->text());
         $status = GoogleCloudStatus::normalize($statusCell->attr('class'));
 
         return [$key, $status];
+    }
+
+    /**
+     * Convert a human-readable service name to a "key"
+     *
+     * Example:
+     * ' Google Cloud SQL ' -> 'google-cloud-sql'
+     *
+     * @param string $name
+     *
+     * @return string
+     */
+    private function convertServiceNameToKey(string $name): string
+    {
+        return Str::kebab(Str::lower(trim($name)));
     }
 }

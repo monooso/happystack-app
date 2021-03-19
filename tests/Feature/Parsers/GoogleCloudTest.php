@@ -29,7 +29,7 @@ final class GoogleCloudTest extends TestCase
     public function itReturnsTheStatusOfAKnownComponent()
     {
         $status = (new GoogleCloudParser())->parse(
-            'google-cloud-storage',
+            'google-cloud-sql',
             $this->crawler
         );
 
