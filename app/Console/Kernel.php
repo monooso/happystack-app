@@ -4,16 +4,10 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\Config;
 
 class Kernel extends ConsoleKernel
 {
-    /**
-     * The Artisan commands provided by your application.
-     *
-     * @var array
-     */
-    protected $commands = [];
-
     /**
      * Define the application's command schedule.
      *
@@ -23,6 +17,16 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('telescope:prune')->daily();
+
+        // The refresh interval is configured in seconds; we need minutes
+        $minutes = floor(Config::get('happystack.status_refresh_interval') / 60);
+        $cron = "*/${minutes} * * * *";
+
+        $schedule
+            ->command('happy:refresh-statuses')
+            ->cron($cron)
+            ->runInBackground()
+            ->withoutOverlapping();
     }
 
     /**
