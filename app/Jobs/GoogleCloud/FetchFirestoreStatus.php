@@ -6,7 +6,7 @@ namespace App\Jobs\GoogleCloud;
 
 final class FetchFirestoreStatus extends FetchStatus
 {
-    protected function getComponentId(): string
+    protected function getExternalComponentId(): string
     {
         return 'cloud-firestore';
     }

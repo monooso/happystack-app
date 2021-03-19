@@ -6,7 +6,7 @@ use App\Jobs\FetchStatusPageStatus;
 
 abstract class FetchStatus extends FetchStatusPageStatus
 {
-    protected function getPageId(): string
+    protected function getExternalPageId(): string
     {
         return 's2k7tnzlhrpw';
     }

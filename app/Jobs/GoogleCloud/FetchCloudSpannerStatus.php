@@ -6,7 +6,7 @@ namespace App\Jobs\GoogleCloud;
 
 final class FetchCloudSpannerStatus extends FetchStatus
 {
-    protected function getComponentId(): string
+    protected function getExternalComponentId(): string
     {
         return 'cloud-spanner';
     }

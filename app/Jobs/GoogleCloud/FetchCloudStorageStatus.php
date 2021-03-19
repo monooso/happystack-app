@@ -6,7 +6,7 @@ namespace App\Jobs\GoogleCloud;
 
 final class FetchCloudStorageStatus extends FetchStatus
 {
-    protected function getComponentId(): string
+    protected function getExternalComponentId(): string
     {
         return 'google-cloud-storage';
     }

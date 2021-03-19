@@ -16,13 +16,16 @@ abstract class FetchStatus
     use Queueable;
     use SerializesModels;
 
+    public Component $component;
+
     /**
      * Constructor
      *
      * @param Component $component
      */
-    public function __construct(public Component $component)
+    public function __construct(Component $component)
     {
+        $this->component = $component;
     }
 
     /**
@@ -35,7 +38,7 @@ abstract class FetchStatus
     {
         $crawler = $fetcher->fetch();
 
-        $status = $parser->parse($this->getComponentId(), $crawler);
+        $status = $parser->parse($this->getExternalComponentId(), $crawler);
 
         StatusFetched::dispatch($this->component, $status);
     }
@@ -45,5 +48,5 @@ abstract class FetchStatus
      *
      * @return string
      */
-    abstract protected function getComponentId(): string;
+    abstract protected function getExternalComponentId(): string;
 }

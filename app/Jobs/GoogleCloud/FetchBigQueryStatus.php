@@ -6,7 +6,7 @@ namespace App\Jobs\GoogleCloud;
 
 final class FetchBigQueryStatus extends FetchStatus
 {
-    protected function getComponentId(): string
+    protected function getExternalComponentId(): string
     {
         return 'google-bigquery';
     }

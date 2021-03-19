@@ -40,9 +40,9 @@ abstract class FetchStatusPageStatus
      */
     public function handle(StatusPageFetcher $fetcher, StatusPageParser $parser)
     {
-        $response = $fetcher->fetch($this->getPageId());
+        $response = $fetcher->fetch($this->getExternalPageId());
 
-        $status = $parser->parse($this->getComponentId(), $response);
+        $status = $parser->parse($this->getExternalComponentId(), $response);
 
         StatusFetched::dispatch($this->component, $status);
     }
@@ -52,12 +52,12 @@ abstract class FetchStatusPageStatus
      *
      * @return string
      */
-    abstract protected function getComponentId(): string;
+    abstract protected function getExternalComponentId(): string;
 
     /**
      * Get the StatusPage page ID
      *
      * @return string
      */
-    abstract protected function getPageId(): string;
+    abstract protected function getExternalPageId(): string;
 }

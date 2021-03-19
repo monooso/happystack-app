@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace App\Jobs\AwsSqs;
 
 use App\Jobs\FetchAwsStatus;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-final class FetchCaCentral1Status extends FetchAwsStatus implements ShouldQueue, ShouldBeUnique
+final class FetchCaCentral1Status extends FetchAwsStatus implements ShouldQueue
 {
-    protected function getComponentId(): string
+    protected function getExternalComponentId(): string
     {
         return 'sqs-ca-central-1';
     }

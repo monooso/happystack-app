@@ -17,7 +17,6 @@ abstract class FetchAwsStatus
     use Queueable;
     use SerializesModels;
 
-    /** @var Component */
     public Component $component;
 
     /**
@@ -42,7 +41,7 @@ abstract class FetchAwsStatus
     {
         $response = $fetcher->fetch();
 
-        $status = $parser->parse($this->getComponentId(), $response);
+        $status = $parser->parse($this->getExternalComponentId(), $response);
 
         StatusFetched::dispatch($this->component, $status);
     }
@@ -52,5 +51,5 @@ abstract class FetchAwsStatus
      *
      * @return string
      */
-    abstract protected function getComponentId(): string;
+    abstract protected function getExternalComponentId(): string;
 }

@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace App\Jobs\AwsSqs;
 
 use App\Jobs\FetchAwsStatus;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-final class FetchEuWest2Status extends FetchAwsStatus implements ShouldQueue, ShouldBeUnique
+final class FetchEuWest2Status extends FetchAwsStatus implements ShouldQueue
 {
-    protected function getComponentId(): string
+    protected function getExternalComponentId(): string
     {
         return 'sqs-eu-west-2';
     }
