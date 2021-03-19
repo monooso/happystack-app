@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProjectController;
-use App\Jobs\Arcustech\FetchV2PlatformEuNl;
+use App\Jobs\Arcustech\FetchV2PlatformEuNlStatus;
 use App\Jobs\AwsS3\FetchUsEast1Status;
 use App\Jobs\Digitalocean\FetchDropletsStatus;
 use App\Jobs\GoogleCloud\FetchComputeEngineStatus;
@@ -39,7 +39,7 @@ Route::get('/agency-mail', function () {
 
 Route::get('/update-status/arcustech/platform', function () {
     $component = Component::where('handle', 'arcustech::v2-platform-eu-nl')->firstOrFail();
-    FetchV2PlatformEuNl::dispatchNow($component);
+    FetchV2PlatformEuNlStatus::dispatchNow($component);
 });
 
 Route::get('/update-status/aws-s3/us-east-1', function () {
