@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
+use App\Actions\Components\RefreshStatus;
 use App\Models\Component;
+use Exception;
 use Illuminate\Console\Command;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Str;
 
 final class RefreshStatuses extends Command
 {
@@ -15,44 +15,26 @@ final class RefreshStatuses extends Command
 
     protected $description = 'Refresh outdated component statuses.';
 
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     public function handle()
     {
-        // Retrieve all of the outdated (?) components from the database
-        // @todo set as environment or config variable
-        $threshold = Carbon::now()->subMinutes(5);
+        $action = new RefreshStatus();
 
-        $components = Component::query()->stale()->get();
-        $components = Component::where('updated_at', '<=', $threshold)->get();
+        Component::stale()->each(function (Component $component) use ($action) {
+            $handle = $component->handle;
 
-        // For each component:
-        // - Check the class exists
-        // - Queue the job
-
-        foreach ($components as $component) {
-            // - Determine the job class
-            //   aws-s3::ap-east-1 -> App\Jobs\AwsS3\FetchApEast1Status
-            // @todo move to "resolver" helper class
-
-            [$serviceName, $componentName] = explode('::', $component->handle);
-
-            $serviceNamespace = ucfirst(Str::camel($serviceName));
-            $componentClass = 'Fetch' . ucfirst(Str::camel($componentName)) . 'Status';
-            $fqcn = '\\App\\Jobs\\' . $serviceNamespace . '\\' . $componentClass;
-
-            if (!class_exists($fqcn)) {
-                // @todo log something, somewhere
-                $this->info('💡 The ' . $fqcn . ' class does not exist');
-                continue;
+            try {
+                $action->refresh($component);
+            } catch (Exception $e) {
+                // @todo log exceptions with extreme prejudice
+                $message = "Error updating ${handle}: " . $e->getMessage();
+                $this->error('⚠️ ' . $message);
+                return;
             }
 
-            $fqcn::dispatch($component);
-            $this->info('⚡️ Dispatched ' . $fqcn);
-        }
+            $this->info('⚡️ Updating ' . $handle);
+        });
+
+        $this->info('💪 All done');
 
         return 0;
     }

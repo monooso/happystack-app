@@ -18,7 +18,7 @@ final class FetchJobResolverTest extends TestCase
 
         $jobClass = FetchJobResolver::resolve($handle);
 
-        $this->assertSame(FetchApEast1Status::class, ltrim($jobClass, '\\'));
+        $this->assertSame('\\' . FetchApEast1Status::class, $jobClass);
     }
 
     /** @test */
