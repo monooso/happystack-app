@@ -6,10 +6,12 @@ namespace App\Events;
 
 use App\Models\Component;
 use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Queue\SerializesModels;
 
 final class StatusFetched
 {
     use Dispatchable;
+    use SerializesModels;
 
     public Component $component;
     public string $status;
