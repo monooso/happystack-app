@@ -1,4 +1,4 @@
-<form wire:submit.prevent="create">
+<form wire:submit.prevent="save">
     <div class="sm:space-y-10">
         <x-jet-action-section>
             <x-slot name="title">{{ __('Project details') }}</x-slot>
@@ -128,7 +128,13 @@
         <x-section-divider/>
 
         <div class="text-right">
-            <x-jet-button>{{ __('Create project') }}</x-jet-button>
+            <x-jet-button>
+                @if ($project->exists)
+                    {{ __('Save changes') }}
+                @else
+                    {{ __('Create project') }}
+                @endif
+            </x-jet-button>
         </div>
     </div>
 </form>

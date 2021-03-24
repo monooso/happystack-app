@@ -9,7 +9,7 @@
         @endif
 
         @if (count($projects) > 0)
-            <div class="mb-6 text-right">
+            <div class="mb-8 text-center sm:text-right">
                 <form action="{{ route('projects.create') }}">
                     <x-jet-button class="text-sm">{{ __('Create project') }}</x-jet-button>
                 </form>
@@ -22,6 +22,7 @@
                         <x-table.head-heading>{{ __('Monitoring') }}</x-table.head-heading>
                         <x-table.head-heading>{{ __('Warnings') }}</x-table.head-heading>
                         <x-table.head-heading>{{ __('Errors') }}</x-table.head-heading>
+                        <x-table.head-heading><span class="sr-only">{{ __('Actions') }}</span></x-table.head-heading>
                     </x-table.row>
                 </x-table.head>
 

@@ -1,3 +1,3 @@
-<thead {{ $attributes->merge(['class' => 'bg-gray-50']) }}>
+<thead>
     {{ $slot }}
 </thead>

@@ -6,7 +6,7 @@ namespace Tests\Feature\Livewire\Projects;
 
 use App\Constants\ToggleValue;
 use App\Contracts\CreatesProjects;
-use App\Http\Livewire\Projects\CreateProjectForm;
+use App\Http\Livewire\Projects\CreateUpdateForm;
 use App\Models\Project;
 use App\Models\Team;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -48,7 +48,7 @@ final class CreateProjectFormTest extends TestCase
             ->with($user, $expected)
             ->andReturns(new Project());
 
-        return Livewire::test(CreateProjectForm::class)
+        return Livewire::test(CreateUpdateForm::class)
             ->set('name', $expected['name'])
             ->set('agency', $expected['agency'])
             ->set('client', $expected['client'])
