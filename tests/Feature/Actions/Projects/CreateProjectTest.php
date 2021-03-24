@@ -11,7 +11,6 @@ use App\Models\Project;
 use App\Models\Team;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Collection;
 use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
 
@@ -23,11 +22,11 @@ final class CreateProjectTest extends TestCase
     /** @test */
     public function itCreatesANewProject()
     {
-        $attributes = $this->makeAttributes();
+        $input = $this->makeInput();
 
-        $this->createProject($attributes);
+        $this->createProject($input);
 
-        $this->assertDatabaseHas('projects', ['name' => $attributes['name']]);
+        $this->assertDatabaseHas('projects', ['name' => $input['name']]);
     }
 
     /** @test */
@@ -39,50 +38,50 @@ final class CreateProjectTest extends TestCase
     /** @test */
     public function itAssociatesComponentsWithTheProject(): void
     {
-        $components = $this->createComponents(5)->pluck('id')->random(2)->all();
+        $input = $this->makeInput();
 
-        $project = $this->createProject(['components' => $components]);
+        $project = $this->createProject($input);
 
-        $this->assertDatabaseCount('component_project', 2);
+        $this->assertDatabaseCount(
+            'component_project',
+            count($input['components'])
+        );
 
-        $this->assertDatabaseHas('component_project', [
-            'component_id' => $components[0],
-            'project_id'   => $project->id,
-        ]);
-
-        $this->assertDatabaseHas('component_project', [
-            'component_id' => $components[1],
-            'project_id'   => $project->id,
-        ]);
+        foreach ($input['components'] as $componentId) {
+            $this->assertDatabaseHas('component_project', [
+                'component_id' => $componentId,
+                'project_id'   => $project->id,
+            ]);
+        }
     }
 
     /** @test */
     public function itCreatesTheProjectAgency()
     {
-        $attributes = $this->makeAttributes();
+        $input = $this->makeInput();
 
-        $project = $this->createProject($attributes);
+        $project = $this->createProject($input);
 
         $this->assertDatabaseHas('agencies', [
             'project_id' => $project->id,
-            'via_mail'   => $attributes['agency']['via_mail'] === ToggleValue::ENABLED,
-            'mail_route' => $attributes['agency']['mail_route'],
+            'via_mail'   => $input['agency']['via_mail'] === ToggleValue::ENABLED,
+            'mail_route' => $input['agency']['mail_route'],
         ]);
     }
 
     /** @test */
     public function itCreatesTheProjectClient()
     {
-        $attributes = $this->makeAttributes();
-        $attributes['client']['via_mail'] = ToggleValue::ENABLED;
+        $input = $this->makeInput();
+        $input['client']['via_mail'] = ToggleValue::ENABLED;
 
-        $project = $this->createProject($attributes);
+        $project = $this->createProject($input);
 
         $this->assertDatabaseHas('clients', [
             'project_id'   => $project->id,
-            'via_mail'     => $attributes['client']['via_mail'] === ToggleValue::ENABLED,
-            'mail_route'   => $attributes['client']['mail_route'],
-            'mail_message' => $attributes['client']['mail_message'],
+            'via_mail'     => $input['client']['via_mail'] === ToggleValue::ENABLED,
+            'mail_route'   => $input['client']['mail_route'],
+            'mail_message' => $input['client']['mail_message'],
         ]);
     }
 
@@ -109,7 +108,7 @@ final class CreateProjectTest extends TestCase
     /** @test */
     public function itThrowsAValidationErrorIfTheAgencyMailRouteIsMissing(): void
     {
-        $attributes = $this->makeAttributes([
+        $input = $this->makeInput([
             'agency' => [
                 'via_mail'   => ToggleValue::ENABLED,
                 'mail_route' => null,
@@ -117,7 +116,7 @@ final class CreateProjectTest extends TestCase
         ]);
 
         try {
-            $this->createProject($attributes);
+            $this->createProject($input);
         } catch (ValidationException $e) {
             $this->assertTrue($e->validator->getMessageBag()->has('agency.mail_route'));
         }
@@ -126,7 +125,7 @@ final class CreateProjectTest extends TestCase
     /** @test */
     public function itThrowsAValidationErrorIfTheAgencyMailRouteIsInvalid(): void
     {
-        $attributes = $this->makeAttributes([
+        $input = $this->makeInput([
             'agency' => [
                 'via_mail'   => ToggleValue::ENABLED,
                 'mail_route' => 'not-an-email',
@@ -134,7 +133,7 @@ final class CreateProjectTest extends TestCase
         ]);
 
         try {
-            $this->createProject($attributes);
+            $this->createProject($input);
         } catch (ValidationException $e) {
             $this->assertTrue($e->validator->getMessageBag()->has('agency.mail_route'));
         }
@@ -143,7 +142,7 @@ final class CreateProjectTest extends TestCase
     /** @test */
     public function itThrowsAValidationErrorIfTheAgencyMailRouteIsTooLong(): void
     {
-        $attributes = $this->makeAttributes([
+        $input = $this->makeInput([
             'agency' => [
                 'via_mail'   => ToggleValue::ENABLED,
                 'mail_route' => str_repeat('x', 255) . '@example.com',
@@ -151,7 +150,7 @@ final class CreateProjectTest extends TestCase
         ]);
 
         try {
-            $this->createProject($attributes);
+            $this->createProject($input);
         } catch (ValidationException $e) {
             $this->assertTrue($e->validator->getMessageBag()->has('agency.mail_route'));
         }
@@ -160,16 +159,16 @@ final class CreateProjectTest extends TestCase
     /** @test */
     public function itAllowsEmptyAgencyMailDetailsIfMailNotificationsAreDisabled(): void
     {
-        $attributes = $this->makeAttributes([
+        $input = $this->makeInput([
             'agency' => [
                 'via_mail'   => ToggleValue::DISABLED,
                 'mail_route' => '',
             ],
         ]);
 
-        $project = $this->createProject($attributes);
+        $project = $this->createProject($input);
 
-        $this->assertDatabaseHas('projects', ['name' => $attributes['name']]);
+        $this->assertDatabaseHas('projects', ['name' => $input['name']]);
 
         $this->assertDatabaseHas('agencies', [
             'project_id' => $project->id,
@@ -181,7 +180,7 @@ final class CreateProjectTest extends TestCase
     /** @test */
     public function itThrowsAValidationErrorIfTheClientMailRouteIsMissing(): void
     {
-        $attributes = $this->makeAttributes([
+        $input = $this->makeInput([
             'client' => [
                 'via_mail'     => ToggleValue::ENABLED,
                 'mail_route'   => null,
@@ -190,7 +189,7 @@ final class CreateProjectTest extends TestCase
         ]);
 
         try {
-            $this->createProject($attributes);
+            $this->createProject($input);
         } catch (ValidationException $e) {
             $this->assertTrue($e->validator->getMessageBag()->has('client.mail_route'));
         }
@@ -199,7 +198,7 @@ final class CreateProjectTest extends TestCase
     /** @test */
     public function itThrowsAValidationErrorIfTheClientMailRouteIsInvalid(): void
     {
-        $attributes = $this->makeAttributes([
+        $input = $this->makeInput([
             'client' => [
                 'via_mail'     => ToggleValue::ENABLED,
                 'mail_route'   => 'not-an-email',
@@ -208,7 +207,7 @@ final class CreateProjectTest extends TestCase
         ]);
 
         try {
-            $this->createProject($attributes);
+            $this->createProject($input);
         } catch (ValidationException $e) {
             $this->assertTrue($e->validator->getMessageBag()->has('client.mail_route'));
         }
@@ -217,7 +216,7 @@ final class CreateProjectTest extends TestCase
     /** @test */
     public function itThrowsAValidationErrorIfTheClientMailRouteIsTooLong(): void
     {
-        $attributes = $this->makeAttributes([
+        $input = $this->makeInput([
             'client' => [
                 'via_mail'     => ToggleValue::ENABLED,
                 'mail_route'   => str_repeat('x', 255) . '@example.com',
@@ -226,7 +225,7 @@ final class CreateProjectTest extends TestCase
         ]);
 
         try {
-            $this->createProject($attributes);
+            $this->createProject($input);
         } catch (ValidationException $e) {
             $this->assertTrue($e->validator->getMessageBag()->has('client.mail_route'));
         }
@@ -235,7 +234,7 @@ final class CreateProjectTest extends TestCase
     /** @test */
     public function itThrowsAValidationErrorIfTheClientMailMessageIsMissing(): void
     {
-        $attributes = $this->makeAttributes([
+        $input = $this->makeInput([
             'client' => [
                 'via_mail'     => ToggleValue::ENABLED,
                 'mail_route'   => $this->faker->email,
@@ -244,7 +243,7 @@ final class CreateProjectTest extends TestCase
         ]);
 
         try {
-            $this->createProject($attributes);
+            $this->createProject($input);
         } catch (ValidationException $e) {
             $this->assertTrue($e->validator->getMessageBag()->has('client.mail_message'));
         }
@@ -253,7 +252,7 @@ final class CreateProjectTest extends TestCase
     /** @test */
     public function itThrowsAValidationErrorIfTheClientMailMessageIsTooLong(): void
     {
-        $attributes = $this->makeAttributes([
+        $input = $this->makeInput([
             'client' => [
                 'via_mail'     => ToggleValue::ENABLED,
                 'mail_route'   => $this->faker->email,
@@ -262,7 +261,7 @@ final class CreateProjectTest extends TestCase
         ]);
 
         try {
-            $this->createProject($attributes);
+            $this->createProject($input);
         } catch (ValidationException $e) {
             $this->assertTrue($e->validator->getMessageBag()->has('client.mail_message'));
         }
@@ -271,7 +270,7 @@ final class CreateProjectTest extends TestCase
     /** @test */
     public function itAllowsEmptyClientMailDetailsIfMailNotificationsAreDisabled(): void
     {
-        $attributes = $this->makeAttributes([
+        $input = $this->makeInput([
             'client' => [
                 'via_mail'     => ToggleValue::DISABLED,
                 'mail_route'   => '',
@@ -279,9 +278,9 @@ final class CreateProjectTest extends TestCase
             ],
         ]);
 
-        $project = $this->createProject($attributes);
+        $project = $this->createProject($input);
 
-        $this->assertDatabaseHas('projects', ['name' => $attributes['name']]);
+        $this->assertDatabaseHas('projects', ['name' => $input['name']]);
 
         $this->assertDatabaseHas('clients', [
             'project_id'   => $project->id,
@@ -312,47 +311,35 @@ final class CreateProjectTest extends TestCase
     }
 
     /**
-     * Create test service components
-     *
-     * @param int $count
-     *
-     * @return Collection
-     */
-    private function createComponents(int $count = 3): Collection
-    {
-        return Component::factory()->count($count)->forService()->create();
-    }
-
-    /**
      * Create a project
      *
-     * @param array $attributes
+     * @param array $input
      *
      * @return Project
      * @throws ValidationException
      */
-    private function createProject(array $attributes = []): Project
+    private function createProject(array $input = []): Project
     {
         $team = Team::factory()->create();
 
         return (new CreateProject())->create(
             $team->owner,
-            $this->makeAttributes($attributes)
+            $this->makeInput($input)
         );
     }
 
     /**
      * Get an array of valid project attributes
      *
-     * @param array $attributes
+     * @param array $input
      *
      * @return array
      */
-    private function makeAttributes(array $attributes = []): array
+    private function makeInput(array $input = []): array
     {
         $defaults = [
             'name'       => $this->faker->company,
-            'components' => $this->createComponents()->pluck('id')->all(),
+            'components' => Component::inRandomOrder()->limit(5)->pluck('id')->all(),
             'agency'     => [
                 'via_mail'   => ToggleValue::ENABLED,
                 'mail_route' => $this->faker->email,
@@ -364,6 +351,6 @@ final class CreateProjectTest extends TestCase
             ],
         ];
 
-        return array_merge($defaults, $attributes);
+        return array_merge($defaults, $input);
     }
 }
