@@ -4,92 +4,134 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Actions\Projects;
 
-use App\Actions\Projects\CreateProject;
+use App\Actions\Projects\UpdateProject;
 use App\Constants\ToggleValue;
 use App\Models\Component;
 use App\Models\Project;
-use App\Models\Team;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
 
-final class CreateProjectTest extends TestCase
+final class UpdateProjectTest extends TestCase
 {
     use RefreshDatabase;
     use WithFaker;
 
     /** @test */
-    public function itCreatesANewProject()
+    public function itUpdatesAProject()
     {
-        $input = $this->makeInput();
+        $project = Project::factory()->create(['name' => 'old']);
 
-        $this->createProject($input);
+        $this->actingAs($project->team->owner);
 
-        $this->assertDatabaseHas('projects', ['name' => $input['name']]);
+        $input = $this->makeInput(['name' => $this->faker->company]);
+
+        $this->updateProject($project, $input);
+
+        $this->assertDatabaseHas('projects', [
+            'id'   => $project->id,
+            'name' => $input['name'],
+        ]);
     }
 
     /** @test */
-    public function itReturnsTheNewProject(): void
+    public function itReturnsTheUpdatedProject(): void
     {
-        $this->assertInstanceOf(Project::class, $this->createProject());
+        $project = Project::factory()->create(['name' => 'old']);
+
+        $this->actingAs($project->team->owner);
+
+        $input = $this->makeInput(['name' => $this->faker->company]);
+
+        $this->assertSame(
+            $project->id,
+            ($this->updateProject($project, $input))->id
+        );
     }
 
     /** @test */
-    public function itAssociatesComponentsWithTheProject(): void
+    public function itUpdatesTheProjectComponents(): void
     {
-        $input = $this->makeInput();
+        $components = Component::inRandomOrder()->limit(3)->pluck('id')->all();
 
-        $project = $this->createProject($input);
+        $project = Project::factory()->create();
+        $project->components()->sync([$components[0]]);
 
-        $this->assertDatabaseCount(
-            'component_project',
-            count($input['components'])
+        $this->actingAs($project->team->owner);
+
+        // Update the components
+        $project = $this->updateProject(
+            $project,
+            ['components' => array_slice($components, 1)]
         );
 
-        foreach ($input['components'] as $componentId) {
-            $this->assertDatabaseHas('component_project', [
-                'component_id' => $componentId,
-                'project_id'   => $project->id,
-            ]);
-        }
+        $this->assertDatabaseCount('component_project', 2);
+
+        $this->assertDatabaseMissing('component_project', [
+            'component_id' => $components[0],
+            'project_id'   => $project->id,
+        ]);
+
+        $this->assertDatabaseHas('component_project', [
+            'component_id' => $components[1],
+            'project_id'   => $project->id,
+        ]);
+
+        $this->assertDatabaseHas('component_project', [
+            'component_id' => $components[2],
+            'project_id'   => $project->id,
+        ]);
     }
 
     /** @test */
-    public function itCreatesTheProjectAgency()
+    public function itUpdatesTheProjectAgency()
     {
-        $input = $this->makeInput();
+        $project = Project::factory()
+            ->hasAgency(['mail_route' => 'old@email.com'])
+            ->create();
 
-        $project = $this->createProject($input);
+        $this->actingAs($project->team->owner);
+
+        $input = $this->makeInput();
+        $input['agency']['mail_route'] = 'new@email.com';
+
+        $this->updateProject($project, $input);
 
         $this->assertDatabaseHas('agencies', [
             'project_id' => $project->id,
-            'via_mail'   => $input['agency']['via_mail'] === ToggleValue::ENABLED,
             'mail_route' => $input['agency']['mail_route'],
         ]);
     }
 
     /** @test */
-    public function itCreatesTheProjectClient()
+    public function itUpdatesTheProjectClient()
     {
-        $input = $this->makeInput();
-        $input['client']['via_mail'] = ToggleValue::ENABLED;
+        $project = Project::factory()
+            ->hasClient(['mail_route' => 'old@email.com'])
+            ->create();
 
-        $project = $this->createProject($input);
+        $this->actingAs($project->team->owner);
+
+        $input = $this->makeInput();
+        $input['client']['mail_route'] = 'new@email.com';
+
+        $this->updateProject($project, $input);
 
         $this->assertDatabaseHas('clients', [
-            'project_id'   => $project->id,
-            'via_mail'     => $input['client']['via_mail'] === ToggleValue::ENABLED,
-            'mail_route'   => $input['client']['mail_route'],
-            'mail_message' => $input['client']['mail_message'],
+            'project_id' => $project->id,
+            'mail_route' => $input['client']['mail_route'],
         ]);
     }
 
     /** @test */
     public function itThrowsAValidationErrorIfTheProjectNameIsEmpty(): void
     {
+        $project = Project::factory()->create();
+        $this->actingAs($project->team->owner);
+
         try {
-            $this->createProject(['name' => '']);
+            $this->updateProject($project, ['name' => '']);
         } catch (ValidationException $e) {
             $this->assertTrue($e->validator->getMessageBag()->has('name'));
         }
@@ -98,8 +140,11 @@ final class CreateProjectTest extends TestCase
     /** @test */
     public function itThrowsAValidationErrorIfTheProjectNameIsTooLong(): void
     {
+        $project = Project::factory()->create();
+        $this->actingAs($project->team->owner);
+
         try {
-            $this->createProject(['name' => str_repeat('x', 256)]);
+            $this->updateProject($project, ['name' => str_repeat('x', 256)]);
         } catch (ValidationException $e) {
             $this->assertTrue($e->validator->getMessageBag()->has('name'));
         }
@@ -108,6 +153,9 @@ final class CreateProjectTest extends TestCase
     /** @test */
     public function itThrowsAValidationErrorIfTheAgencyMailRouteIsMissing(): void
     {
+        $project = Project::factory()->create();
+        $this->actingAs($project->team->owner);
+
         $input = $this->makeInput([
             'agency' => [
                 'via_mail'   => ToggleValue::ENABLED,
@@ -116,7 +164,7 @@ final class CreateProjectTest extends TestCase
         ]);
 
         try {
-            $this->createProject($input);
+            $this->updateProject($project, $input);
         } catch (ValidationException $e) {
             $this->assertTrue($e->validator->getMessageBag()->has('agency.mail_route'));
         }
@@ -125,6 +173,9 @@ final class CreateProjectTest extends TestCase
     /** @test */
     public function itThrowsAValidationErrorIfTheAgencyMailRouteIsInvalid(): void
     {
+        $project = Project::factory()->create();
+        $this->actingAs($project->team->owner);
+
         $input = $this->makeInput([
             'agency' => [
                 'via_mail'   => ToggleValue::ENABLED,
@@ -133,7 +184,7 @@ final class CreateProjectTest extends TestCase
         ]);
 
         try {
-            $this->createProject($input);
+            $this->updateProject($project, $input);
         } catch (ValidationException $e) {
             $this->assertTrue($e->validator->getMessageBag()->has('agency.mail_route'));
         }
@@ -142,6 +193,9 @@ final class CreateProjectTest extends TestCase
     /** @test */
     public function itThrowsAValidationErrorIfTheAgencyMailRouteIsTooLong(): void
     {
+        $project = Project::factory()->create();
+        $this->actingAs($project->team->owner);
+
         $input = $this->makeInput([
             'agency' => [
                 'via_mail'   => ToggleValue::ENABLED,
@@ -150,7 +204,7 @@ final class CreateProjectTest extends TestCase
         ]);
 
         try {
-            $this->createProject($input);
+            $this->updateProject($project, $input);
         } catch (ValidationException $e) {
             $this->assertTrue($e->validator->getMessageBag()->has('agency.mail_route'));
         }
@@ -159,6 +213,9 @@ final class CreateProjectTest extends TestCase
     /** @test */
     public function itAllowsEmptyAgencyMailDetailsIfMailNotificationsAreDisabled(): void
     {
+        $project = Project::factory()->create();
+        $this->actingAs($project->team->owner);
+
         $input = $this->makeInput([
             'agency' => [
                 'via_mail'   => ToggleValue::DISABLED,
@@ -166,7 +223,7 @@ final class CreateProjectTest extends TestCase
             ],
         ]);
 
-        $project = $this->createProject($input);
+        $project = $this->updateProject($project, $input);
 
         $this->assertDatabaseHas('projects', ['name' => $input['name']]);
 
@@ -180,6 +237,9 @@ final class CreateProjectTest extends TestCase
     /** @test */
     public function itThrowsAValidationErrorIfTheClientMailRouteIsMissing(): void
     {
+        $project = Project::factory()->create();
+        $this->actingAs($project->team->owner);
+
         $input = $this->makeInput([
             'client' => [
                 'via_mail'     => ToggleValue::ENABLED,
@@ -189,7 +249,7 @@ final class CreateProjectTest extends TestCase
         ]);
 
         try {
-            $this->createProject($input);
+            $this->updateProject($project, $input);
         } catch (ValidationException $e) {
             $this->assertTrue($e->validator->getMessageBag()->has('client.mail_route'));
         }
@@ -198,6 +258,9 @@ final class CreateProjectTest extends TestCase
     /** @test */
     public function itThrowsAValidationErrorIfTheClientMailRouteIsInvalid(): void
     {
+        $project = Project::factory()->create();
+        $this->actingAs($project->team->owner);
+
         $input = $this->makeInput([
             'client' => [
                 'via_mail'     => ToggleValue::ENABLED,
@@ -207,7 +270,7 @@ final class CreateProjectTest extends TestCase
         ]);
 
         try {
-            $this->createProject($input);
+            $this->updateProject($project, $input);
         } catch (ValidationException $e) {
             $this->assertTrue($e->validator->getMessageBag()->has('client.mail_route'));
         }
@@ -216,6 +279,9 @@ final class CreateProjectTest extends TestCase
     /** @test */
     public function itThrowsAValidationErrorIfTheClientMailRouteIsTooLong(): void
     {
+        $project = Project::factory()->create();
+        $this->actingAs($project->team->owner);
+
         $input = $this->makeInput([
             'client' => [
                 'via_mail'     => ToggleValue::ENABLED,
@@ -225,7 +291,7 @@ final class CreateProjectTest extends TestCase
         ]);
 
         try {
-            $this->createProject($input);
+            $this->updateProject($project, $input);
         } catch (ValidationException $e) {
             $this->assertTrue($e->validator->getMessageBag()->has('client.mail_route'));
         }
@@ -234,6 +300,9 @@ final class CreateProjectTest extends TestCase
     /** @test */
     public function itThrowsAValidationErrorIfTheClientMailMessageIsMissing(): void
     {
+        $project = Project::factory()->create();
+        $this->actingAs($project->team->owner);
+
         $input = $this->makeInput([
             'client' => [
                 'via_mail'     => ToggleValue::ENABLED,
@@ -243,7 +312,7 @@ final class CreateProjectTest extends TestCase
         ]);
 
         try {
-            $this->createProject($input);
+            $this->updateProject($project, $input);
         } catch (ValidationException $e) {
             $this->assertTrue($e->validator->getMessageBag()->has('client.mail_message'));
         }
@@ -252,6 +321,9 @@ final class CreateProjectTest extends TestCase
     /** @test */
     public function itThrowsAValidationErrorIfTheClientMailMessageIsTooLong(): void
     {
+        $project = Project::factory()->create();
+        $this->actingAs($project->team->owner);
+
         $input = $this->makeInput([
             'client' => [
                 'via_mail'     => ToggleValue::ENABLED,
@@ -261,7 +333,7 @@ final class CreateProjectTest extends TestCase
         ]);
 
         try {
-            $this->createProject($input);
+            $this->updateProject($project, $input);
         } catch (ValidationException $e) {
             $this->assertTrue($e->validator->getMessageBag()->has('client.mail_message'));
         }
@@ -270,6 +342,9 @@ final class CreateProjectTest extends TestCase
     /** @test */
     public function itAllowsEmptyClientMailDetailsIfMailNotificationsAreDisabled(): void
     {
+        $project = Project::factory()->create();
+        $this->actingAs($project->team->owner);
+
         $input = $this->makeInput([
             'client' => [
                 'via_mail'     => ToggleValue::DISABLED,
@@ -278,7 +353,7 @@ final class CreateProjectTest extends TestCase
             ],
         ]);
 
-        $project = $this->createProject($input);
+        $project = $this->updateProject($project, $input);
 
         $this->assertDatabaseHas('projects', ['name' => $input['name']]);
 
@@ -293,8 +368,11 @@ final class CreateProjectTest extends TestCase
     /** @test */
     public function itThrowsAValidationErrorIfThereAreNoSelectedComponents(): void
     {
+        $project = Project::factory()->create();
+        $this->actingAs($project->team->owner);
+
         try {
-            $this->createProject(['components' => []]);
+            $this->updateProject($project, ['components' => []]);
         } catch (ValidationException $e) {
             $this->assertTrue($e->validator->getMessageBag()->has('components'));
         }
@@ -303,27 +381,33 @@ final class CreateProjectTest extends TestCase
     /** @test */
     public function itThrowsAValidationErrorIfAComponentDoesNotExist()
     {
+        $project = Project::factory()->create();
+        $this->actingAs($project->team->owner);
+
         try {
-            $this->createProject(['components' => [$this->faker->randomNumber(6)]]);
+            $this->updateProject(
+                $project,
+                ['components' => [$this->faker->randomNumber(6)]]
+            );
         } catch (ValidationException $e) {
             $this->assertTrue($e->validator->getMessageBag()->has('components.0'));
         }
     }
 
     /**
-     * Create a project
+     * Update the given project
      *
-     * @param array $input
+     * @param Project $project
+     * @param array   $input
      *
      * @return Project
      * @throws ValidationException
      */
-    private function createProject(array $input = []): Project
+    private function updateProject(Project $project, array $input = []): Project
     {
-        $team = Team::factory()->create();
-
-        return (new CreateProject())->create(
-            $team->owner,
+        return (new UpdateProject())->update(
+            auth()->user(),
+            $project,
             $this->makeInput($input)
         );
     }
@@ -331,11 +415,11 @@ final class CreateProjectTest extends TestCase
     /**
      * Get an array of valid project attributes
      *
-     * @param array $input
+     * @param array $overrides
      *
      * @return array
      */
-    private function makeInput(array $input = []): array
+    private function makeInput(array $overrides = []): array
     {
         $defaults = [
             'name'       => $this->faker->company,
@@ -351,6 +435,6 @@ final class CreateProjectTest extends TestCase
             ],
         ];
 
-        return array_merge($defaults, $input);
+        return array_merge($defaults, $overrides);
     }
 }

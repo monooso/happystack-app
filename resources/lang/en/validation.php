@@ -131,7 +131,7 @@ return [
     */
 
     'custom' => [
-        'createProject' => [
+        'create_update_project' => [
             'agency' => [
                 'mail_route' => [
                     'email'       => 'The notification email must be a valid email address',

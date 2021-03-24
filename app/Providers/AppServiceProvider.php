@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Actions\Projects\CreateProject;
+use App\Actions\Projects\UpdateProject;
 use App\Contracts\CreatesProjects;
 use App\Contracts\Fetchers\AwsFetcher as AwsFetcherContract;
 use App\Contracts\Fetchers\GoogleCloudFetcher as GoogleCloudFetcherContract;
@@ -10,6 +11,7 @@ use App\Contracts\Fetchers\StatusPageFetcher as StatusPageFetcherContract;
 use App\Contracts\Parsers\AwsParser as AwsParserContract;
 use App\Contracts\Parsers\GoogleCloudParser as GoogleCloudParserContract;
 use App\Contracts\Parsers\StatusPageParser as StatusPageParserContract;
+use App\Contracts\UpdatesProjects;
 use App\Fetchers\Aws as AwsFetcher;
 use App\Fetchers\GoogleCloud as GoogleCloudFetcher;
 use App\Fetchers\StatusPage as StatusPageFetcher;
@@ -86,5 +88,6 @@ class AppServiceProvider extends ServiceProvider
     private function registerActions()
     {
         $this->app->bind(CreatesProjects::class, CreateProject::class);
+        $this->app->bind(UpdatesProjects::class, UpdateProject::class);
     }
 }

@@ -1,3 +1,3 @@
-<table {{ $attributes->merge(['class' => 'bg-white divide-y divide-gray-200 min-w-full overflow-hidden rounded shadow']) }}>
+<table class="bg-white border-b border-gray-200 divide-y divide-gray-200 min-w-full shadow sm:rounded">
     {{ $slot }}
 </table>

@@ -13,6 +13,7 @@ module.exports = {
 
     variants: {
         extend: {
+            borderRadius: ['first', 'last'],
             opacity: ['disabled'],
         },
     },

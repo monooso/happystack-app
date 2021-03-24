@@ -29,30 +29,11 @@ final class ProjectController extends Controller
     /**
      * Display the "create project" form
      *
-     * @param Request $request
-     *
      * @return Response
      */
-    public function create(Request $request): Response
+    public function create(): Response
     {
-        $user = $request->user();
-
-        return response()->view('projects.create', [
-            'user' => $user,
-            'team' => $user->currentTeam,
-        ]);
-    }
-
-    /**
-     * Display the project details
-     *
-     * @param Project $project
-     *
-     * @return Response
-     */
-    public function show(Project $project): Response
-    {
-        //
+        return response()->view('projects.create', ['project' => new Project()]);
     }
 
     /**
@@ -64,6 +45,6 @@ final class ProjectController extends Controller
      */
     public function edit(Project $project): Response
     {
-        //
+        return response()->view('projects.edit', ['project' => $project]);
     }
 }

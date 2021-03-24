@@ -9,10 +9,7 @@ use App\Contracts\CreatesProjects;
 use App\Models\Project;
 use App\Models\Team;
 use App\Models\User;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Lang;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
+use App\Validators\CreateProjectValidator;
 use Illuminate\Validation\ValidationException;
 
 final class CreateProject implements CreatesProjects
@@ -21,24 +18,26 @@ final class CreateProject implements CreatesProjects
      * Create a new project for the given user
      *
      * @param User  $user
-     * @param array $attributes
+     * @param array $input
      *
      * @return Project
      * @throws ValidationException
      */
-    public function create(User $user, array $attributes): Project
+    public function create(User $user, array $input): Project
     {
-        $attributes = $this->validate($attributes);
+        // @todo Gate
+
+        $input = $this->validate($input);
 
         /** @var Team $team */
         $team = $user->currentTeam;
 
         /** @var Project $project */
-        $project = $team->projects()->create(['name' => $attributes['name']]);
+        $project = $team->projects()->create(['name' => $input['name']]);
 
-        $this->createComponents($project, $attributes);
-        $this->createAgency($project, $attributes);
-        $this->createClient($project, $attributes);
+        $this->createComponents($project, $input);
+        $this->createAgency($project, $input);
+        $this->createClient($project, $input);
 
         return $project;
     }
@@ -46,68 +45,36 @@ final class CreateProject implements CreatesProjects
     /**
      * Validate the project attributes
      *
-     * @param array $attributes
+     * @param array $input
      *
      * @return array
      * @throws ValidationException
      */
-    private function validate(array $attributes): array
+    private function validate(array $input): array
     {
-        $rules = [
-            'name'         => ['required', 'string', 'min:1', 'max:255'],
-            'components'   => ['required', 'array', 'min:1'],
-            'components.*' => ['exists:components,id'],
-
-            'agency.via_mail' => ['required', Rule::in(ToggleValue::all())],
-
-            'agency.mail_route' => [
-                'required_if:agency.via_email,' . ToggleValue::ENABLED,
-                'email',
-                'max:255',
-            ],
-
-            'client.via_mail' => ['required', Rule::in(ToggleValue::all())],
-
-            'client.mail_route' => [
-                'required_if:client.via_mail,' . ToggleValue::ENABLED,
-                'email',
-                'max:255',
-            ],
-
-            'client.mail_message' => [
-                'required_if:client.via_mail,' . ToggleValue::ENABLED,
-                'string',
-                'min:1',
-                'max:60000',
-            ],
-        ];
-
-        $messages = Lang::get('validation.custom.createProject');
-        $flattened = Arr::dot($messages);
-
-        return Validator::make($attributes, $rules, $flattened)->validate();
+        return CreateProjectValidator::make($input)->validate();
     }
 
     /**
      * Associate the selected components with the project
      *
      * @param Project $project
-     * @param array   $attributes
+     * @param array   $input
      */
-    private function createComponents(Project $project, array $attributes)
+    private function createComponents(Project $project, array $input)
     {
-        $project->components()->sync($attributes['components']);
+        $project->components()->sync($input['components']);
     }
 
     /**
      * Create the project agency
      *
      * @param Project $project
-     * @param array   $attributes
+     * @param array   $input
      */
-    private function createAgency(Project $project, array $attributes)
+    private function createAgency(Project $project, array $input)
     {
-        $agency = $attributes['agency'];
+        $agency = $input['agency'];
 
         $project->agency()->create([
             'via_mail'   => $agency['via_mail'] === ToggleValue::ENABLED,
@@ -119,11 +86,11 @@ final class CreateProject implements CreatesProjects
      * Create the project client
      *
      * @param Project $project
-     * @param array   $attributes
+     * @param array   $input
      */
-    private function createClient(Project $project, array $attributes)
+    private function createClient(Project $project, array $input)
     {
-        $client = $attributes['client'];
+        $client = $input['client'];
 
         $project->client()->create([
             'via_mail'     => $client['via_mail'] === ToggleValue::ENABLED,

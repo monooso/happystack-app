@@ -73,10 +73,11 @@ Route::get('/update-status/sendgrid/parse-api', function () {
 });
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
-    Route::get('/projects', fn () => redirect()->route('dashboard'));
-    Route::get('/projects/new', [ProjectController::class, 'create'])->name('projects.create');
+    Route::resource('projects', ProjectController::class, [
+        'only' => ['create', 'edit', 'index']
+    ]);
 });
 
 Route::middleware(['auth:sanctum', 'verified'])
-    ->get('/dashboard', [ProjectController::class, 'index'])
+    ->get('/dashboard', fn () => redirect()->route('projects.index'))
     ->name('dashboard');
