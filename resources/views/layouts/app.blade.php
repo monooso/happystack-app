@@ -27,14 +27,16 @@
         @livewire('navigation-menu')
     </div>
 
-    <x-container>
-        <div class="px-4 sm:px-0">
-            <h1 class="font-bold leading-7 text-3xl text-gray-900">{{ $header }}</h1>
-        </div>
-    </x-container>
+    @if (isset($header))
+        <x-container>
+            <div class="mb-12 px-4 sm:px-0">
+                <h1 class="font-bold leading-7 text-3xl text-gray-900">{{ $header }}</h1>
+            </div>
+        </x-container>
+    @endif
 </header>
 
-<main class="py-12">
+<main class="pb-12">
     <x-container>{{ $slot }}</x-container>
 </main>
 

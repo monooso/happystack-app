@@ -95,6 +95,30 @@ final class Component extends Model
     }
 
     /**
+     * Limit query results to components that are down
+     *
+     * @param Builder $query
+     *
+     * @return Builder
+     */
+    public function scopeDown(Builder $query): Builder
+    {
+        return $query->where('status', Status::DOWN);
+    }
+
+    /**
+     * Limit query results to components that have a warning
+     *
+     * @param Builder $query
+     *
+     * @return Builder
+     */
+    public function scopeWarn(Builder $query): Builder
+    {
+        return $query->where('status', Status::WARN);
+    }
+
+    /**
      * Return a boolean indicating whether the component is "healthy"
      *
      * @return bool

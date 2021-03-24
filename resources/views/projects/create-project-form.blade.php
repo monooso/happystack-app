@@ -1,5 +1,5 @@
 <form wire:submit.prevent="create">
-    <div>
+    <div class="sm:space-y-10">
         <x-jet-action-section>
             <x-slot name="title">{{ __('Project details') }}</x-slot>
             <x-slot name="description">{{ __('Tell us a bit about your project.') }}</x-slot>
@@ -12,11 +12,9 @@
                 </x-section-content>
             </x-slot>
         </x-jet-action-section>
-    </div>
 
-    <x-jet-section-border/>
+        <x-section-divider/>
 
-    <div class="mt-10 sm:mt-0">
         <x-jet-action-section>
             <x-slot name="title">{{ __('Services') }}</x-slot>
             <x-slot name="description">{{ __('Select the services you’d like to monitor.') }}</x-slot>
@@ -37,11 +35,11 @@
                                     </div>
 
                                     <div>
-                                        <span class="text-sm text-gray-500" x-text="expanded ? 'Hide components' : 'Show components'" />
+                                        <span class="text-sm text-gray-500" x-text="expanded ? 'Hide components' : 'Show components'"/>
                                     </div>
                                 </button>
 
-                                <div x-show="expanded === true" class="bg-gray-100 border-b border-gray-200 p-4 shadow-inner sm:p-6">
+                                <div x-show="expanded === true" class="bg-gray-50 border-b border-gray-200 p-4 shadow-inner sm:p-6">
                                     <div class="grid grid-cols-3 gap-3">
                                         @foreach ($service->components as $target)
                                             <label class="col-span-1 flex items-start p-1 select-none">
@@ -59,11 +57,9 @@
                 </div>
             </x-slot>
         </x-jet-action-section>
-    </div>
 
-    <x-jet-section-border/>
+        <x-section-divider/>
 
-    <div class="mt-10 sm:mt-0">
         <x-jet-action-section>
             <x-slot name="title">{{ __('Your notifications') }}</x-slot>
             <x-slot name="description">{{ __('Control how we notify you when there’s a problem.') }}</x-slot>
@@ -76,11 +72,9 @@
                 </x-section-content>
             </x-slot>
         </x-jet-action-section>
-    </div>
 
-    <x-jet-section-border/>
+        <x-section-divider/>
 
-    <div class="mt-10 sm:mt-0">
         <x-jet-action-section>
             <x-slot name="title">{{ __('Client notifications') }}</x-slot>
             <x-slot name="description">{{ __('Control how we notify your client when there’s a problem.') }}</x-slot>
@@ -89,6 +83,10 @@
                 <x-section-content>
                     <div>
                         <fieldset class="space-y-4">
+                            <x-legend>
+                                <x-slot name="title"></x-slot>
+                                <x-slot name="subtitle"></x-slot>
+                            </x-legend>
                             <legend class="block">
                                 <span class="block font-medium text-gray-900">{{ __('Would you like us to notify your client?') }}</span>
                                 <span class="block mt-1 text-sm text-gray-500">{{ __('We’ll email your client once per day, at most.') }}</span>
@@ -126,11 +124,11 @@
                 </x-section-content>
             </x-slot>
         </x-jet-action-section>
-    </div>
 
-    <x-jet-section-border/>
+        <x-section-divider/>
 
-    <div class="mt-10 text-right sm:mt-0">
-        <x-jet-button>{{ __('Create project') }}</x-jet-button>
+        <div class="text-right">
+            <x-jet-button>{{ __('Create project') }}</x-jet-button>
+        </div>
     </div>
 </form>

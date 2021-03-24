@@ -1,47 +1,32 @@
-<div class="
-    bg-white border-t-4 w-full
-    @if ($project->hasComponentErrors)
-        {{ 'border-red-500' }}
-    @elseif ($project->hasComponentWarnings)
-        {{ 'border-yellow-500' }}
-    @else
-        {{ 'border-green-500' }}
+<tr wire:poll.180s="refresh">
+    @if ($project->status === \App\Constants\Status::DOWN)
+        <x-table.body-heading class="bg-red-50">
+            <div class="flex flex-nowrap gap-x-2 items-center">
+                <div class="text-red-700 w-3">@svg('icon-status-down')</div>
+                <div class="font-medium text-red-700">{{ $project->name }}</div>
+            </div>
+        </x-table.body-heading>
     @endif
-">
-    <div class="p-6">
-        <header class="mb-8">
-            <h3 class="font-medium text-xl">{{ $project->name }}</h3>
-            <p class="mt-1 text-sm text-gray-500">
-                {{ __('app.last_updated', ['time_interval' => $project->updatedAtForHumans]) }}
-            </p>
-        </header>
 
-        <div class="flex items-center justify-start gap-4">
-            @if ($project->hasComponentErrors)
-                <div class="bg-red-50 border border-red-100 flex items-center px-2 py-1 rounded-md">
-                    <div class="h-auto text-red-500 w-3">
-                        <svg fill="currentColor" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                            <rect height="100" width="100"></rect>
-                        </svg>
-                    </div>
-                    <span class="ml-2 text-sm text-red-700">
-                        {{ trans_choice('app.component_errors', $project->componentsWithErrors->count()) }}
-                    </span>
-                </div>
-            @endif
+    @if ($project->status === \App\Constants\Status::WARN)
+        <x-table.body-heading class="bg-yellow-50">
+            <div class="flex flex-nowrap gap-x-2 items-center">
+                <div class="text-yellow-500 w-3">@svg('icon-status-warn')</div>
+                <div class="font-medium text-yellow-700">{{ $project->name }}</div>
+            </div>
+        </x-table.body-heading>
+    @endif
 
-            @if ($project->hasComponentWarnings)
-                <div class="bg-yellow-50 border border-yellow-100 flex items-center px-2 py-1 rounded-md">
-                    <div class="h-auto text-yellow-500 w-3">
-                        <svg fill="currentColor" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                            <polygon points="50,0 100,100 0,100"></polygon>
-                        </svg>
-                    </div>
-                    <span class="ml-2 text-sm text-yellow-700">
-                        {{ trans_choice('app.component_warnings', $project->componentsWithWarnings->count()) }}
-                    </span>
-                </div>
-            @endif
-        </div>
-    </div>
-</div>
+    @if ($project->status === \App\Constants\Status::OKAY)
+        <x-table.body-heading>
+            <div class="flex flex-nowrap gap-x-2 items-center">
+                <div class="text-gray-300 w-3">@svg('icon-status-okay')</div>
+                <div class="font-medium">{{ $project->name }}</div>
+            </div>
+        </x-table.body-heading>
+    @endif
+
+    <x-table.body-cell>{{ trans_choice('app.component_count', $project->components->count()) }}</x-table.body-cell>
+    <x-table.body-cell>{{ trans_choice('app.component_warnings', $project->components()->warn()->count()) }}</x-table.body-cell>
+    <x-table.body-cell>{{ trans_choice('app.component_errors', $project->components()->down()->count()) }}</x-table.body-cell>
+</tr>

@@ -20,23 +20,6 @@ final class ProjectStatus extends Component
     }
 
     /**
-     * Subscribe to component status changes
-     *
-     * @return string[]
-     */
-    public function getListeners(): array
-    {
-        $listeners = [];
-
-        foreach ($this->project->components as $component) {
-            $channelName = 'component-' . $component->id;
-            $listeners["echo:${channelName},StatusUpdated"] = 'updateStatus';
-        }
-
-        return $listeners;
-    }
-
-    /**
      * Render the component
      *
      * @return Application|Factory|View
@@ -47,11 +30,9 @@ final class ProjectStatus extends Component
     }
 
     /**
-     * Update the project status in response to an event
-     *
-     * @param array $event
+     * Refresh the project
      */
-    public function updateStatus(array $event)
+    public function refresh()
     {
         $this->project->refresh();
     }

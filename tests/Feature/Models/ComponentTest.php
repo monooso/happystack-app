@@ -18,6 +18,32 @@ final class ComponentTest extends TestCase
     use WithFaker;
 
     /** @test */
+    public function scopeDownRestrictsResultsToComponentsThatAreDown()
+    {
+        $down = Component::first();
+        $down->status = Status::DOWN;
+        $down->save();
+
+        $result = Component::down()->get();
+
+        $this->assertCount(1, $result);
+        $this->assertSame($down->id, $result->first()->id);
+    }
+
+    /** @test */
+    public function scopeWarnRestrictsResultsToComponentsThatHaveAWarning()
+    {
+        $down = Component::first();
+        $down->status = Status::WARN;
+        $down->save();
+
+        $result = Component::warn()->get();
+
+        $this->assertCount(1, $result);
+        $this->assertSame($down->id, $result->first()->id);
+    }
+
+    /** @test */
     public function scopeStaleOmitsRecentlyUpdatedComponents()
     {
         $refreshInterval = $this->faker->numberBetween(60, 600);
