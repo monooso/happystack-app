@@ -29,7 +29,9 @@ return [
         'secret'  => env('AWS_SECRET_ACCESS_KEY'),
         'region'  => env('AWS_DEFAULT_REGION', 'eu-west-1'),
         'options' => [
-            'Tags' => ['Name' => 'environment', 'Value' => env('APP_ENV')],
+            'Tags' => [
+                ['Name' => 'environment', 'Value' => env('APP_ENV')],
+            ],
         ],
     ],
 
