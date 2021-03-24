@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Constants\Status;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -66,41 +65,27 @@ class Project extends Model
         return $this->belongsTo(Team::class);
     }
 
-    public function getCurrentStatusAttribute(): string
+    /**
+     * Get the project status
+     *
+     * The project status is the same as the "worst" component status.
+     *
+     * @return string
+     */
+    public function getStatusAttribute(): string
     {
-        if ($this->hasComponentErrors) {
-            return Status::DOWN;
+        $hasWarning = false;
+
+        foreach ($this->components as $component) {
+            if ($component->status === Status::DOWN) {
+                return Status::DOWN;
+            }
+
+            if ($component->status === Status::WARN) {
+                $hasWarning = true;
+            }
         }
 
-        if ($this->hasComponentWarnings) {
-            return Status::WARN;
-        }
-
-        return Status::OKAY;
-    }
-
-    public function getHasComponentErrorsAttribute(): bool
-    {
-        return $this->componentsWithErrors->count() > 0;
-    }
-
-    public function getHasComponentWarningsAttribute(): bool
-    {
-        return $this->componentsWithWarnings->count() > 0;
-    }
-
-    public function getUpdatedAtForHumansAttribute(): string
-    {
-        return $this->updated_at->diffForHumans();
-    }
-
-    public function getComponentsWithWarningsAttribute(): Collection
-    {
-        return $this->components()->where('status', Status::WARN)->get();
-    }
-
-    public function getComponentsWithErrorsAttribute(): Collection
-    {
-        return $this->components()->where('status', Status::DOWN)->get();
+        return $hasWarning ? Status::WARN : Status::OKAY;
     }
 }

@@ -15,9 +15,15 @@ return [
 
     'sets' => [
         'logos' => [
-            'class'  => 'w-full h-auto',
+            'class'  => 'h-auto w-full',
             'path'   => 'resources/svg/logos',
             'prefix' => 'logo',
+        ],
+
+        'icons' => [
+            'class'  => 'fill-current h-auto w-full',
+            'path'   => 'resources/svg/icons',
+            'prefix' => 'icon',
         ],
 
         // 'default' => [
