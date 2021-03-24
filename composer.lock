@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "405ffe50e5b3bedb91a1447a00382b41",
+    "content-hash": "6e4a32b392548da6b6271053606e96ae",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -64,16 +64,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.173.23",
+            "version": "3.175.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "259fa1a47a46f81e66b1ea328ed961a58fa061c2"
+                "reference": "31baa9e0c4330f01eb74b8a7ef086e9d34f8391e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/259fa1a47a46f81e66b1ea328ed961a58fa061c2",
-                "reference": "259fa1a47a46f81e66b1ea328ed961a58fa061c2",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/31baa9e0c4330f01eb74b8a7ef086e9d34f8391e",
+                "reference": "31baa9e0c4330f01eb74b8a7ef086e9d34f8391e",
                 "shasum": ""
             },
             "require": {
@@ -148,9 +148,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.173.23"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.175.0"
             },
-            "time": "2021-03-05T19:20:35+00:00"
+            "time": "2021-03-19T18:13:22+00:00"
         },
         {
             "name": "bacon/bacon-qr-code",
