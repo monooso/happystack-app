@@ -12,10 +12,10 @@ interface CreatesProjects
     /**
      * Create a new project for the given user
      *
-     * @param User $user
-     * @param array $attributes
+     * @param User  $user
+     * @param array $input
      *
      * @return Project
      */
-    public function create(User $user, array $attributes): Project;
+    public function create(User $user, array $input): Project;
 }
