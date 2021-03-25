@@ -9,13 +9,14 @@ use App\Contracts\UpdatesProjects;
 use App\Models\Project;
 use App\Models\User;
 use App\Validators\UpdateProjectValidator;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\ValidationException;
 
 final class UpdateProject implements UpdatesProjects
 {
     public function update(User $user, Project $project, array $input): Project
     {
-        // @todo Gate
+        Gate::forUser($user)->authorize('update', $project);
 
         $input = $this->validate($input);
 

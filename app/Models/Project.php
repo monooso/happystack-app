@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  *
  * @property-read Agency $agency
  * @property-read Client $client
+ * @property-read Team $team
  */
 class Project extends Model
 {

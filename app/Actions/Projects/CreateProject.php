@@ -25,8 +25,6 @@ final class CreateProject implements CreatesProjects
      */
     public function create(User $user, array $input): Project
     {
-        // @todo Gate
-
         $input = $this->validate($input);
 
         /** @var Team $team */

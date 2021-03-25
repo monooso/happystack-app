@@ -10,6 +10,11 @@ use Illuminate\Http\Response;
 
 final class ProjectController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Project::class, 'project');
+    }
+
     /**
      * Display a list of team projects
      *
