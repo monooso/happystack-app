@@ -13,6 +13,7 @@ final class CreateProjectsTable extends Migration
     {
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid')->unique();
             $table->foreignIdFor(Team::class)->constrained()->cascadeOnDelete();
             $table->string('name');
             $table->timestamps();

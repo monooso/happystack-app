@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class Project extends Model
 {
     use HasFactory;
+    use HasUuid;
 
     protected $fillable = ['name'];
 

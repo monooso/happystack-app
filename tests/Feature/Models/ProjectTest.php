@@ -8,6 +8,7 @@ use App\Constants\Status;
 use App\Models\Project;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 final class ProjectTest extends TestCase
@@ -52,5 +53,28 @@ final class ProjectTest extends TestCase
         $project->components[0]->save();
 
         $this->assertSame(Status::WARN, $project->status);
+    }
+
+    /** @test */
+    public function hasUuidTraitGeneratesAUuidWhenCreatingAProject()
+    {
+        $project = Project::factory()->create();
+
+        $this->assertTrue(Str::isUuid($project->uuid));
+    }
+
+    /** @test */
+    public function hasUuidTraitDoesNotOverrideAGivenUuid()
+    {
+        $uuid = Str::uuid();
+
+        $project = Project::factory()->make();
+        $project->uuid = $uuid;
+        $project->save();
+
+        $this->assertDatabaseHas('projects', [
+            'id'   => $project->id,
+            'uuid' => $uuid,
+        ]);
     }
 }
