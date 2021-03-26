@@ -8,8 +8,11 @@ use App\Actions\Projects\UpdateProject;
 use App\Constants\ToggleValue;
 use App\Models\Component;
 use App\Models\Project;
+use App\Models\User;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
 
@@ -392,6 +395,18 @@ final class UpdateProjectTest extends TestCase
         } catch (ValidationException $e) {
             $this->assertTrue($e->validator->getMessageBag()->has('components.0'));
         }
+    }
+
+    /** @test */
+    public function itThrowsAnAuthExceptionIfTheUserDoesNotBelongToTheProjectTeam()
+    {
+        $project = Project::factory()->create();
+
+        $this->actingAs(User::factory()->create());
+
+        $this->expectException(AuthorizationException::class);
+
+        (new UpdateProject())->update(Auth::user(), $project, []);
     }
 
     /**
