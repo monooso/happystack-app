@@ -5,8 +5,8 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="flex-shrink-0 flex items-center">
-                    <a href="{{ route('projects.index') }}">
-                        <x-jet-application-mark class="block h-8 w-auto" />
+                    <a class="block h-8 w-8" href="{{ route('projects.index') }}">
+                        <x-jet-application-logo />
                     </a>
                 </div>
 
