@@ -6,9 +6,11 @@ namespace Tests\Feature\Livewire\Projects;
 
 use App\Constants\ToggleValue;
 use App\Contracts\CreatesProjects;
+use App\Contracts\UpdatesProjects;
 use App\Http\Livewire\Projects\CreateUpdateForm;
 use App\Models\Project;
 use App\Models\Team;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Livewire;
@@ -20,7 +22,7 @@ final class CreateUpdateFormTest extends TestCase
     use WithFaker;
 
     /** @test */
-    public function createCallsTheActionWithTheCorrectParameters()
+    public function savingANewProjectCallsTheCreateActionWithTheCorrectParameters()
     {
         $user = Team::factory()->create()->owner;
 
@@ -40,19 +42,39 @@ final class CreateUpdateFormTest extends TestCase
             'components' => [$this->faker->randomNumber()],
         ];
 
-        $action = $this->mock(CreatesProjects::class);
+        $createsAction = $this->mock(CreatesProjects::class);
+        $updatesAction = $this->mock(UpdatesProjects::class);
 
-        $action
+        $createsAction
             ->expects('create')
             ->once()
             ->with($user, $expected)
             ->andReturns(new Project());
+
+        $updatesAction->expects('update')->never();
 
         return Livewire::test(CreateUpdateForm::class)
             ->set('name', $expected['name'])
             ->set('agency', $expected['agency'])
             ->set('client', $expected['client'])
             ->set('components', $expected['components'])
-            ->call('create', $action);
+            ->call('save', $createsAction);
+    }
+
+    /** @test */
+    public function savingAnExistingProjectCallsTheUpdateAction()
+    {
+        $project = Project::factory()->create();
+
+        $this->actingAs(User::factory()->create());
+
+        $createsAction = $this->mock(CreatesProjects::class);
+        $updatesAction = $this->mock(UpdatesProjects::class);
+
+        $updatesAction->expects('update')->once()->andReturns($project);
+        $createsAction->expects('create')->never();
+
+        return Livewire::test(CreateUpdateForm::class, ['project' => $project])
+            ->call('save', $createsAction, $updatesAction);
     }
 }
