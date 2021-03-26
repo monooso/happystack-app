@@ -3,8 +3,10 @@
 namespace App\Providers;
 
 use App\Actions\Projects\CreateProject;
+use App\Actions\Projects\DeleteProject;
 use App\Actions\Projects\UpdateProject;
 use App\Contracts\CreatesProjects;
+use App\Contracts\DeletesProjects;
 use App\Contracts\Fetchers\AwsFetcher as AwsFetcherContract;
 use App\Contracts\Fetchers\GoogleCloudFetcher as GoogleCloudFetcherContract;
 use App\Contracts\Fetchers\StatusPageFetcher as StatusPageFetcherContract;
@@ -88,6 +90,7 @@ class AppServiceProvider extends ServiceProvider
     private function registerActions()
     {
         $this->app->bind(CreatesProjects::class, CreateProject::class);
+        $this->app->bind(DeletesProjects::class, DeleteProject::class);
         $this->app->bind(UpdatesProjects::class, UpdateProject::class);
     }
 }
