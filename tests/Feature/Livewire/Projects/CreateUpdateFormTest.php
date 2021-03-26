@@ -14,7 +14,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Livewire;
 use Tests\TestCase;
 
-final class CreateProjectFormTest extends TestCase
+final class CreateUpdateFormTest extends TestCase
 {
     use RefreshDatabase;
     use WithFaker;
