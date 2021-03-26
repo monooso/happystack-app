@@ -31,54 +31,58 @@
     <x-table.body-cell class="whitespace-nowrap">{{ trans_choice('app.component_errors', $project->components()->down()->count()) }}</x-table.body-cell>
 
     <x-table.body-cell class="text-right">
-
-        <div class="relative inline-block text-left" x-data="{ open: false }">
-            <div>
-                <button
-                    aria-expanded="true"
-                    aria-haspopup="true"
-                    class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"
-                    id="options-menu"
-                    type="button"
-                    @click="open = !open"
-                >
+        <x-jet-dropdown>
+            <x-slot name="trigger">
+                <x-dropdown-button aria-expanded="true" aria-haspopup="true" id="options-menu">
                     {{ __('Actions') }}
-                    <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
-                    </svg>
-                </button>
-            </div>
+                </x-dropdown-button>
+            </x-slot>
 
-            <div
-                aria-labelledby="options-menu"
-                aria-orientation="vertical"
-                class="absolute origin-top-right right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 z-10 focus:outline-none"
-                role="menu"
-                x-show.transition="open"
-                @click.away="open = false"
-            >
-                <div class="py-1" role="none">
-                    <a
-                        class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                        href="{{ route('projects.edit', ['project' => $project]) }}"
-                        role="menuitem"
-                    >
-                        <div class="text-gray-400 w-4 group-hover:text-gray-500">
-                            @svg('icon-edit')
-                        </div>
-                        <div class="ml-4">{{ __('Edit') }}</div>
-                    </a>
-                </div>
+            <x-slot name="content">
+                <div aria-labelledby="options-menu" aria-orientation="vertical" role="menu">
+                    <div class="py-1" role="none">
+                        <a
+                            class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                            href="{{ route('projects.edit', ['project' => $project]) }}"
+                            role="menuitem"
+                        >
+                            <div class="text-gray-400 w-4 group-hover:text-gray-500">@svg('icon-edit')</div>
+                            <div class="ml-4">{{ __('Edit') }}</div>
+                        </a>
+                    </div>
 
-                <div class="py-1" role="none">
-                    <a href="#" class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">
-                        <div class="text-gray-400 w-4 group-hover:text-gray-500">
-                            @svg('icon-delete')
-                        </div>
-                        <div class="ml-4">{{ __('Delete') }}</div>
-                    </a>
+                    <div class="py-1" role="none">
+                        <button
+                            class="group flex items-center px-4 py-2 text-sm text-gray-700 w-full hover:bg-gray-100 hover:text-gray-900"
+                            role="menuitem"
+                            @click.prevent="open = false"
+                            wire:click="$toggle('confirmingProjectDeletion')"
+                            wire:loading.attr="disabled"
+                        >
+                            <div class="text-gray-400 w-4 group-hover:text-gray-500">@svg('icon-delete')</div>
+                            <div class="ml-4">{{ __('Delete') }}</div>
+                        </button>
+                    </div>
                 </div>
-            </div>
-        </div>
+            </x-slot>
+        </x-jet-dropdown>
+
+        <x-jet-confirmation-modal :id="$project->uuid" wire:model="confirmingProjectDeletion">
+            <x-slot name="title">{{ __('Delete Project') }}</x-slot>
+
+            <x-slot name="content">
+                {{ __('Are you sure you want to delete this project? This cannot be undone.') }}
+            </x-slot>
+
+            <x-slot name="footer">
+                <x-jet-secondary-button wire:click="$toggle('confirmingProjectDeletion')" wire:loading.attr="disabled">
+                    {{ __('Nevermind') }}
+                </x-jet-secondary-button>
+
+                <x-jet-danger-button class="ml-2" wire:click="deleteProject" wire:loading.attr="disabled">
+                    {{ __('Delete Project') }}
+                </x-jet-danger-button>
+            </x-slot>
+        </x-jet-confirmation-modal>
     </x-table.body-cell>
 </tr>
