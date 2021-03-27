@@ -4,7 +4,7 @@ use App\Http\Controllers\ProjectController;
 use Illuminate\Support\Facades\Route;
 
 // Restricted routes
-Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+Route::middleware(['auth:sanctum', 'subscribed', 'verified'])->group(function () {
     Route::resource('projects', ProjectController::class, [
         'only' => ['create', 'edit', 'index']
     ]);
