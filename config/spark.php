@@ -91,14 +91,14 @@ return [
                     'yearly_incentive'  => 'Save over 20%',
                     'features'          => [
                         '5 projects',
-                        '1 team member',
+                        '3 team members',
                         'Monitor unlimited services per project',
                         'Email notifications',
                         'Slack notifications (coming soon)',
                     ],
                     'options' => [
                         'channels' => [NotificationChannel::MAIL],
-                        'members'  => 1,
+                        'members'  => 3,
                         'projects' => 5,
                     ],
                 ],
@@ -112,14 +112,14 @@ return [
                     'yearly_incentive'  => 'Save over 20%',
                     'features'          => [
                         '15 projects',
-                        '5 team members',
+                        '10 team members',
                         'Monitor unlimited services per project',
                         'Email notifications',
                         'Slack notifications (coming soon)',
                     ],
                     'options' => [
                         'channels' => [NotificationChannel::MAIL],
-                        'members'  => 5,
+                        'members'  => 10,
                         'projects' => 15,
                     ],
                 ],
