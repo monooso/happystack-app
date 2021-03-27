@@ -1,19 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace {{ namespace }};
 
 use Illuminate\Auth\Access\HandlesAuthorization;
 use {{ namespacedModel }};
 use {{ namespacedUserModel }};
 
-class {{ class }}
+final class {{ class }}
 {
     use HandlesAuthorization;
 
     /**
-     * Determine whether the user can view any models.
+     * Determine whether the user can view any models
      *
      * @param  \{{ namespacedUserModel }}  $user
+     *
      * @return mixed
      */
     public function viewAny({{ user }} $user)
@@ -22,10 +25,11 @@ class {{ class }}
     }
 
     /**
-     * Determine whether the user can view the model.
+     * Determine whether the user can view the model
      *
      * @param  \{{ namespacedUserModel }}  $user
      * @param  \{{ namespacedModel }}  ${{ modelVariable }}
+     *
      * @return mixed
      */
     public function view({{ user }} $user, {{ model }} ${{ modelVariable }})
@@ -34,9 +38,10 @@ class {{ class }}
     }
 
     /**
-     * Determine whether the user can create models.
+     * Determine whether the user can create models
      *
      * @param  \{{ namespacedUserModel }}  $user
+     *
      * @return mixed
      */
     public function create({{ user }} $user)
@@ -45,10 +50,11 @@ class {{ class }}
     }
 
     /**
-     * Determine whether the user can update the model.
+     * Determine whether the user can update the model
      *
      * @param  \{{ namespacedUserModel }}  $user
      * @param  \{{ namespacedModel }}  ${{ modelVariable }}
+     *
      * @return mixed
      */
     public function update({{ user }} $user, {{ model }} ${{ modelVariable }})
@@ -57,10 +63,11 @@ class {{ class }}
     }
 
     /**
-     * Determine whether the user can delete the model.
+     * Determine whether the user can delete the model
      *
      * @param  \{{ namespacedUserModel }}  $user
      * @param  \{{ namespacedModel }}  ${{ modelVariable }}
+     *
      * @return mixed
      */
     public function delete({{ user }} $user, {{ model }} ${{ modelVariable }})
@@ -69,10 +76,11 @@ class {{ class }}
     }
 
     /**
-     * Determine whether the user can restore the model.
+     * Determine whether the user can restore the model
      *
      * @param  \{{ namespacedUserModel }}  $user
      * @param  \{{ namespacedModel }}  ${{ modelVariable }}
+     *
      * @return mixed
      */
     public function restore({{ user }} $user, {{ model }} ${{ modelVariable }})
@@ -81,10 +89,11 @@ class {{ class }}
     }
 
     /**
-     * Determine whether the user can permanently delete the model.
+     * Determine whether the user can permanently delete the model
      *
      * @param  \{{ namespacedUserModel }}  $user
      * @param  \{{ namespacedModel }}  ${{ modelVariable }}
+     *
      * @return mixed
      */
     public function forceDelete({{ user }} $user, {{ model }} ${{ modelVariable }})
