@@ -15,11 +15,13 @@ final class ProjectPolicy
     /**
      * Determine whether the user can create a new project
      *
+     * @param User $user
+     *
      * @return bool
      */
-    public function create(): bool
+    public function create(User $user): bool
     {
-        return true;
+        return $user->hasTeamPermission($user->currentTeam, 'project:create');
     }
 
     /**
@@ -32,7 +34,7 @@ final class ProjectPolicy
      */
     public function delete(User $user, Project $project): bool
     {
-        return $user->belongsToTeam($project->team);
+        return $user->hasTeamPermission($project->team, 'project:delete');
     }
 
     /**
@@ -45,7 +47,7 @@ final class ProjectPolicy
      */
     public function update(User $user, Project $project): bool
     {
-        return $user->belongsToTeam($project->team);
+        return $user->hasTeamPermission($project->team, 'project:update');
     }
 
     /**
@@ -58,16 +60,18 @@ final class ProjectPolicy
      */
     public function view(User $user, Project $project): bool
     {
-        return $user->belongsToTeam($project->team);
+        return $user->hasTeamPermission($project->team, 'project:view');
     }
 
     /**
      * Determine whether the user can view a list of projects
      *
+     * @param User $user
+     *
      * @return bool
      */
-    public function viewAny(): bool
+    public function viewAny(User $user): bool
     {
-        return true;
+        return $user->hasTeamPermission($user->currentTeam, 'project:view');
     }
 }
