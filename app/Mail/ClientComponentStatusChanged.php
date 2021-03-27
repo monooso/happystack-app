@@ -13,12 +13,16 @@ final class ClientComponentStatusChanged extends Mailable
     use Queueable;
     use SerializesModels;
 
-    public function __construct(public string $message)
+    public string $body;
+
+    public function __construct(string $body)
     {
+        // Horrible hack, to handle single line-breaks
+        $this->body = str_replace(PHP_EOL, '  ' . PHP_EOL, $body);
     }
 
     public function build()
     {
-        return $this->markdown('emails.status.client', ['body' => $this->message]);
+        return $this->markdown('emails.status.client');
     }
 }

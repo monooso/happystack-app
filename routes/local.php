@@ -7,6 +7,7 @@ use App\Jobs\GoogleCloud\FetchComputeEngineStatus;
 use App\Jobs\Mailgun\FetchSmtpStatus;
 use App\Jobs\Sendgrid\FetchParseApiStatus;
 use App\Mail\AgencyComponentStatusChanged;
+use App\Mail\ClientComponentStatusChanged;
 use App\Models\Component;
 use App\Models\Project;
 use Illuminate\Support\Facades\Route;
@@ -19,6 +20,19 @@ Route::get('agency-mail', function () {
     $component = $project->components()->first();
 
     return new AgencyComponentStatusChanged($project, $component);
+});
+
+Route::get('client-mail', function () {
+    $message = <<<MESSAGE
+Hi Jimbob,
+
+The world is on fire. This is fine.
+
+Regards,
+Agency
+MESSAGE;
+
+    return new ClientComponentStatusChanged($message);
 });
 
 Route::get('update-status/arcustech/platform', function () {

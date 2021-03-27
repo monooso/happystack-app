@@ -23,14 +23,6 @@ final class AgencyComponentStatusChanged extends Mailable
 
     public function build()
     {
-        $component = $this->component;
-        $project = $this->project;
-        $service = $component->service;
-
-        return $this->markdown('emails.status.agency', [
-            'project' => $project->name,
-            'service' => $service->name . ' ' . $component->name,
-            'status'  => $component->status,
-        ]);
+        return $this->markdown('emails.status.agency');
     }
 }
