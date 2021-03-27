@@ -10,6 +10,7 @@ use App\Models\Project;
 use App\Models\Team;
 use App\Models\User;
 use App\Validators\CreateProjectValidator;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\ValidationException;
 
 final class CreateProject implements CreatesProjects
@@ -25,6 +26,8 @@ final class CreateProject implements CreatesProjects
      */
     public function create(User $user, array $input): Project
     {
+        Gate::forUser($user)->authorize('create', Project::class);
+
         $input = $this->validate($input);
 
         /** @var Team $team */

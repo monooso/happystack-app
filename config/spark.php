@@ -1,5 +1,7 @@
 <?php
 
+use App\Constants\NotificationChannel;
+use App\Constants\SubscriptionPlan;
 use App\Models\Team;
 
 return [
@@ -44,7 +46,7 @@ return [
 
     'brand' => [
         'logo'  => realpath(__DIR__ . '/../public/svg/billing-logo.svg'),
-        'color' => 'bg-yellow-700',
+        'color' => 'bg-indigo-700',
     ],
 
     /*
@@ -76,28 +78,73 @@ return [
     */
 
     'billables' => [
-
         'team' => [
-            'model' => Team::class,
-
-            'trial_days' => 5,
-
-            'plans' => [
+            'model'      => Team::class,
+            'trial_days' => 14,
+            'plans'      => [
                 [
-                    'name'              => 'Standard',
-                    'short_description' => 'Perfect for small agencies',
-                    'monthly_id'        => env('SPARK_STANDARD_MONTHLY_PLAN'),
-                    'yearly_id'         => env('SPARK_STANDARD_YEARLY_PLAN'),
+                    'archived'          => false,
+                    'name'              => SubscriptionPlan::SMALL,
+                    'short_description' => 'For freelancers or small agencies',
+                    'monthly_id'        => env('SPARK_SMALL_MONTHLY_PLAN'),
+                    'yearly_id'         => env('SPARK_SMALL_YEARLY_PLAN'),
+                    'yearly_incentive'  => 'Save over 20%',
                     'features'          => [
-                        '3 projects',
-                        'Monitor unlimited services',
-                        'Unlimited team members',
+                        '5 projects',
+                        '1 team member',
+                        'Monitor unlimited services per project',
+                        'Email notifications',
+                        'Slack notifications (coming soon)',
                     ],
-                    'archived' => false,
+                    'options' => [
+                        'channels' => [NotificationChannel::MAIL],
+                        'members'  => 1,
+                        'projects' => 5,
+                    ],
+                ],
+                [
+                    'archived'          => false,
+                    'name'              => SubscriptionPlan::MEDIUM,
+                    'short_description' => 'For growing agencies',
+                    'monthly_id'        => env('SPARK_MEDIUM_MONTHLY_PLAN'),
+                    'monthly_incentive' => 'Most popular',
+                    'yearly_id'         => env('SPARK_MEDIUM_YEARLY_PLAN'),
+                    'yearly_incentive'  => 'Save over 20%',
+                    'features'          => [
+                        '15 projects',
+                        '5 team members',
+                        'Monitor unlimited services per project',
+                        'Email notifications',
+                        'Slack notifications (coming soon)',
+                    ],
+                    'options' => [
+                        'channels' => [NotificationChannel::MAIL],
+                        'members'  => 5,
+                        'projects' => 15,
+                    ],
+                ],
+                [
+                    'archived'          => false,
+                    'name'              => SubscriptionPlan::LARGE,
+                    'short_description' => 'For larger agencies',
+                    'monthly_id'        => env('SPARK_LARGE_MONTHLY_PLAN'),
+                    'yearly_id'         => env('SPARK_LARGE_YEARLY_PLAN'),
+                    'yearly_incentive'  => 'Save over 20%',
+                    'features'          => [
+                        '50 projects',
+                        'Unlimited team members',
+                        'Monitor unlimited services per project',
+                        'Email notifications',
+                        'Slack notifications (coming soon)',
+                        'Zapier integration (coming soon)',
+                    ],
+                    'options' => [
+                        'channels' => [NotificationChannel::MAIL],
+                        'members'  => 1000000,
+                        'projects' => 50,
+                    ],
                 ],
             ],
-
         ],
-
-    ]
+    ],
 ];

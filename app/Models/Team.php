@@ -50,8 +50,13 @@ class Team extends JetstreamTeam
         return $this->hasMany(Project::class);
     }
 
+    /**
+     * Return the billable email address
+     *
+     * @return string
+     */
     public function paddleEmail(): string
     {
-        return $this->owner()->email;
+        return $this->owner->email;
     }
 }

@@ -10,7 +10,7 @@ use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Auth;
+use Laravel\Jetstream\Jetstream;
 use Tests\TestCase;
 
 final class DeleteProjectTest extends TestCase
@@ -23,22 +23,23 @@ final class DeleteProjectTest extends TestCase
     {
         $project = Project::factory()->create();
 
-        $this->actingAs($project->team->owner);
-
-        (new DeleteProject())->delete(Auth::user(), $project);
+        (new DeleteProject())->delete($project->team->owner, $project);
 
         $this->assertDatabaseMissing('projects', ['id' => $project->id]);
     }
 
     /** @test */
-    public function itThrowsAnAuthExceptionIfTheUserDoesNotBelongToTheProjectTeam()
+    public function itThrowsAnAuthExceptionIfTheUserDoesNotHaveTheRequiredPermissions()
     {
-        $project = Project::factory()->create();
+        Jetstream::role('minion', 'Minion', []);
 
-        $this->actingAs(User::factory()->create());
+        $project = Project::factory()->create();
+        $user = User::factory()->create();
+
+        $project->team->users()->attach($user->id, ['role' => 'minion']);
 
         $this->expectException(AuthorizationException::class);
 
-        (new DeleteProject())->delete(Auth::user(), $project);
+        (new DeleteProject())->delete($user, $project);
     }
 }
