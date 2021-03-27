@@ -9,9 +9,12 @@ use App\Constants\ToggleValue;
 use App\Models\Component;
 use App\Models\Project;
 use App\Models\Team;
+use App\Models\User;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Validation\ValidationException;
+use Laravel\Jetstream\Jetstream;
 use Tests\TestCase;
 
 final class CreateProjectTest extends TestCase
@@ -308,6 +311,23 @@ final class CreateProjectTest extends TestCase
         } catch (ValidationException $e) {
             $this->assertTrue($e->validator->getMessageBag()->has('components.0'));
         }
+    }
+
+    /** @test */
+    public function itThrowsAnAuthExceptionIfTheUserDoesNotHaveTheRequiredPermissions()
+    {
+        Jetstream::role('minion', 'Minion', []);
+
+        $project = Project::factory()->create();
+        $user = User::factory()->create();
+
+        $project->team->users()->attach($user->id, ['role' => 'minion']);
+
+        $user->switchTeam($project->team);
+
+        $this->expectException(AuthorizationException::class);
+
+        (new CreateProject())->create($user, []);
     }
 
     /**
