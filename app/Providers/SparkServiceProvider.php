@@ -27,11 +27,17 @@ class SparkServiceProvider extends ServiceProvider
         });
 
         Spark::billable(Team::class)->checkPlanEligibility(function (Team $billable, Plan $plan) {
-            // if ($billable->projects > 5 && $plan->name == 'Basic') {
-            //     throw ValidationException::withMessages([
-            //         'plan' => 'You have too many projects for the selected plan.'
-            //     ]);
-            // }
+            if ($billable->projects()->count() > $plan->options['projects'] ?? INF) {
+                throw ValidationException::withMessages([
+                    'plan' => 'You have too many projects for the selected plan.',
+                ]);
+            }
+
+            if ($billable->users()->count() > $plan->options['members'] ?? INF) {
+                throw ValidationException::withMessages([
+                    'plan' => 'You have too many team members for the selected plan.',
+                ]);
+            }
         });
     }
 }
