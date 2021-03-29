@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Middleware;
 
 use App\Models\User;
+use App\Providers\RouteServiceProvider;
 use Closure;
 use Illuminate\Http\Request;
 
@@ -12,7 +13,11 @@ final class EnsureUserHasTeam
 {
     public function handle(Request $request, Closure $next)
     {
-        $user = user();
+        $user = $request->user();
+
+        if (is_null($user)) {
+            return redirect(RouteServiceProvider::HOME);
+        }
 
         if (!$user->belongsToATeam()) {
             return redirect()->route('teams.create-first');
