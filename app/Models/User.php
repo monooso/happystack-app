@@ -32,4 +32,14 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = ['email_verified_at' => 'datetime'];
 
     protected $appends = ['profile_photo_url'];
+
+    /**
+     * Does the user belongs to at least one team?
+     *
+     * @return bool
+     */
+    public function belongsToATeam(): bool
+    {
+        return $this->allTeams()->count() > 0;
+    }
 }
