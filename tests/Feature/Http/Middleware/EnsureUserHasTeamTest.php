@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tests\Feature\app\Http\Middleware;
+namespace Tests\Feature\Http\Middleware;
 
 use App\Http\Middleware\EnsureUserHasTeam;
 use App\Models\Team;
 use App\Models\User;
+use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Route;
 use Tests\TestCase;
@@ -25,6 +26,12 @@ final class EnsureUserHasTeamTest extends TestCase
             $this->testRoute,
             fn () => 'ok'
         );
+    }
+
+    /** @test */
+    public function itRedirectsToTheHomeRouteIfTheUserDoesNotExist()
+    {
+        $this->get($this->testRoute)->assertRedirect(RouteServiceProvider::HOME);
     }
 
     /** @test */
