@@ -1,10 +1,17 @@
 <?php
 
+use App\Http\Controllers\CreateFirstTeamController;
+use App\Http\Controllers\JoinTeamController;
 use App\Http\Controllers\ProjectController;
 use Illuminate\Support\Facades\Route;
 
-// Restricted routes
-Route::middleware(['auth:sanctum', 'subscribed', 'verified'])->group(function () {
+// Application routes
+Route::middleware([
+    'auth:sanctum',
+    'verified',
+    'has-team',
+    'subscribed',
+])->group(function () {
     Route::resource('projects', ProjectController::class, [
         'only' => ['create', 'edit', 'index']
     ]);
@@ -13,7 +20,18 @@ Route::middleware(['auth:sanctum', 'subscribed', 'verified'])->group(function ()
     Route::redirect('/', route('projects.index'))->name('home');
 });
 
-Route::get('/wibble', fn () => 'ok')->name('teams.create-first');
+Route::middleware([
+    'auth:sanctum',
+    'verified',
+    'missing-team',
+])->group(function () {
+    Route::get('/create-first-team', CreateFirstTeamController::class)
+        ->name('teams.create-first');
+});
+
+Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::get('/join-team', JoinTeamController::class)->name('teams.join');
+});
 
 // Public routes
 Route::middleware(['guest'])->group(function () {

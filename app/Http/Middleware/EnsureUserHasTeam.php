@@ -39,7 +39,6 @@ final class EnsureUserHasTeam
             return;
         }
 
-        $user->current_team_id = $user->allTeams()->first()->id;
-        $user->save();
+        $user->switchTeam($user->allTeams()->first());
     }
 }
