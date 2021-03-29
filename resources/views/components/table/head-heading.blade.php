@@ -1,6 +1,6 @@
 <th scope="col" {{ $attributes->merge(['class' => '
     bg-gray-50
-    font-medium
+    font-semibold
     overflow-hidden
     px-6
     py-4
