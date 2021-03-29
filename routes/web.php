@@ -10,7 +10,10 @@ Route::middleware(['auth:sanctum', 'subscribed', 'verified'])->group(function ()
     ]);
 
     Route::redirect('/dashboard', route('projects.index'))->name('dashboard');
+    Route::redirect('/', route('projects.index'))->name('home');
 });
 
-// Public routes (the projects.index route must be defined first)
-Route::redirect('/', route('projects.index'));
+// Public routes
+Route::middleware(['guest'])->group(function () {
+    Route::redirect('/', 'login')->name('home');
+});
