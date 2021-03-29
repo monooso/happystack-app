@@ -13,6 +13,8 @@ Route::middleware(['auth:sanctum', 'subscribed', 'verified'])->group(function ()
     Route::redirect('/', route('projects.index'))->name('home');
 });
 
+Route::get('/wibble', fn () => 'ok')->name('teams.create-first');
+
 // Public routes
 Route::middleware(['guest'])->group(function () {
     Route::redirect('/', 'login')->name('home');
