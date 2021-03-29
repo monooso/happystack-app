@@ -7,15 +7,11 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
-    <!-- Fonts -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
-
-    <!-- Styles -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
+    @livewireStyles
 
-@livewireStyles
-
-<!-- Scripts -->
     <script src="{{ mix('js/app.js') }}" defer></script>
 </head>
 
@@ -24,13 +20,13 @@
 
 <header>
     <div class="mb-8">
-        @livewire('navigation-menu')
+        <livewire:navigation-menu />
     </div>
 
     @if (isset($header))
         <x-container>
             <div class="mb-12 px-4 sm:px-0">
-                <h1 class="font-bold leading-7 text-3xl text-gray-900">{{ $header }}</h1>
+                <h1 class="font-semibold leading-7 text-3xl text-gray-900">{{ $header }}</h1>
             </div>
         </x-container>
     @endif

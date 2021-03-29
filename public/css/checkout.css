@@ -743,6 +743,11 @@ select {
   outline: 1px auto -webkit-focus-ring-color;
 }
 
+#sideBar,
+    #topNavReturnLink {
+  display: none !important;
+}
+
 .container {
   width: 100%;
 }

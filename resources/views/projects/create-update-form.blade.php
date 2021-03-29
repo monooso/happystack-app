@@ -29,7 +29,7 @@
                                         <div class="flex-0 mr-4 mt-1 w-6">@svg('logo-' . $service->handle)</div>
 
                                         <div class="flex-1 text-left">
-                                            <span class="block font-medium text-gray-900">{{ $service->name }}</span>
+                                            <span class="block font-semibold text-gray-900">{{ $service->name }}</span>
                                             <span class="block text-sm text-gray-500">{{ trans_choice('app.selected_components', count($this->selectedServiceComponents($service))) }}</span>
                                         </div>
                                     </div>
@@ -88,7 +88,7 @@
                                 <x-slot name="subtitle"></x-slot>
                             </x-legend>
                             <legend class="block">
-                                <span class="block font-medium text-gray-900">{{ __('Would you like us to notify your client?') }}</span>
+                                <span class="block font-semibold text-gray-900">{{ __('Would you like us to notify your client?') }}</span>
                                 <span class="block mt-1 text-sm text-gray-500">{{ __('We’ll email your client once per day, at most.') }}</span>
                             </legend>
 
