@@ -12,7 +12,7 @@ final class EnsureUserMissingTeam
 {
     public function handle(Request $request, Closure $next)
     {
-        $user = user();
+        $user = $request->user();
 
         if (! $user || $user->belongsToATeam()) {
             return redirect(RouteServiceProvider::HOME);
