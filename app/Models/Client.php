@@ -45,7 +45,7 @@ final class Client extends Model
      *
      * @return bool
      */
-    public function getCanBeNotifiedAttribute(): bool
+    public function canBeNotified(): bool
     {
         if ($this->notified_at === null) {
             return true;

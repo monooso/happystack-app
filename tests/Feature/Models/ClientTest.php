@@ -39,7 +39,7 @@ final class ClientTest extends TestCase
     {
         $client = Client::factory()->make(['notified_at' => null]);
 
-        $this->assertTrue($client->canBeNotified);
+        $this->assertTrue($client->canBeNotified());
     }
 
     /** @test */
@@ -49,7 +49,7 @@ final class ClientTest extends TestCase
             'notified_at' => Carbon::now()->subHours(24),
         ]);
 
-        $this->assertTrue($client->canBeNotified);
+        $this->assertTrue($client->canBeNotified());
     }
 
     /** @test */
@@ -59,7 +59,7 @@ final class ClientTest extends TestCase
             'notified_at' => Carbon::now()->subHours(23),
         ]);
 
-        $this->assertFalse($client->canBeNotified);
+        $this->assertFalse($client->canBeNotified());
     }
 
     /** @test */
