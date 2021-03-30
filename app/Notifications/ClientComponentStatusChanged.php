@@ -4,6 +4,7 @@ namespace App\Notifications;
 
 use App\Constants\NotificationChannel;
 use App\Mail\ClientComponentStatusChanged as Mailable;
+use App\Models\Client;
 use App\Models\Component;
 use App\Models\Project;
 use Illuminate\Bus\Queueable;
@@ -22,16 +23,18 @@ class ClientComponentStatusChanged extends Notification implements ShouldQueue
     ) {
     }
 
-    public function toMail($notifiable): Mailable
+    public function toMail(Client $notifiable): Mailable
     {
         $message = $notifiable->mail_message ?? '';
 
-        return (new Mailable($message))->subject('Website Status');
+        return (new Mailable($message))
+            ->to($notifiable->routeNotificationForMail())
+            ->subject('Website Status');
     }
 
-    public function via($notifiable): array
+    public function via(Client $notifiable): array
     {
-        if ($notifiable->can_be_notified === false) {
+        if ($notifiable->canBeNotified() === false) {
             return [];
         }
 
