@@ -1,42 +1,21 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+<x-base-layout>
+    <x-slot name="header">
+        <x-top-bar.full />
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
-
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ mix('css/app.css') }}">
-    @livewireStyles
-
-    <script src="{{ mix('js/app.js') }}" defer></script>
-</head>
-
-<body class="bg-gray-100 border-t-4 border-yellow-500 font-sans antialiased">
-<x-jet-banner/>
-
-<header>
-    <div class="mb-8">
-        <livewire:navigation-menu />
-    </div>
-
-    @if (isset($header))
-        <x-container>
-            <div class="mb-12 px-4 sm:px-0">
-                <h1 class="font-semibold leading-7 text-3xl text-gray-900">{{ $header }}</h1>
+        @if(isset($header))
+            <div class="bg-gray-50 py-6 shadow">
+                <x-container>
+                    <h1 class="font-bold text-2xl">{{ $header }}</h1>
+                </x-container>
             </div>
-        </x-container>
-    @endif
-</header>
+        @endif
+    </x-slot>
 
-<main class="pb-12">
-    <x-container>{{ $slot }}</x-container>
-</main>
+    <x-slot name="main">
+        <div class="my-16">
+            <x-container>{{ $slot }}</x-container>
+        </div>
+    </x-slot>
 
-@stack('modals')
-@livewireScripts
-</body>
-</html>
+    @stack('modals')
+</x-base-layout>
