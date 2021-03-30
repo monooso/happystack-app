@@ -35,6 +35,22 @@ final class ClientComponentStatusChangedTest extends TestCase
     }
 
     /** @test */
+    public function toMailSetsTheRecipient()
+    {
+        $component = Component::factory()->create();
+        $project = Project::factory()->hasAttached($component)->create();
+        $notifiable = Client::factory()->for($project)->create();
+
+        $mailable = (new ClientComponentStatusChanged(
+            $project,
+            $component
+        ))->toMail($notifiable);
+
+        $this->assertCount(1, $mailable->to);
+        $this->assertSame($notifiable->mail_route, $mailable->to[0]['address']);
+    }
+
+    /** @test */
     public function toMailSetsTheMessageText()
     {
         $message = $this->faker->realText();
