@@ -71,10 +71,10 @@ final class Client extends Model
      */
     public function notify($instance)
     {
+        $this->traitNotify($instance);
+
         $this->notified_at = Carbon::now();
         $this->save();
-
-        $this->traitNotify($instance);
     }
 
     /**
@@ -85,9 +85,9 @@ final class Client extends Model
      */
     public function notifyNow($instance, array $channels = null)
     {
+        $this->traitNotifyNow($instance, $channels);
+
         $this->notified_at = Carbon::now();
         $this->save();
-
-        $this->traitNotifyNow($instance, $channels);
     }
 }
