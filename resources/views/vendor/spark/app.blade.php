@@ -16,10 +16,22 @@
     <script src="{{ mix('js/app.js') }}" defer></script>
 </head>
 
-<body class="bg-gray-100 border-t-4 border-yellow-500 font-sans antialiased">
-    <x-checkout.header />
+<body class="antialiased bg-gray-200 border-t-4 border-yellow-500 font-sans text-gray-900">
+    <header>
+        <x-top-bar.checkout />
+    </header>
 
-    @inertia
+    <main>
+        <div class="bg-gray-50 py-6 relative shadow z-10">
+            <x-container>
+                <h1 class="font-bold text-2xl">{{ __('Managing billing for ') . user()->currentTeam->name }}</h1>
+            </x-container>
+        </div>
+
+        <div>
+            @inertia
+        </div>
+    </main>
 
     <!-- Scripts -->
     <script>

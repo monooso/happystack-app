@@ -42,4 +42,14 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->allTeams()->count() > 0;
     }
+
+    /**
+     * Does the user have a profile photo?
+     *
+     * @return bool
+     */
+    public function getHasProfilePhotoAttribute(): bool
+    {
+        return (string) $this->profile_photo_path !== '';
+    }
 }

@@ -1,5 +1,5 @@
 <x-base-layout>
-    <div class="text-gray-900">
+    <x-slot name="main">
         {{ $slot }}
-    </div>
+    </x-slot>
 </x-base-layout>

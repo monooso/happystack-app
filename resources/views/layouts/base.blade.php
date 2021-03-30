@@ -8,16 +8,23 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
     @livewireStyles
 
     <script src="{{ mix('js/app.js') }}" defer></script>
 </head>
 
-<body class="bg-gray-100 border-t-4 border-yellow-500 font-sans antialiased">
+<body class="antialiased bg-gray-200 border-t-4 border-yellow-500 font-sans text-gray-900">
+<x-jet-banner/>
 
-{{ $slot }}
+@if (isset($header))
+    <header>{{ $header }}</header>
+@endif
+
+@if (isset($main))
+    <main>{{ $main }}</main>
+@endif
 
 @livewireScripts
 </body>
