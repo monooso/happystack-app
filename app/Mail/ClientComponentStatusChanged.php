@@ -6,12 +6,10 @@ namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
-use Illuminate\Queue\SerializesModels;
 
 final class ClientComponentStatusChanged extends Mailable
 {
     use Queueable;
-    use SerializesModels;
 
     public function __construct(public string $body)
     {
