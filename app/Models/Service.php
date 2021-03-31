@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Constants\ServiceVisibility;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -20,5 +21,15 @@ class Service extends Model
     public function components(): HasMany
     {
         return $this->hasMany(Component::class);
+    }
+
+    /**
+     * Is access to this service restricted?
+     *
+     * @return bool
+     */
+    public function isRestricted(): bool
+    {
+        return $this->visibility === ServiceVisibility::RESTRICTED;
     }
 }
