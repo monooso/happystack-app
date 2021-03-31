@@ -23,13 +23,30 @@ final class AgencyComponentStatusChangedTest extends TestCase
     {
         $component = Component::factory()->create();
         $project = Project::factory()->hasAttached($component)->create();
+        $notifiable = Agency::factory()->for($project)->create();
 
         $mailable = (new AgencyComponentStatusChanged(
             $project,
             $component
-        ))->toMail();
+        ))->toMail($notifiable);
 
         $this->assertSame('Happy Stack Status Alert', $mailable->subject);
+    }
+
+    /** @test */
+    public function toMailSetsTheRecipient()
+    {
+        $component = Component::factory()->create();
+        $project = Project::factory()->hasAttached($component)->create();
+        $notifiable = Agency::factory()->for($project)->create();
+
+        $mailable = (new AgencyComponentStatusChanged(
+            $project,
+            $component
+        ))->toMail($notifiable);
+
+        $this->assertCount(1, $mailable->to);
+        $this->assertSame($notifiable->mail_route, $mailable->to[0]['address']);
     }
 
     /** @test */

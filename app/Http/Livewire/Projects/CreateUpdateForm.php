@@ -69,9 +69,16 @@ final class CreateUpdateForm extends Component
     {
         $agency = $this->project->agency;
 
+        if (is_null($agency)) {
+            return [
+                'mail_route' => user()->email,
+                'via_mail'   => ToggleValue::ENABLED,
+            ];
+        }
+
         return [
-            'via_mail'   => $agency?->via_mail === true ? ToggleValue::ENABLED : ToggleValue::DISABLED,
-            'mail_route' => $agency?->mail_route ?? Auth::user()->email,
+            'mail_route' => $agency->mail_route,
+            'via_mail'   => $agency->via_mail === true ? ToggleValue::ENABLED : ToggleValue::DISABLED,
         ];
     }
 
@@ -85,7 +92,7 @@ final class CreateUpdateForm extends Component
         $client = $this->project->client;
 
         $message = (string) trans('app.client_notification', [
-            'sender_name' => Auth::user()->name,
+            'sender_name' => user()->name,
         ]);
 
         return [
@@ -118,7 +125,7 @@ final class CreateUpdateForm extends Component
         $selectedComponentIds = array_values($this->components);
 
         return $service->components->filter(
-            fn ($component) => in_array($component->id, $selectedComponentIds)
+            fn($component) => in_array($component->id, $selectedComponentIds)
         );
     }
 

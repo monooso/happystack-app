@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Jobs\Manifest;
+namespace App\Jobs\TestCanary;
 
 use App\Jobs\FetchStatusPageStatus;
 

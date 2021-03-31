@@ -24,37 +24,39 @@
             <x-card class="overflow-hidden">
                 <div class="divide-gray-100 divide-y">
                     @foreach($services as $service)
-                        <div x-data="{ expanded: false }">
-                            <button @click.prevent="expanded = ! expanded" class="w-full">
-                                <x-sleeve>
-                                    <div class="text-left sm:flex sm:items-center sm:justify-between">
-                                        <div class="flex items-center">
-                                            <div class="w-6">
-                                                @svg('logo-' . $service->handle)
+                        @can('view', $service)
+                            <div x-data="{ expanded: false }">
+                                <button @click.prevent="expanded = ! expanded" class="w-full">
+                                    <x-sleeve>
+                                        <div class="text-left sm:flex sm:items-center sm:justify-between">
+                                            <div class="flex items-center">
+                                                <div class="w-6">
+                                                    @svg('logo-' . $service->handle)
+                                                </div>
+
+                                                <div class="block font-semibold ml-4 text-gray-900">{{ $service->name }}</div>
                                             </div>
 
-                                            <div class="block font-semibold ml-4 text-gray-900">{{ $service->name }}</div>
+                                            <div class="block mt-2 text-sm text-gray-700 sm:mt-0">
+                                                {{ trans_choice('app.selected_components', count($this->selectedServiceComponents($service))) }}
+                                                (<span class="text-indigo-700 underline" x-text="expanded ? 'hide' : 'show'"></span>)
+                                            </div>
                                         </div>
+                                    </x-sleeve>
+                                </button>
 
-                                        <div class="block mt-2 text-sm text-gray-700 sm:mt-0">
-                                            {{ trans_choice('app.selected_components', count($this->selectedServiceComponents($service))) }}
-                                            (<span class="text-indigo-700 underline" x-text="expanded ? 'hide' : 'show'"></span>)
-                                        </div>
+                                <div x-show="expanded === true" class="bg-gray-50 border-b border-gray-200 p-4 shadow-inner sm:p-6">
+                                    <div class="grid gap-3 md:grid-cols-2">
+                                        @foreach ($service->components as $target)
+                                            <label class="col-span-1 flex items-start p-1 select-none">
+                                                <x-jet-input class="mt-1" type="checkbox" wire:model="components" value="{{ $target->id }}"/>
+                                                <span class="ml-2">{{ $target->name }}</span>
+                                            </label>
+                                        @endforeach
                                     </div>
-                                </x-sleeve>
-                            </button>
-
-                            <div x-show="expanded === true" class="bg-gray-50 border-b border-gray-200 p-4 shadow-inner sm:p-6">
-                                <div class="grid gap-3 md:grid-cols-2">
-                                    @foreach ($service->components as $target)
-                                        <label class="col-span-1 flex items-start p-1 select-none">
-                                            <x-jet-input class="mt-1" type="checkbox" wire:model="components" value="{{ $target->id }}"/>
-                                            <span class="ml-2">{{ $target->name }}</span>
-                                        </label>
-                                    @endforeach
                                 </div>
                             </div>
-                        </div>
+                        @endcan
                     @endforeach
                 </div>
 

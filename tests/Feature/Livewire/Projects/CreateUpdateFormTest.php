@@ -22,6 +22,34 @@ final class CreateUpdateFormTest extends TestCase
     use WithFaker;
 
     /** @test */
+    public function itEnablesTheAgencyViaMailPropertyToTrueForNewProjects()
+    {
+        $project = new Project();
+        $user = User::factory()->create();
+
+        $this->actingAs($user);
+
+        $component = new CreateUpdateForm();
+        $component->mount($project);
+
+        $this->assertSame(ToggleValue::ENABLED, $component->agency['via_mail']);
+    }
+
+    /** @test */
+    public function itSetsTheAgencyMailRoutePropertyToTheAuthorizedUserForNewProjects()
+    {
+        $project = new Project();
+        $user = User::factory()->create();
+
+        $this->actingAs($user);
+
+        $component = new CreateUpdateForm();
+        $component->mount($project);
+
+        $this->assertSame($user->email, $component->agency['mail_route']);
+    }
+
+    /** @test */
     public function savingANewProjectCallsTheCreateActionWithTheCorrectParameters()
     {
         $user = Team::factory()->create()->owner;
@@ -53,7 +81,7 @@ final class CreateUpdateFormTest extends TestCase
 
         $updatesAction->expects('update')->never();
 
-        return Livewire::test(CreateUpdateForm::class)
+        Livewire::test(CreateUpdateForm::class)
             ->set('name', $expected['name'])
             ->set('agency', $expected['agency'])
             ->set('client', $expected['client'])
@@ -74,7 +102,25 @@ final class CreateUpdateFormTest extends TestCase
         $updatesAction->expects('update')->once()->andReturns($project);
         $createsAction->expects('create')->never();
 
-        return Livewire::test(CreateUpdateForm::class, ['project' => $project])
+        Livewire::test(CreateUpdateForm::class, ['project' => $project])
             ->call('save', $createsAction, $updatesAction);
+    }
+
+    /** @test */
+    public function averageJoeDoesNotSeeTheTestCanaryService()
+    {
+        $this->actingAs(User::factory()->create());
+
+        Livewire::test(CreateUpdateForm::class)->assertDontSee('Test Canary');
+    }
+
+    /** @test */
+    public function godUserSeesTheTestCanaryService()
+    {
+        $this->actingAs(User::factory()->create([
+            'email' => 'stephen@happystack.app',
+        ]));
+
+        Livewire::test(CreateUpdateForm::class)->assertSee('Test Canary');
     }
 }

@@ -56,7 +56,7 @@ return [
 
     'prefix' => env(
         'HORIZON_PREFIX',
-        Str::slug(env('APP_NAME', 'laravel'), '_').'_horizon:'
+        Str::slug(env('APP_NAME', 'laravel'), '_') . '_horizon:'
     ),
 
     /*
@@ -166,13 +166,17 @@ return [
 
     'defaults' => [
         'supervisor-1' => [
-            'connection'   => 'redis',
-            'queue'        => ['default'],
             'balance'      => 'auto',
+            'connection'   => 'redis',
             'maxProcesses' => 1,
+            'maxJobs'      => 1000,
+            'maxTime'      => 3600,
             'memory'       => 128,
+            'nice'         => 10,
+            'queue'        => ['default'],
+            'rest'         => 0.5,
+            'sleep'        => 5,
             'tries'        => 1,
-            'nice'         => 0,
         ],
     ],
 

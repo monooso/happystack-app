@@ -6,9 +6,8 @@ namespace App\Listeners;
 
 use App\Events\StatusChanged;
 use App\Events\StatusFetched;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
-final class UpdateComponentStatus implements ShouldQueue
+final class UpdateComponentStatus
 {
     /**
      * Handle the event

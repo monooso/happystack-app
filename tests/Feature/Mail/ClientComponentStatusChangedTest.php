@@ -17,7 +17,7 @@ final class ClientComponentStatusChangedTest extends TestCase
     /** @test */
     public function itOutputsTheGivenMessage()
     {
-        $message = $this->faker->realText();
+        $message = $this->faker->sentence();
         $mailable = new ClientComponentStatusChanged($message);
 
         $mailable->assertSeeInHtml($message);

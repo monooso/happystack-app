@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
+use App\Constants\ServiceVisibility;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Facades\Storage;
 
 class Service extends Model
 {
@@ -24,14 +24,12 @@ class Service extends Model
     }
 
     /**
-     * Return the logo SVG string
+     * Is access to this service restricted?
      *
-     * @return string
+     * @return bool
      */
-    public function getLogoSvgAttribute(): string
+    public function isRestricted(): bool
     {
-        $logoPath = Storage::path('public/service-logos/' . $this->handle . '.svg');
-
-        return file_exists($logoPath) ? file_get_contents($logoPath) : '';
+        return $this->visibility === ServiceVisibility::RESTRICTED;
     }
 }
