@@ -12,10 +12,12 @@ module.exports = {
         colors: {
             current: 'currentColor',
             transparent: 'transparent',
+            black: colors.black,
             gray: colors.warmGray,
             indigo: colors.indigo,
             red: colors.red,
             yellow: colors.amber,
+            white: colors.white,
         },
         extend: {
             fontFamily: {
