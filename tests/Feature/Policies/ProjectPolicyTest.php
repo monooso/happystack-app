@@ -17,9 +17,9 @@ final class ProjectPolicyTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function createReturnsTrueIfTheUserHasCreatePrivilegesOnTheirCurrentTeam()
+    public function createReturnsTrueIfTheUserHasAddPrivilegesOnTheirCurrentTeam()
     {
-        Jetstream::role('overlord', 'Overlord', ['project:create']);
+        Jetstream::role('overlord', 'Overlord', ['project:add']);
 
         $team = Team::factory()->create();
         $user = User::factory()->create();
@@ -31,7 +31,7 @@ final class ProjectPolicyTest extends TestCase
     }
 
     /** @test */
-    public function createReturnsFalseIfTheUserDoesNotHaveCreatePrivilegesOnTheirCurrentTeam()
+    public function createReturnsFalseIfTheUserDoesNotHaveAddPrivilegesOnTheirCurrentTeam()
     {
         Jetstream::role('minion', 'Minion', []);
 
@@ -73,9 +73,9 @@ final class ProjectPolicyTest extends TestCase
     }
 
     /** @test */
-    public function updateReturnsTrueIfTheUserHasUpdatePrivilegesOnTheProjectTeam()
+    public function updateReturnsTrueIfTheUserHasEditPrivilegesOnTheProjectTeam()
     {
-        Jetstream::role('overlord', 'Overlord', ['project:update']);
+        Jetstream::role('overlord', 'Overlord', ['project:edit']);
 
         $project = Project::factory()->create();
         $user = User::factory()->create();
@@ -87,7 +87,7 @@ final class ProjectPolicyTest extends TestCase
     }
 
     /** @test */
-    public function updateReturnsFalseIfTheUserDoesNotHaveUpdatePrivilegesOnTheProjectTeam()
+    public function updateReturnsFalseIfTheUserDoesNotHaveEditPrivilegesOnTheProjectTeam()
     {
         Jetstream::role('minion', 'Minion', []);
 
@@ -101,9 +101,9 @@ final class ProjectPolicyTest extends TestCase
     }
 
     /** @test */
-    public function viewReturnsTrueIfTheUserHasViewPrivilegesOnTheProjectTeam()
+    public function viewReturnsTrueIfTheUserHasReadPrivilegesOnTheProjectTeam()
     {
-        Jetstream::role('overlord', 'Overlord', ['project:view']);
+        Jetstream::role('overlord', 'Overlord', ['project:read']);
 
         $project = Project::factory()->create();
         $user = User::factory()->create();
@@ -115,7 +115,7 @@ final class ProjectPolicyTest extends TestCase
     }
 
     /** @test */
-    public function viewReturnsFalseIfTheUserDoesNotHaveViewPrivilegesOnTheProjectTeam()
+    public function viewReturnsFalseIfTheUserDoesNotHaveReadPrivilegesOnTheProjectTeam()
     {
         Jetstream::role('minion', 'Minion', []);
 
@@ -129,9 +129,9 @@ final class ProjectPolicyTest extends TestCase
     }
 
     /** @test */
-    public function viewAnyReturnsTrueIfTheUserHasViewPrivilegesOnTheirCurrentTeam()
+    public function viewAnyReturnsTrueIfTheUserHasBrowsePrivilegesOnTheirCurrentTeam()
     {
-        Jetstream::role('overlord', 'Overlord', ['project:view']);
+        Jetstream::role('overlord', 'Overlord', ['project:browse']);
 
         $team = Team::factory()->create();
         $user = User::factory()->create();
@@ -143,7 +143,7 @@ final class ProjectPolicyTest extends TestCase
     }
 
     /** @test */
-    public function viewAnyReturnsFalseIfTheUserDoesNotHaveViewPrivilegesOnTheirCurrentTeam()
+    public function viewAnyReturnsFalseIfTheUserDoesNotHaveBrowsePrivilegesOnTheirCurrentTeam()
     {
         Jetstream::role('minion', 'Minion', []);
 

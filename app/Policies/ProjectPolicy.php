@@ -21,7 +21,7 @@ final class ProjectPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasTeamPermission($user->currentTeam, 'project:create');
+        return $user->hasTeamPermission($user->currentTeam, 'project:add');
     }
 
     /**
@@ -47,7 +47,7 @@ final class ProjectPolicy
      */
     public function update(User $user, Project $project): bool
     {
-        return $user->hasTeamPermission($project->team, 'project:update');
+        return $user->hasTeamPermission($project->team, 'project:edit');
     }
 
     /**
@@ -60,7 +60,7 @@ final class ProjectPolicy
      */
     public function view(User $user, Project $project): bool
     {
-        return $user->hasTeamPermission($project->team, 'project:view');
+        return $user->hasTeamPermission($project->team, 'project:read');
     }
 
     /**
@@ -72,6 +72,6 @@ final class ProjectPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->hasTeamPermission($user->currentTeam, 'project:view');
+        return $user->hasTeamPermission($user->currentTeam, 'project:browse');
     }
 }
