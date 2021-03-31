@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Jobs\Manifest;
+namespace App\Jobs\TestCanary;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
 

@@ -105,4 +105,22 @@ final class CreateUpdateFormTest extends TestCase
         Livewire::test(CreateUpdateForm::class, ['project' => $project])
             ->call('save', $createsAction, $updatesAction);
     }
+
+    /** @test */
+    public function averageJoeDoesNotSeeTheTestCanaryService()
+    {
+        $this->actingAs(User::factory()->create());
+
+        Livewire::test(CreateUpdateForm::class)->assertDontSee('Test Canary');
+    }
+
+    /** @test */
+    public function godUserSeesTheTestCanaryService()
+    {
+        $this->actingAs(User::factory()->create([
+            'email' => 'stephen@happystack.app',
+        ]));
+
+        Livewire::test(CreateUpdateForm::class)->assertSee('Test Canary');
+    }
 }

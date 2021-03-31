@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Jobs\Manifest;
+namespace App\Jobs\TestCanary;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-final class FetchCharlieStatus extends FetchStatus implements ShouldQueue
+final class FetchAlfaStatus extends FetchStatus implements ShouldQueue
 {
     protected function getExternalComponentId(): string
     {
-        return '3bb4g3xgzwsf';
+        return 'gy9xsn9gwzx1';
     }
 }
