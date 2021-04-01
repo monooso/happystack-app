@@ -26,7 +26,7 @@ git push origin main
 # Switch to the production branch, and merge the changes from `main`
 # The `main` branch is our source of truth
 git checkout production
-git merge -s recursive -X theirs --ff --commit main
+git merge -s recursive -X theirs --ff --commit -m 'Merge latest changes for release' main
 
 # Build the production assets
 npm run production
@@ -40,3 +40,6 @@ fi
 git push origin production
 
 echo '⚡️ Pushed to production'
+
+# Return to main
+git checkout main
