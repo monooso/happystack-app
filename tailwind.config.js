@@ -5,6 +5,7 @@ module.exports = {
     purge: [
         './resources/views/**/*.blade.php',
         './storage/framework/views/*.php',
+        './vendor/laravel/spark-paddle/resources/js/**/*.vue',
     ],
 
     theme: {
@@ -13,6 +14,7 @@ module.exports = {
             transparent: 'transparent',
             black: colors.black,
             gray: colors.warmGray,
+            green: colors.green,
             indigo: colors.indigo,
             red: colors.red,
             yellow: colors.amber,
