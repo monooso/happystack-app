@@ -100,7 +100,7 @@ final class ClientComponentStatusChangedTest extends TestCase
     /** @test */
     public function toMailSetsTheMessageText()
     {
-        $message = $this->faker->realText();
+        $message = $this->faker->sentence();
 
         $component = Component::factory()->create();
         $project = Project::factory()->hasAttached($component)->create();
