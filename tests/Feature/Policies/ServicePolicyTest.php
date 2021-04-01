@@ -21,7 +21,7 @@ final class ServicePolicyTest extends TestCase
             'visibility' => ServiceVisibility::PUBLIC,
         ]);
 
-        $this->assertTrue((new ServicePolicy)->view($user, $service));
+        $this->assertTrue((new ServicePolicy())->view($user, $service));
     }
 
     /** @test */
@@ -37,7 +37,7 @@ final class ServicePolicyTest extends TestCase
         ]);
 
         foreach ($gods as $god) {
-            $this->assertTrue((new ServicePolicy)->view($god, $service));
+            $this->assertTrue((new ServicePolicy())->view($god, $service));
         }
     }
 
@@ -50,6 +50,6 @@ final class ServicePolicyTest extends TestCase
             'visibility' => ServiceVisibility::RESTRICTED,
         ]);
 
-        $this->assertFalse((new ServicePolicy)->view($user, $service));
+        $this->assertFalse((new ServicePolicy())->view($user, $service));
     }
 }

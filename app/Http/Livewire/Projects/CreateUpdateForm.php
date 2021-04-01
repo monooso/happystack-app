@@ -125,7 +125,7 @@ final class CreateUpdateForm extends Component
         $selectedComponentIds = array_values($this->components);
 
         return $service->components->filter(
-            fn($component) => in_array($component->id, $selectedComponentIds)
+            fn ($component) => in_array($component->id, $selectedComponentIds)
         );
     }
 
