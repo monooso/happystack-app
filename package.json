@@ -8,7 +8,8 @@
         "hot": "mix watch --hot",
         "postinstall": "husky install",
         "prod": "npm run production",
-        "production": "mix --production"
+        "production": "mix --production",
+        "release": "bash ./scripts/deploy-to-production.sh || exit 0"
     },
     "devDependencies": {
         "@tailwindcss/forms": "^0.2.1",
