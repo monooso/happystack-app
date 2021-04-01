@@ -3,6 +3,7 @@
     "scripts": {
         "dev": "npm run development",
         "development": "mix",
+        "lint-fix": "php ./tools/vendor/bin/php-cs-fixer fix --config .php_cs",
         "watch": "mix watch",
         "watch-poll": "mix watch -- --watch-options-poll=1000",
         "hot": "mix watch --hot",

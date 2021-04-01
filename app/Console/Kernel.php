@@ -26,7 +26,8 @@ class Kernel extends ConsoleKernel
             ->command('happy:refresh-statuses')
             ->cron($cron)
             ->runInBackground()
-            ->withoutOverlapping();
+            ->withoutOverlapping()
+            ->thenPingHoneybadger('OaIKBK', 'production');
     }
 
     /**
@@ -36,7 +37,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands()
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
     }
