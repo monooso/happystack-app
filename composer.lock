@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "12ec51d040ca6471a0aa040a7be7cbc4",
+    "content-hash": "c6dbf0137752180b99d42229d9e42fdd",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1192,6 +1192,146 @@
                 "source": "https://github.com/guzzle/psr7/tree/1.8.1"
             },
             "time": "2021-03-21T16:25:00+00:00"
+        },
+        {
+            "name": "honeybadger-io/honeybadger-laravel",
+            "version": "v3.8.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/honeybadger-io/honeybadger-laravel.git",
+                "reference": "73d2e001d9fe9bcbabe465a93ac108cbec4b48d0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/honeybadger-io/honeybadger-laravel/zipball/73d2e001d9fe9bcbabe465a93ac108cbec4b48d0",
+                "reference": "73d2e001d9fe9bcbabe465a93ac108cbec4b48d0",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "honeybadger-io/honeybadger-php": "^2.8.0",
+                "illuminate/console": "^7.0|^8.0",
+                "illuminate/support": "^7.0|^8.0",
+                "php": "^7.2|^8.0",
+                "sixlive/dotenv-editor": "^1.1"
+            },
+            "require-dev": {
+                "larapack/dd": "^1.0",
+                "mockery/mockery": "^1.4",
+                "orchestra/testbench": "^5.0|^6.0",
+                "phpunit/phpunit": "^8.4|^9.3"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Honeybadger\\HoneybadgerLaravel\\HoneybadgerServiceProvider"
+                    ],
+                    "aliases": {
+                        "Honeybadger": "Honeybadger\\HoneybadgerLaravel\\Facades\\Honeybadger"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Honeybadger\\HoneybadgerLaravel\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "TJ Miller",
+                    "email": "oss@tjmiller.co",
+                    "homepage": "https://tjmiller.co",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Honeybadger Laravel integration",
+            "homepage": "https://github.com/honeybadger-io/honeybadger-laravel",
+            "keywords": [
+                "debugging",
+                "errors",
+                "exceptions",
+                "honeybadger-io",
+                "honeybadger-php",
+                "logging",
+                "monitoring"
+            ],
+            "support": {
+                "issues": "https://github.com/honeybadger-io/honeybadger-laravel/issues",
+                "source": "https://github.com/honeybadger-io/honeybadger-laravel/tree/v3.8.1"
+            },
+            "time": "2021-03-25T18:25:53+00:00"
+        },
+        {
+            "name": "honeybadger-io/honeybadger-php",
+            "version": "v2.8.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/honeybadger-io/honeybadger-php.git",
+                "reference": "39007ff89aec6cb5b2e08be700d6ba6fc406716d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/honeybadger-io/honeybadger-php/zipball/39007ff89aec6cb5b2e08be700d6ba6fc406716d",
+                "reference": "39007ff89aec6cb5b2e08be700d6ba6fc406716d",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "guzzlehttp/guzzle": "^6.3|^7.0.1",
+                "monolog/monolog": "^2.0",
+                "php": "^7.2|^8.0",
+                "spatie/regex": "^1.4",
+                "symfony/http-foundation": ">=3.3|^4.1"
+            },
+            "require-dev": {
+                "larapack/dd": "^1.1",
+                "mockery/mockery": "^1.4",
+                "phpunit/phpunit": "^8.5|^9.4"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Honeybadger\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "TJ Miller",
+                    "email": "oss@tjmiller.co",
+                    "homepage": "https://tjmiller.co",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Honeybadger PHP library",
+            "homepage": "https://github.com/honeybadger-io/honeybadger-php",
+            "keywords": [
+                "debugging",
+                "errors",
+                "exceptions",
+                "honeybadger-io",
+                "honeybadger-php",
+                "logging",
+                "monitoring"
+            ],
+            "support": {
+                "issues": "https://github.com/honeybadger-io/honeybadger-php/issues",
+                "source": "https://github.com/honeybadger-io/honeybadger-php/tree/v2.8.1"
+            },
+            "time": "2021-03-26T17:23:33+00:00"
         },
         {
             "name": "inertiajs/inertia-laravel",
@@ -3764,6 +3904,58 @@
             "time": "2020-08-18T17:17:46+00:00"
         },
         {
+            "name": "sixlive/dotenv-editor",
+            "version": "v1.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sixlive/dotenv-editor.git",
+                "reference": "8fe8695962cbf1462dca903d1455054e66bae5e4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sixlive/dotenv-editor/zipball/8fe8695962cbf1462dca903d1455054e66bae5e4",
+                "reference": "8fe8695962cbf1462dca903d1455054e66bae5e4",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1|^8.0"
+            },
+            "require-dev": {
+                "larapack/dd": "^1.0",
+                "phpunit/phpunit": "^7.0|^8.0|^9.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "sixlive\\DotenvEditor\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "TJ Miller",
+                    "email": "oss@tjmiller.co",
+                    "homepage": "https://tjmiller.me",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A tool to edit phpdotenv files",
+            "homepage": "https://github.com/sixlive/dotenv-editor",
+            "keywords": [
+                "dotenv",
+                "dotenv-editor",
+                "phpdotenv"
+            ],
+            "support": {
+                "issues": "https://github.com/sixlive/dotenv-editor/issues",
+                "source": "https://github.com/sixlive/dotenv-editor/tree/v1.3.0"
+            },
+            "time": "2020-11-29T13:42:53+00:00"
+        },
+        {
             "name": "spatie/macroable",
             "version": "1.0.1",
             "source": {
@@ -3812,6 +4004,69 @@
                 "source": "https://github.com/spatie/macroable/tree/1.0.1"
             },
             "time": "2020-11-03T10:15:05+00:00"
+        },
+        {
+            "name": "spatie/regex",
+            "version": "1.4.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/regex.git",
+                "reference": "1500ed75af430df3a32047494c43d79d45cf152b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/regex/zipball/1500ed75af430df3a32047494c43d79d45cf152b",
+                "reference": "1500ed75af430df3a32047494c43d79d45cf152b",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.3|^8.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\Regex\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sebastian De Deyne",
+                    "email": "sebastian@spatie.be",
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A sane interface for php's built in preg_* functions",
+            "homepage": "https://github.com/spatie/regex",
+            "keywords": [
+                "expression",
+                "expressions",
+                "regex",
+                "regular",
+                "spatie"
+            ],
+            "support": {
+                "issues": "https://github.com/spatie/regex/issues",
+                "source": "https://github.com/spatie/regex/tree/1.4.2"
+            },
+            "funding": [
+                {
+                    "url": "https://spatie.be/open-source/support-us",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/spatie",
+                    "type": "github"
+                }
+            ],
+            "time": "2020-11-03T23:05:25+00:00"
         },
         {
             "name": "spatie/url",
