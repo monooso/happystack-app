@@ -20,6 +20,9 @@ if is_dirty; then
     exit 1
 fi
 
+# Ensure that we've pushed everything
+git push origin main
+
 # Switch to the production branch, and merge the changes from `main`
 # The `main` branch is our source of truth
 git checkout production
@@ -37,4 +40,3 @@ fi
 git push origin production
 
 echo '⚡️ Pushed to production'
-
