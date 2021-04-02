@@ -34,6 +34,12 @@ class StatusPageStatusTest extends TestCase
     }
 
     /** @test */
+    public function itNormalizesTheUnderMaintenanceStatus(): void
+    {
+        $this->assertSame(Status::WARN, StatusPageStatus::normalize('under_maintenance'));
+    }
+
+    /** @test */
     public function itThrowsAnExceptionIfTheStatusIsUnknown()
     {
         $this->expectExceptionObject(new UnknownStatusException('nope'));
