@@ -16,6 +16,7 @@ final class StatusPageStatus implements StatusNormalizer
             'operational'          => Status::OKAY,
             'degraded_performance' => Status::WARN,
             'partial_outage'       => Status::WARN,
+            'under_maintenance'    => Status::WARN,
             'major_outage'         => Status::DOWN,
         ];
 
