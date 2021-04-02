@@ -16,8 +16,8 @@ final class AgencyFactory extends Factory
     {
         return [
             'project_id' => Project::factory(),
-            'via_mail'   => $this->faker->boolean,
-            'mail_route' => $this->faker->email,
+            'via_mail'   => $this->faker->boolean(),
+            'mail_route' => $this->faker->email(),
         ];
     }
 }
