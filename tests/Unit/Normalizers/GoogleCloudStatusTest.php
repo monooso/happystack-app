@@ -10,29 +10,38 @@ use PHPUnit\Framework\TestCase;
 class GoogleCloudStatusTest extends TestCase
 {
     /** @test */
-    public function itNormalizesAClassStringContainingOk()
+    public function itNormalizesAClassStringContainingAvailable()
     {
         $this->assertSame(
             Status::OKAY,
-            GoogleCloudStatus::normalize('end-bubble bubble ok')
+            GoogleCloudStatus::normalize('lorem-ipsum dolor available')
         );
     }
 
     /** @test */
-    public function itNormalizesAClassStringContainingMedium()
+    public function itNormalizesAClassStringContainingInformation()
+    {
+        $this->assertSame(
+            Status::OKAY,
+            GoogleCloudStatus::normalize('lorem-ipsum information dolor')
+        );
+    }
+
+    /** @test */
+    public function itNormalizesAClassStringContainingDisruption()
     {
         $this->assertSame(
             Status::WARN,
-            GoogleCloudStatus::normalize('end-bubble bubble medium')
+            GoogleCloudStatus::normalize('dolor disruption lorem-ipsum')
         );
     }
 
     /** @test */
-    public function itNormalizesAClassStringContainingHigh()
+    public function itNormalizesAClassStringContainingOutage()
     {
         $this->assertSame(
             Status::DOWN,
-            GoogleCloudStatus::normalize('end-bubble bubble high')
+            GoogleCloudStatus::normalize('lorem ipsum outage dolor sit-amet')
         );
     }
 
