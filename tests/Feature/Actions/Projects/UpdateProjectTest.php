@@ -25,7 +25,7 @@ final class UpdateProjectTest extends TestCase
     public function itUpdatesAProject()
     {
         $project = Project::factory()->create(['name' => 'old']);
-        $input = $this->makeInput(['name' => $this->faker->company]);
+        $input = $this->makeInput(['name' => $this->faker->company()]);
 
         (new UpdateProject())->update($project->team->owner, $project, $input);
 
@@ -39,7 +39,7 @@ final class UpdateProjectTest extends TestCase
     public function itReturnsTheUpdatedProject(): void
     {
         $project = Project::factory()->create(['name' => 'old']);
-        $input = $this->makeInput(['name' => $this->faker->company]);
+        $input = $this->makeInput(['name' => $this->faker->company()]);
 
         $this->assertSame(
             $project->id,
@@ -287,7 +287,7 @@ final class UpdateProjectTest extends TestCase
         $input = $this->makeInput([
             'client' => [
                 'via_mail'     => ToggleValue::ENABLED,
-                'mail_route'   => $this->faker->email,
+                'mail_route'   => $this->faker->email(),
                 'mail_message' => null,
             ],
         ]);
@@ -307,7 +307,7 @@ final class UpdateProjectTest extends TestCase
         $input = $this->makeInput([
             'client' => [
                 'via_mail'     => ToggleValue::ENABLED,
-                'mail_route'   => $this->faker->email,
+                'mail_route'   => $this->faker->email(),
                 'mail_message' => str_repeat('x', 60001),
             ],
         ]);
@@ -395,16 +395,16 @@ final class UpdateProjectTest extends TestCase
     private function makeInput(array $overrides = []): array
     {
         $defaults = [
-            'name'       => $this->faker->company,
+            'name'       => $this->faker->company(),
             'components' => Component::inRandomOrder()->limit(5)->pluck('id')->all(),
             'agency'     => [
                 'via_mail'   => ToggleValue::ENABLED,
-                'mail_route' => $this->faker->email,
+                'mail_route' => $this->faker->email(),
             ],
             'client' => [
                 'via_mail'     => $this->faker->randomElement(ToggleValue::all()),
-                'mail_route'   => $this->faker->email,
-                'mail_message' => $this->faker->text,
+                'mail_route'   => $this->faker->email(),
+                'mail_message' => $this->faker->text(),
             ],
         ];
 

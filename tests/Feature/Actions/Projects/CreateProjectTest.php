@@ -240,7 +240,7 @@ final class CreateProjectTest extends TestCase
         $input = $this->makeInput([
             'client' => [
                 'via_mail'     => ToggleValue::ENABLED,
-                'mail_route'   => $this->faker->email,
+                'mail_route'   => $this->faker->email(),
                 'mail_message' => null,
             ],
         ]);
@@ -258,7 +258,7 @@ final class CreateProjectTest extends TestCase
         $input = $this->makeInput([
             'client' => [
                 'via_mail'     => ToggleValue::ENABLED,
-                'mail_route'   => $this->faker->email,
+                'mail_route'   => $this->faker->email(),
                 'mail_message' => str_repeat('x', 60001),
             ],
         ]);
@@ -358,16 +358,16 @@ final class CreateProjectTest extends TestCase
     private function makeInput(array $input = []): array
     {
         $defaults = [
-            'name'       => $this->faker->company,
+            'name'       => $this->faker->company(),
             'components' => Component::inRandomOrder()->limit(5)->pluck('id')->all(),
             'agency'     => [
                 'via_mail'   => ToggleValue::ENABLED,
-                'mail_route' => $this->faker->email,
+                'mail_route' => $this->faker->email(),
             ],
             'client' => [
                 'via_mail'     => $this->faker->randomElement(ToggleValue::all()),
-                'mail_route'   => $this->faker->email,
-                'mail_message' => $this->faker->text,
+                'mail_route'   => $this->faker->email(),
+                'mail_message' => $this->faker->text(),
             ],
         ];
 

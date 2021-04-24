@@ -13,18 +13,17 @@ final class GoogleCloudStatus implements StatusNormalizer
 {
     public static function normalize($externalStatus): string
     {
-        if (Str::contains($externalStatus, 'ok')) {
-            return Status::OKAY;
-        }
+        $map = [
+            'available'   => Status::OKAY,
+            'information' => Status::OKAY,
+            'disruption'  => Status::WARN,
+            'outage'      => Status::DOWN,
+        ];
 
-        if (Str::contains($externalStatus, 'medium')) {
-            return Status::WARN;
-        }
+        $status = collect($map)->first(
+            fn ($status, $key) => Str::contains($externalStatus, $key)
+        );
 
-        if (Str::contains($externalStatus, 'high')) {
-            return Status::DOWN;
-        }
-
-        throw new UnknownStatusException((string) $externalStatus);
+        return $status ?? throw new UnknownStatusException((string) $externalStatus);
     }
 }

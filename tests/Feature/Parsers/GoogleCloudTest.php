@@ -40,7 +40,7 @@ final class GoogleCloudTest extends TestCase
     public function itReturnsUnknownIfTheComponentDoesNotExist()
     {
         $status = (new GoogleCloudParser())->parse(
-            $this->faker->sentence,
+            $this->faker->sentence(),
             $this->crawler
         );
 

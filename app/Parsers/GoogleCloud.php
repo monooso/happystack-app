@@ -32,7 +32,7 @@ final class GoogleCloud implements GoogleCloudParser
     private function getServiceStatusRows(Crawler $crawler): array
     {
         return $crawler
-            ->filter('td.service-status')
+            ->filter('.status-container')
             ->each(fn (Crawler $td) => $td->closest('tr'));
     }
 
@@ -50,7 +50,7 @@ final class GoogleCloud implements GoogleCloudParser
     {
         $cells = $row->filter('td');
         $keyCell = $cells->first();
-        $statusCell = $cells->filter('td > span')->last();
+        $statusCell = $cells->filter('td .status-icon')->last();
 
         if ($keyCell->count() === 0 || $statusCell->count() === 0) {
             return null;
