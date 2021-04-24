@@ -57,15 +57,15 @@ final class CreateUpdateFormTest extends TestCase
         $this->actingAs($user);
 
         $expected = [
-            'name'   => $this->faker->company,
+            'name'   => $this->faker->company(),
             'agency' => [
                 'via_email'  => ToggleValue::ENABLED,
-                'mail_route' => $this->faker->email,
+                'mail_route' => $this->faker->email(),
             ],
             'client' => [
                 'via_mail'     => $this->faker->randomElement(ToggleValue::all()),
-                'mail_route'   => $this->faker->email,
-                'mail_message' => $this->faker->text,
+                'mail_route'   => $this->faker->email(),
+                'mail_message' => $this->faker->text(),
             ],
             'components' => [$this->faker->randomNumber()],
         ];

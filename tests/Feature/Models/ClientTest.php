@@ -20,7 +20,7 @@ final class ClientTest extends TestCase
     /** @test */
     public function routeNotificationForMailReturnsTheMailRoutePropertyIfSet()
     {
-        $email = $this->faker->email;
+        $email = $this->faker->email();
         $client = Client::factory()->make(['mail_route' => $email]);
 
         $this->assertSame($email, $client->routeNotificationForMail());
@@ -66,7 +66,7 @@ final class ClientTest extends TestCase
     public function notifyCallsTheDispatcher()
     {
         $client = Client::factory()->create();
-        $notifiable = $this->faker->word;
+        $notifiable = $this->faker->word();
 
         $this->mock(
             Dispatcher::class,
@@ -102,7 +102,7 @@ final class ClientTest extends TestCase
     public function notifyNowCallsTheDispatcher()
     {
         $client = Client::factory()->create();
-        $notifiable = $this->faker->word;
+        $notifiable = $this->faker->word();
         $channels = $this->faker->words();
 
         $this->mock(

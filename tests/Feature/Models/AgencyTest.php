@@ -17,7 +17,7 @@ final class AgencyTest extends TestCase
     /** @test */
     public function routeNotificationForMailReturnsTheMailRoutePropertyIfSet()
     {
-        $email = $this->faker->email;
+        $email = $this->faker->email();
         $client = Agency::factory()->make(['mail_route' => $email]);
 
         $this->assertSame($email, $client->routeNotificationForMail());
