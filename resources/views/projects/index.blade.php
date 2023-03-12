@@ -9,7 +9,7 @@
 
             <x-slot name="action">
                 <form action="{{ route('projects.create') }}">
-                    <x-jet-button class="shadow-md">{{ __('Let’s get started') }}</x-jet-button>
+                    <x-button class="shadow-md">{{ __('Let’s get started') }}</x-button>
                 </form>
             </x-slot>
         </x-blank-slate>
@@ -20,7 +20,7 @@
 
         <div class="mb-8 text-center sm:text-right">
             <form action="{{ route('projects.create') }}">
-                <x-jet-button class="text-sm">{{ __('Create project') }}</x-jet-button>
+                <x-button class="text-sm">{{ __('Create project') }}</x-button>
             </form>
         </div>
 

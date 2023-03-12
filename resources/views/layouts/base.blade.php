@@ -23,7 +23,7 @@
 </head>
 
 <body class="antialiased bg-gray-200 border-t-4 border-yellow-500 font-sans text-gray-900">
-    <x-jet-banner />
+    <x-banner />
 
     @if (isset($header))
     <header>{{ $header }}</header>

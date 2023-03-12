@@ -1,22 +1,22 @@
 <form wire:submit.prevent="save">
-    <x-jet-action-section>
+    <x-action-section>
         <x-slot name="title">{{ __('Project details') }}</x-slot>
         <x-slot name="description">{{ __('Tell us a bit about your project.') }}</x-slot>
 
         <x-slot name="content">
             <x-card>
                 <x-sleeve>
-                    <x-jet-label class="block" for="name" value="{{ __('Project name') }}"/>
-                    <x-jet-input class="block mt-2 w-full" id="name" type="text" wire:model.defer="name"/>
-                    <x-jet-input-error for="name" class="mt-2"/>
+                    <x-label class="block" for="name" value="{{ __('Project name') }}"/>
+                    <x-input class="block mt-2 w-full" id="name" type="text" wire:model.defer="name"/>
+                    <x-input-error for="name" class="mt-2"/>
                 </x-sleeve>
             </x-card>
         </x-slot>
-    </x-jet-action-section>
+    </x-action-section>
 
-    <x-jet-section-border/>
+    <x-section-border/>
 
-    <x-jet-action-section>
+    <x-action-section>
         <x-slot name="title">{{ __('Services') }}</x-slot>
         <x-slot name="description">{{ __('Select the services you’d like to monitor.') }}</x-slot>
 
@@ -49,7 +49,7 @@
                                     <div class="grid gap-3 md:grid-cols-2">
                                         @foreach ($service->components as $target)
                                             <label class="col-span-1 flex items-start p-1 select-none">
-                                                <x-jet-input class="mt-1" type="checkbox" wire:model="components" value="{{ $target->id }}"/>
+                                                <x-input class="mt-1" type="checkbox" wire:model="components" value="{{ $target->id }}"/>
                                                 <span class="ml-2">{{ $target->name }}</span>
                                             </label>
                                         @endforeach
@@ -60,31 +60,31 @@
                     @endforeach
                 </div>
 
-                <x-jet-input-error for="components" class="mt-2 p-4 sm:p-6"/>
+                <x-input-error for="components" class="mt-2 p-4 sm:p-6"/>
             </x-card>
         </x-slot>
-    </x-jet-action-section>
+    </x-action-section>
 
-    <x-jet-section-border/>
+    <x-section-border/>
 
-    <x-jet-action-section>
+    <x-action-section>
         <x-slot name="title">{{ __('Your notifications') }}</x-slot>
         <x-slot name="description">{{ __('Control how we notify you when there’s a problem.') }}</x-slot>
 
         <x-slot name="content">
             <x-card>
                 <x-sleeve>
-                    <x-jet-label class="block" for="agency.mail_route" value="{{ __('Who should we email if there’s a problem?') }}"/>
-                    <x-jet-input class="block mt-2 w-full" id="agency.mail_route" type="email" placeholder="alert@domain.com" wire:model.defer="agency.mail_route"/>
-                    <x-jet-input-error for="agency.mail_route" class="mt-2"/>
+                    <x-label class="block" for="agency.mail_route" value="{{ __('Who should we email if there’s a problem?') }}"/>
+                    <x-input class="block mt-2 w-full" id="agency.mail_route" type="email" placeholder="alert@domain.com" wire:model.defer="agency.mail_route"/>
+                    <x-input-error for="agency.mail_route" class="mt-2"/>
                 </x-sleeve>
             </x-card>
         </x-slot>
-    </x-jet-action-section>
+    </x-action-section>
 
-    <x-jet-section-border/>
+    <x-section-border/>
 
-    <x-jet-action-section>
+    <x-action-section>
         <x-slot name="title">{{ __('Client notifications') }}</x-slot>
         <x-slot name="description">{{ __('Control how we notify your client when there’s a problem.') }}</x-slot>
 
@@ -113,32 +113,32 @@
                     @if ($this->notifyClient)
                         <div class="mt-8 space-y-6">
                             <div class="mt-4">
-                                <x-jet-label class="block" for="client.mail_route" value="{{ __('What is your client’s email address?') }}"/>
-                                <x-jet-input class="block mt-2 w-full" id="client.mail_route" type="email" placeholder="john@bigcorp.com" wire:model.defer="client.mail_route"/>
-                                <x-jet-input-error for="client.mail_route" class="mt-2"/>
+                                <x-label class="block" for="client.mail_route" value="{{ __('What is your client’s email address?') }}"/>
+                                <x-input class="block mt-2 w-full" id="client.mail_route" type="email" placeholder="john@bigcorp.com" wire:model.defer="client.mail_route"/>
+                                <x-input-error for="client.mail_route" class="mt-2"/>
                             </div>
 
                             <div>
-                                <x-jet-label class="block" for="client.mail_message" value="{{ __('What would you like us to say?') }}"/>
+                                <x-label class="block" for="client.mail_message" value="{{ __('What would you like us to say?') }}"/>
                                 <x-form.textarea class="mt-2" id="client.mail_message" wire:model.defer="client.mail_message"></x-form.textarea>
-                                <x-jet-input-error for="client.mail_message" class="mt-2"/>
+                                <x-input-error for="client.mail_message" class="mt-2"/>
                             </div>
                         </div>
                     @endif
                 </x-sleeve>
             </x-card>
         </x-slot>
-    </x-jet-action-section>
+    </x-action-section>
 
-    <x-jet-section-border/>
+    <x-section-border/>
 
     <div class="text-right">
-        <x-jet-button>
+        <x-button>
             @if ($project->exists)
                 {{ __('Save changes') }}
             @else
                 {{ __('Create project') }}
             @endif
-        </x-jet-button>
+        </x-button>
     </div>
 </form>
