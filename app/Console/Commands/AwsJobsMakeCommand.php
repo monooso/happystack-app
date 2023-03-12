@@ -81,7 +81,7 @@ final class AwsJobsMakeCommand extends Command
      */
     private function parseTemplate(string $template, array $props): string
     {
-        return collect($props)->reduceWithKeys(function ($template, $value, $key) {
+        return collect($props)->reduce(function ($template, $value, $key) {
             $keys = ['{{ ' . $key . ' }}', '{{' . $key . '}}'];
             return str_replace($keys, $value, $template);
         }, $template);
