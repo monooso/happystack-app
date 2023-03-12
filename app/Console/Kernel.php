@@ -20,7 +20,7 @@ class Kernel extends ConsoleKernel
 
         // The refresh interval is configured in seconds; we need minutes
         $minutes = floor(Config::get('happystack.status_refresh_interval') / 60);
-        $cron = "*/${minutes} * * * *";
+        $cron = "*/{$minutes} * * * *";
 
         $schedule
             ->command('happy:refresh-statuses')
