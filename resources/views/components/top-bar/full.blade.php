@@ -37,10 +37,6 @@
 
                         <x-slot name="content">
                             @if (user()->ownsTeam(user()->currentTeam))
-                                <x-jet-dropdown-link href="{{ route('spark.portal') }}">
-                                    {{ __('Manage subscription') }}
-                                </x-jet-dropdown-link>
-
                                 <x-jet-dropdown-link href="{{ route('teams.show', user()->currentTeam->id) }}">
                                     {{ __('Team settings') }}
                                 </x-jet-dropdown-link>
@@ -146,10 +142,6 @@
                 <x-mobile-nav-divider />
 
                 @if (user()->ownsTeam(user()->currentTeam))
-                    <x-jet-responsive-nav-link href="{{ route('spark.portal') }}">
-                        {{ __('Manage subscription') }}
-                    </x-jet-responsive-nav-link>
-
                     <x-jet-responsive-nav-link href="{{ route('teams.show', user()->currentTeam->id) }}">
                         {{ __('Team settings') }}
                     </x-jet-responsive-nav-link>

@@ -10,7 +10,6 @@ Route::middleware([
     'auth:sanctum',
     'verified',
     'has-team',
-    'subscribed',
 ])->group(function () {
     Route::resource('projects', ProjectController::class, [
         'only' => ['create', 'edit', 'index']

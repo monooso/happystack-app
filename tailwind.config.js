@@ -5,7 +5,6 @@ module.exports = {
     purge: [
         './resources/views/**/*.blade.php',
         './storage/framework/views/*.php',
-        './vendor/laravel/spark-paddle/resources/js/**/*.vue',
     ],
 
     theme: {

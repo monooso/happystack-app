@@ -28,7 +28,6 @@ use Illuminate\Routing\Middleware\ValidateSignature;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Laravel\Jetstream\Http\Middleware\AuthenticateSession;
-use Spark\Http\Middleware\VerifyBillableIsSubscribed;
 
 class Kernel extends HttpKernel
 {
@@ -89,7 +88,6 @@ class Kernel extends HttpKernel
         'missing-team'     => EnsureUserMissingTeam::class,
         'password.confirm' => RequirePassword::class,
         'signed'           => ValidateSignature::class,
-        'subscribed'       => VerifyBillableIsSubscribed::class,
         'throttle'         => ThrottleRequests::class,
         'verified'         => EnsureEmailIsVerified::class,
     ];

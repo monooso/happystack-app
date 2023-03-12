@@ -8,11 +8,9 @@ use Laravel\Jetstream\Events\TeamCreated;
 use Laravel\Jetstream\Events\TeamDeleted;
 use Laravel\Jetstream\Events\TeamUpdated;
 use Laravel\Jetstream\Team as JetstreamTeam;
-use Spark\Billable;
 
 class Team extends JetstreamTeam
 {
-    use Billable;
     use HasFactory;
 
     /**
@@ -48,15 +46,5 @@ class Team extends JetstreamTeam
     public function projects(): HasMany
     {
         return $this->hasMany(Project::class);
-    }
-
-    /**
-     * Return the billable email address
-     *
-     * @return string
-     */
-    public function paddleEmail(): string
-    {
-        return $this->owner->email;
     }
 }
