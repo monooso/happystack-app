@@ -1,3 +1,4 @@
-require('./bootstrap');
+import 'alpinejs';
 
-require('alpinejs');
+import './bootstrap';
+import '../css/app.css';
