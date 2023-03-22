@@ -17,24 +17,12 @@ abstract class FetchStatusPageStatus
     use Queueable;
     use SerializesModels;
 
-    /** @var Component */
-    public Component $component;
-
-    /**
-     * Constructor
-     *
-     * @param Component $component
-     */
-    public function __construct(Component $component)
+    public function __construct(public Component $component)
     {
-        $this->component = $component;
     }
 
     /**
      * Execute the job
-     *
-     * @param StatusPageFetcher $fetcher
-     * @param StatusPageParser  $parser
      *
      * @throws GuzzleException
      */
@@ -49,15 +37,11 @@ abstract class FetchStatusPageStatus
 
     /**
      * Get the StatusPage component ID
-     *
-     * @return string
      */
     abstract protected function getExternalComponentId(): string;
 
     /**
      * Get the StatusPage page ID
-     *
-     * @return string
      */
     abstract protected function getExternalPageId(): string;
 }

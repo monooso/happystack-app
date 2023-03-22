@@ -31,7 +31,7 @@ final class DeleteProjectTest extends TestCase
     /** @test */
     public function itThrowsAnAuthExceptionIfTheUserDoesNotHaveTheRequiredPermissions()
     {
-        Jetstream::role('minion', 'Minion', []);
+        Jetstream::role('minion', 'Minion', [])->description('Underling');
 
         $project = Project::factory()->create();
         $user = User::factory()->create();

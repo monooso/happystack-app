@@ -7,6 +7,7 @@ namespace App\Constants;
 abstract class ToggleValue
 {
     public const ENABLED = 'yes';
+
     public const DISABLED = 'no';
 
     public static function all(): array

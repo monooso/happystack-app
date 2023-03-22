@@ -15,8 +15,6 @@ class Service extends Model
 
     /**
      * Get the components owned by this service
-     *
-     * @return HasMany
      */
     public function components(): HasMany
     {
@@ -25,8 +23,6 @@ class Service extends Model
 
     /**
      * Is access to this service restricted?
-     *
-     * @return bool
      */
     public function isRestricted(): bool
     {

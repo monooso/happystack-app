@@ -73,7 +73,7 @@ final class ProjectTest extends TestCase
         $project->save();
 
         $this->assertDatabaseHas('projects', [
-            'id'   => $project->id,
+            'id' => $project->id,
             'uuid' => $uuid,
         ]);
     }

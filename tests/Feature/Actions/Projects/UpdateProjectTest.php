@@ -30,7 +30,7 @@ final class UpdateProjectTest extends TestCase
         (new UpdateProject())->update($project->team->owner, $project, $input);
 
         $this->assertDatabaseHas('projects', [
-            'id'   => $project->id,
+            'id' => $project->id,
             'name' => $input['name'],
         ]);
     }
@@ -63,17 +63,17 @@ final class UpdateProjectTest extends TestCase
 
         $this->assertDatabaseMissing('component_project', [
             'component_id' => $components[0],
-            'project_id'   => $project->id,
+            'project_id' => $project->id,
         ]);
 
         $this->assertDatabaseHas('component_project', [
             'component_id' => $components[1],
-            'project_id'   => $project->id,
+            'project_id' => $project->id,
         ]);
 
         $this->assertDatabaseHas('component_project', [
             'component_id' => $components[2],
-            'project_id'   => $project->id,
+            'project_id' => $project->id,
         ]);
     }
 
@@ -146,7 +146,7 @@ final class UpdateProjectTest extends TestCase
 
         $input = $this->makeInput([
             'agency' => [
-                'via_mail'   => ToggleValue::ENABLED,
+                'via_mail' => ToggleValue::ENABLED,
                 'mail_route' => null,
             ],
         ]);
@@ -165,7 +165,7 @@ final class UpdateProjectTest extends TestCase
 
         $input = $this->makeInput([
             'agency' => [
-                'via_mail'   => ToggleValue::ENABLED,
+                'via_mail' => ToggleValue::ENABLED,
                 'mail_route' => 'not-an-email',
             ],
         ]);
@@ -184,8 +184,8 @@ final class UpdateProjectTest extends TestCase
 
         $input = $this->makeInput([
             'agency' => [
-                'via_mail'   => ToggleValue::ENABLED,
-                'mail_route' => str_repeat('x', 255) . '@example.com',
+                'via_mail' => ToggleValue::ENABLED,
+                'mail_route' => str_repeat('x', 255).'@example.com',
             ],
         ]);
 
@@ -203,7 +203,7 @@ final class UpdateProjectTest extends TestCase
 
         $input = $this->makeInput([
             'agency' => [
-                'via_mail'   => ToggleValue::DISABLED,
+                'via_mail' => ToggleValue::DISABLED,
                 'mail_route' => '',
             ],
         ]);
@@ -214,7 +214,7 @@ final class UpdateProjectTest extends TestCase
 
         $this->assertDatabaseHas('agencies', [
             'project_id' => $project->id,
-            'via_mail'   => false,
+            'via_mail' => false,
             'mail_route' => '',
         ]);
     }
@@ -226,8 +226,8 @@ final class UpdateProjectTest extends TestCase
 
         $input = $this->makeInput([
             'client' => [
-                'via_mail'     => ToggleValue::ENABLED,
-                'mail_route'   => null,
+                'via_mail' => ToggleValue::ENABLED,
+                'mail_route' => null,
                 'mail_message' => $this->faker->realText(),
             ],
         ]);
@@ -246,8 +246,8 @@ final class UpdateProjectTest extends TestCase
 
         $input = $this->makeInput([
             'client' => [
-                'via_mail'     => ToggleValue::ENABLED,
-                'mail_route'   => 'not-an-email',
+                'via_mail' => ToggleValue::ENABLED,
+                'mail_route' => 'not-an-email',
                 'mail_message' => $this->faker->realText(),
             ],
         ]);
@@ -266,8 +266,8 @@ final class UpdateProjectTest extends TestCase
 
         $input = $this->makeInput([
             'client' => [
-                'via_mail'     => ToggleValue::ENABLED,
-                'mail_route'   => str_repeat('x', 255) . '@example.com',
+                'via_mail' => ToggleValue::ENABLED,
+                'mail_route' => str_repeat('x', 255).'@example.com',
                 'mail_message' => $this->faker->realText(),
             ],
         ]);
@@ -286,8 +286,8 @@ final class UpdateProjectTest extends TestCase
 
         $input = $this->makeInput([
             'client' => [
-                'via_mail'     => ToggleValue::ENABLED,
-                'mail_route'   => $this->faker->email(),
+                'via_mail' => ToggleValue::ENABLED,
+                'mail_route' => $this->faker->email(),
                 'mail_message' => null,
             ],
         ]);
@@ -306,8 +306,8 @@ final class UpdateProjectTest extends TestCase
 
         $input = $this->makeInput([
             'client' => [
-                'via_mail'     => ToggleValue::ENABLED,
-                'mail_route'   => $this->faker->email(),
+                'via_mail' => ToggleValue::ENABLED,
+                'mail_route' => $this->faker->email(),
                 'mail_message' => str_repeat('x', 60001),
             ],
         ]);
@@ -326,8 +326,8 @@ final class UpdateProjectTest extends TestCase
 
         $input = $this->makeInput([
             'client' => [
-                'via_mail'     => ToggleValue::DISABLED,
-                'mail_route'   => '',
+                'via_mail' => ToggleValue::DISABLED,
+                'mail_route' => '',
                 'mail_message' => '',
             ],
         ]);
@@ -337,9 +337,9 @@ final class UpdateProjectTest extends TestCase
         $this->assertDatabaseHas('projects', ['name' => $input['name']]);
 
         $this->assertDatabaseHas('clients', [
-            'project_id'   => $project->id,
-            'via_mail'     => false,
-            'mail_route'   => '',
+            'project_id' => $project->id,
+            'via_mail' => false,
+            'mail_route' => '',
             'mail_message' => '',
         ]);
     }
@@ -373,7 +373,7 @@ final class UpdateProjectTest extends TestCase
     /** @test */
     public function itThrowsAnAuthExceptionIfTheUserDoesNotHaveTheRequiredPermissions()
     {
-        Jetstream::role('minion', 'Minion', []);
+        Jetstream::role('minion', 'Minion', [])->description('Underling');
 
         $project = Project::factory()->create();
         $user = User::factory()->create();
@@ -387,23 +387,19 @@ final class UpdateProjectTest extends TestCase
 
     /**
      * Get an array of valid project attributes
-     *
-     * @param array $overrides
-     *
-     * @return array
      */
     private function makeInput(array $overrides = []): array
     {
         $defaults = [
-            'name'       => $this->faker->company(),
+            'name' => $this->faker->company(),
             'components' => Component::inRandomOrder()->limit(5)->pluck('id')->all(),
-            'agency'     => [
-                'via_mail'   => ToggleValue::ENABLED,
+            'agency' => [
+                'via_mail' => ToggleValue::ENABLED,
                 'mail_route' => $this->faker->email(),
             ],
             'client' => [
-                'via_mail'     => $this->faker->randomElement(ToggleValue::all()),
-                'mail_route'   => $this->faker->email(),
+                'via_mail' => $this->faker->randomElement(ToggleValue::all()),
+                'mail_route' => $this->faker->email(),
                 'mail_message' => $this->faker->text(),
             ],
         ];

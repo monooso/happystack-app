@@ -16,8 +16,6 @@ class Agency extends Model
 
     /**
      * Get the parent project
-     *
-     * @return BelongsTo
      */
     public function project(): BelongsTo
     {
@@ -26,8 +24,6 @@ class Agency extends Model
 
     /**
      * Get the notification email
-     *
-     * @return string
      */
     public function routeNotificationForMail(): string
     {

@@ -6,8 +6,6 @@ namespace App\Http\Livewire\Projects;
 
 use App\Contracts\DeletesProjects;
 use App\Models\Project;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
@@ -19,17 +17,15 @@ final class ProjectStatus extends Component
 
     public Project $project;
 
-    public function mount(Project $project)
+    public function mount(Project $project): void
     {
         $this->project = $project;
     }
 
     /**
      * Render the component
-     *
-     * @return Application|Factory|View
      */
-    public function render()
+    public function render(): View
     {
         return view('projects.project-status');
     }
@@ -37,17 +33,13 @@ final class ProjectStatus extends Component
     /**
      * Refresh the project
      */
-    public function refresh()
+    public function refresh(): void
     {
         $this->project->refresh();
     }
 
     /**
      * Delete the project
-     *
-     * @param DeletesProjects $deleter
-     *
-     * @return Redirector
      */
     public function deleteProject(DeletesProjects $deleter): Redirector
     {

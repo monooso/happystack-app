@@ -31,7 +31,7 @@ use Kevinrob\GuzzleCache\Strategy\GreedyCacheStrategy;
 
 class AppServiceProvider extends ServiceProvider
 {
-    public function register()
+    public function register(): void
     {
         $this->registerHttpClient();
         $this->registerFetchers();
@@ -46,7 +46,7 @@ class AppServiceProvider extends ServiceProvider
      * headers say. This is mostly because the AWS data is not a proper
      * API endpoint, and behaves poorly.
      */
-    private function registerHttpClient()
+    private function registerHttpClient(): void
     {
         $this->app->singleton(ClientInterface::class, function () {
             $cacheStorage = new LaravelCacheStorage(Cache::store());
@@ -63,7 +63,7 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Register component status fetchers with the container
      */
-    private function registerFetchers()
+    private function registerFetchers(): void
     {
         $app = $this->app;
 
@@ -75,7 +75,7 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Register component status parsers with the container
      */
-    private function registerParsers()
+    private function registerParsers(): void
     {
         $app = $this->app;
 
@@ -87,7 +87,7 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Register actions with the container
      */
-    private function registerActions()
+    private function registerActions(): void
     {
         $this->app->bind(CreatesProjects::class, CreateProject::class);
         $this->app->bind(DeletesProjects::class, DeleteProject::class);

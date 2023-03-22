@@ -9,13 +9,6 @@ use App\Events\StatusFetched;
 
 final class UpdateComponentStatus
 {
-    /**
-     * Handle the event
-     *
-     * @param  StatusFetched $event
-     *
-     * @return void
-     */
     public function handle(StatusFetched $event): void
     {
         $component = $event->component;

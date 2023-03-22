@@ -32,7 +32,7 @@ final class UpdateComponentStatusTest extends TestCase
         (new UpdateComponentStatus())->handle($event);
 
         $this->assertDatabaseHas('components', [
-            'id'     => $component->id,
+            'id' => $component->id,
             'status' => Status::OKAY,
         ]);
     }
@@ -56,7 +56,7 @@ final class UpdateComponentStatusTest extends TestCase
         (new UpdateComponentStatus())->handle($event);
 
         $this->assertDatabaseHas('components', [
-            'id'                => $component->id,
+            'id' => $component->id,
             'status_updated_at' => Carbon::now(),
         ]);
 
@@ -78,8 +78,8 @@ final class UpdateComponentStatusTest extends TestCase
 
         $this->assertDatabaseHas('status_updates', [
             'component_id' => $component->id,
-            'status'       => Status::OKAY,
-            'created_at'   => Carbon::now(),
+            'status' => Status::OKAY,
+            'created_at' => Carbon::now(),
         ]);
 
         $this->travelBack();

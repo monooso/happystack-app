@@ -25,10 +25,6 @@ final class Aws implements AwsParser
 
     /**
      * Extract and parse the body of the given response
-     *
-     * @param ResponseInterface $response
-     *
-     * @return array
      */
     private function getResponseBody(ResponseInterface $response): array
     {
@@ -37,11 +33,6 @@ final class Aws implements AwsParser
 
     /**
      * Extract the most recent component with the given ID from the response body
-     *
-     * @param string $componentId
-     * @param array  $responseBody
-     *
-     * @return array|null
      */
     private function getComponentById(string $componentId, array $responseBody): ?array
     {

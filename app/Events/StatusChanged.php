@@ -13,15 +13,7 @@ final class StatusChanged
     use Dispatchable;
     use SerializesModels;
 
-    public Component $component;
-
-    /**
-     * Constructor
-     *
-     * @param Component $component
-     */
-    public function __construct(Component $component)
+    public function __construct(public Component $component)
     {
-        $this->component = $component;
     }
 }

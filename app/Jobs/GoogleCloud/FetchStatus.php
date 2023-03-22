@@ -20,8 +20,6 @@ abstract class FetchStatus
 
     /**
      * Constructor
-     *
-     * @param Component $component
      */
     public function __construct(Component $component)
     {
@@ -30,9 +28,6 @@ abstract class FetchStatus
 
     /**
      * Execute the job
-     *
-     * @param GoogleCloudFetcher $fetcher
-     * @param GoogleCloudParser  $parser
      */
     public function handle(GoogleCloudFetcher $fetcher, GoogleCloudParser $parser)
     {
@@ -45,8 +40,6 @@ abstract class FetchStatus
 
     /**
      * Get the Google Cloud component ID
-     *
-     * @return string
      */
     abstract protected function getExternalComponentId(): string;
 }

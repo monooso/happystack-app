@@ -21,32 +21,34 @@ final class AwsJobsMakeCommand extends Command
     {
         $service = $this->argument('service');
 
-        $directoryName = $this->pascal('aws-' . $service);
-        $directoryPath = app_path('Jobs/' . $directoryName);
+        $directoryName = $this->pascal('aws-'.$service);
+        $directoryPath = app_path('Jobs/'.$directoryName);
 
         try {
             File::makeDirectory($directoryPath);
         } catch (Exception $e) {
-            $this->error('Unable to create directory ' . $directoryPath);
-            $this->error('Details: ' . $e->getMessage());
+            $this->error('Unable to create directory '.$directoryPath);
+            $this->error('Details: '.$e->getMessage());
+
             return 1;
         }
 
         foreach (AwsRegion::all() as $region) {
-            $className = 'Fetch' . $this->pascal($region) . 'Status';
-            $filePath = $directoryPath . '/' . $className . '.php';
+            $className = 'Fetch'.$this->pascal($region).'Status';
+            $filePath = $directoryPath.'/'.$className.'.php';
 
             $props = [
-                'class'       => $className,
-                'componentId' => $service . '-' . $region,
-                'namespace'   => 'App\\Jobs\\' . $directoryName,
+                'class' => $className,
+                'componentId' => $service.'-'.$region,
+                'namespace' => 'App\\Jobs\\'.$directoryName,
             ];
 
             try {
                 $template = $this->getTemplateString();
             } catch (FileNotFoundException $e) {
                 $this->error('Could not find template file');
-                $this->error('Details: ' . $e->getMessage());
+                $this->error('Details: '.$e->getMessage());
+
                 return 1;
             }
 
@@ -54,7 +56,7 @@ final class AwsJobsMakeCommand extends Command
 
             File::put($filePath, $rendered);
 
-            $this->info('Generated ' . $filePath);
+            $this->info('Generated '.$filePath);
         }
 
         return 0;
@@ -63,7 +65,6 @@ final class AwsJobsMakeCommand extends Command
     /**
      * Load the template file contents
      *
-     * @return string
      * @throws FileNotFoundException
      */
     private function getTemplateString(): string
@@ -73,26 +74,18 @@ final class AwsJobsMakeCommand extends Command
 
     /**
      * Parse the given template string
-     *
-     * @param string $template
-     * @param array  $props
-     *
-     * @return string
      */
     private function parseTemplate(string $template, array $props): string
     {
         return collect($props)->reduceWithKeys(function ($template, $value, $key) {
-            $keys = ['{{ ' . $key . ' }}', '{{' . $key . '}}'];
+            $keys = ['{{ '.$key.' }}', '{{'.$key.'}}'];
+
             return str_replace($keys, $value, $template);
         }, $template);
     }
 
     /**
      * Convert a string to Pascal case
-     *
-     * @param string $input
-     *
-     * @return string
      */
     private function pascal(string $input): string
     {

@@ -12,10 +12,6 @@ interface StatusPageFetcher
     /**
      * Fetch the status
      *
-     * @param string $pageId
-     *
-     * @return ResponseInterface
-     *
      * @throws GuzzleException
      */
     public function fetch(string $pageId): ResponseInterface;

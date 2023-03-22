@@ -16,7 +16,7 @@
             <div class="hidden sm:flex sm:items-center">
                 @if (user()->allTeams()->count() > 1)
                     <div class="ml-4 relative">
-                        <x-jet-dropdown align="right">
+                        <x-dropdown align="right">
                             <x-slot name="trigger">
                                 <button class="bg-transparent border border-transparent px-4 py-2 rounded transition-colors focus:outline-none focus:border-yellow-100 hover:bg-yellow-300">
                                     <div class="flex items-center text-yellow-900">
@@ -33,18 +33,18 @@
                                     <div class="font-semibold px-4 py-2 text-sm">{{ __('Switch team') }}</div>
                                     @foreach (user()->allTeams() as $team)
                                         @unless ($team->id === user()->currentTeam->id)
-                                            <x-jet-switchable-team :team="$team"/>
+                                            <x-switchable-team :team="$team"/>
                                         @endunless
                                     @endforeach
                                 </div>
                             </x-slot>
-                        </x-jet-dropdown>
+                        </x-dropdown>
                     </div>
                 @endif
 
                 <!-- User settings -->
                 <div class="ml-4">
-                    <x-jet-dropdown>
+                    <x-dropdown>
                         <x-slot name="trigger">
                             <button class="flex items-center">
                                 <div class="bg-yellow-300 border border-yellow-200 duration-150 ease-in-out flex rounded-full transition focus:outline-none focus:border-yellow-100">
@@ -68,12 +68,12 @@
                         <x-slot name="content">
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
-                                <x-jet-dropdown-link href="{{ route('logout') }}" onclick="event.preventDefault(); this.closest('form').submit();">
+                                <x-dropdown-link href="{{ route('logout') }}" onclick="event.preventDefault(); this.closest('form').submit();">
                                     {{ __('Log out') }}
-                                </x-jet-dropdown-link>
+                                </x-dropdown-link>
                             </form>
                         </x-slot>
-                    </x-jet-dropdown>
+                    </x-dropdown>
                 </div>
             </div>
 
@@ -94,16 +94,16 @@
             <div class="space-y-1">
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <x-jet-responsive-nav-link href="{{ route('logout') }}" onclick="event.preventDefault(); this.closest('form').submit();">
+                    <x-responsive-nav-link href="{{ route('logout') }}" onclick="event.preventDefault(); this.closest('form').submit();">
                         {{ __('Log out') }}
-                    </x-jet-responsive-nav-link>
+                    </x-responsive-nav-link>
                 </form>
 
                 <x-mobile-nav-divider />
 
                 <div class="font-semibold px-4 py-2 text-sm">{{ __('Switch team') }}</div>
                 @foreach (user()->allTeams() as $team)
-                    <x-jet-switchable-team :team="$team" component="jet-responsive-nav-link"/>
+                    <x-switchable-team :team="$team" component="responsive-nav-link"/>
                 @endforeach
             </div>
         </div>

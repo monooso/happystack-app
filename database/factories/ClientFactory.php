@@ -15,11 +15,11 @@ final class ClientFactory extends Factory
     public function definition()
     {
         return [
-            'project_id'   => Project::factory(),
-            'via_mail'     => $this->faker->boolean(),
-            'mail_route'   => $this->faker->email(),
+            'project_id' => Project::factory(),
+            'via_mail' => $this->faker->boolean(),
+            'mail_route' => $this->faker->email(),
             'mail_message' => $this->faker->realText(),
-            'notified_at'  => $this->faker->dateTimeThisMonth(),
+            'notified_at' => $this->faker->dateTimeThisMonth(),
         ];
     }
 }

@@ -17,7 +17,6 @@ use Illuminate\Support\Facades\Config;
 /**
  * Component model
  *
- * @package App\Models
  *
  * @property-read bool isHealthy
  */
@@ -33,8 +32,6 @@ final class Component extends Model
 
     /**
      * Get the projects which are monitoring this component
-     *
-     * @return BelongsToMany
      */
     public function projects(): BelongsToMany
     {
@@ -43,8 +40,6 @@ final class Component extends Model
 
     /**
      * Get the service to which this component belongs
-     *
-     * @return BelongsTo
      */
     public function service(): BelongsTo
     {
@@ -53,8 +48,6 @@ final class Component extends Model
 
     /**
      * Get the component status updates
-     *
-     * @return HasMany
      */
     public function statusUpdates(): HasMany
     {
@@ -65,10 +58,8 @@ final class Component extends Model
      * Update the component status
      *
      * @todo wrap updates in a database transaction
-     *
-     * @param string $status
      */
-    public function updateStatus(string $status)
+    public function updateStatus(string $status): void
     {
         // Update the status history
         $this->statusUpdates()->create(['status' => $status]);
@@ -81,10 +72,6 @@ final class Component extends Model
 
     /**
      * Limit query results to components that have not been recently refreshed
-     *
-     * @param Builder $query
-     *
-     * @return Builder
      */
     public function scopeStale(Builder $query): Builder
     {
@@ -96,10 +83,6 @@ final class Component extends Model
 
     /**
      * Limit query results to components that are down
-     *
-     * @param Builder $query
-     *
-     * @return Builder
      */
     public function scopeDown(Builder $query): Builder
     {
@@ -108,10 +91,6 @@ final class Component extends Model
 
     /**
      * Limit query results to components that have a warning
-     *
-     * @param Builder $query
-     *
-     * @return Builder
      */
     public function scopeWarn(Builder $query): Builder
     {
@@ -120,8 +99,6 @@ final class Component extends Model
 
     /**
      * Return a boolean indicating whether the component is "healthy"
-     *
-     * @return bool
      */
     public function getIsHealthyAttribute(): bool
     {

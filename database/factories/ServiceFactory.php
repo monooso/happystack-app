@@ -15,10 +15,10 @@ final class ServiceFactory extends Factory
     public function definition()
     {
         return [
-            'handle'      => $this->faker->unique()->slug(),
-            'name'        => $this->faker->unique()->words(3, true),
+            'handle' => $this->faker->unique()->slug(),
+            'name' => $this->faker->unique()->words(3, true),
             'description' => $this->faker->sentence(),
-            'visibility'  => ServiceVisibility::PUBLIC,
+            'visibility' => ServiceVisibility::PUBLIC,
         ];
     }
 }

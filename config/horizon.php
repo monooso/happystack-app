@@ -56,7 +56,7 @@ return [
 
     'prefix' => env(
         'HORIZON_PREFIX',
-        Str::slug(env('APP_NAME', 'laravel'), '_') . '_horizon:'
+        Str::slug(env('APP_NAME', 'laravel'), '_').'_horizon:'
     ),
 
     /*
@@ -99,12 +99,12 @@ return [
     */
 
     'trim' => [
-        'recent'        => 60,
-        'pending'       => 60,
-        'completed'     => 60,
+        'recent' => 60,
+        'pending' => 60,
+        'completed' => 60,
         'recent_failed' => 10080,
-        'failed'        => 10080,
-        'monitored'     => 10080,
+        'failed' => 10080,
+        'monitored' => 10080,
     ],
 
     /*
@@ -120,7 +120,7 @@ return [
 
     'metrics' => [
         'trim_snapshots' => [
-            'job'   => 24,
+            'job' => 24,
             'queue' => 24,
         ],
     ],
@@ -166,24 +166,24 @@ return [
 
     'defaults' => [
         'supervisor-1' => [
-            'balance'      => 'auto',
-            'connection'   => 'redis',
+            'balance' => 'auto',
+            'connection' => 'redis',
             'maxProcesses' => 1,
-            'maxJobs'      => 1000,
-            'maxTime'      => 3600,
-            'memory'       => 128,
-            'nice'         => 10,
-            'queue'        => ['default'],
-            'rest'         => 0.5,
-            'sleep'        => 5,
-            'tries'        => 1,
+            'maxJobs' => 1000,
+            'maxTime' => 3600,
+            'memory' => 128,
+            'nice' => 10,
+            'queue' => ['default'],
+            'rest' => 0.5,
+            'sleep' => 5,
+            'tries' => 1,
         ],
     ],
 
     'environments' => [
         'production' => [
             'supervisor-1' => [
-                'maxProcesses'    => 10,
+                'maxProcesses' => 10,
                 'balanceMaxShift' => 1,
                 'balanceCooldown' => 3,
             ],

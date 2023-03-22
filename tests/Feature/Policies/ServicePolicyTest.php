@@ -27,17 +27,20 @@ final class ServicePolicyTest extends TestCase
     /** @test */
     public function viewReturnsTrueIfTheServiceIsRestrictedAndTheUserIsAGod()
     {
-        $gods = [
-            User::factory()->make(['email' => 'stephen@happystack.app']),
-            User::factory()->make(['email' => 'stephen@manifest.uk.com']),
-        ];
+        $emails = ['john@doe.com', 'jane@doe.com'];
+
+        // Configure the super user emails.
+        config(['happystack.super_users' => $emails]);
+
+        // Create the super users.
+        $supers = collect($emails)->map(fn ($email) => User::factory()->make(['email' => $email]));
 
         $service = Service::factory()->make([
             'visibility' => ServiceVisibility::RESTRICTED,
         ]);
 
-        foreach ($gods as $god) {
-            $this->assertTrue((new ServicePolicy())->view($god, $service));
+        foreach ($supers as $super) {
+            $this->assertTrue((new ServicePolicy())->view($super, $service));
         }
     }
 

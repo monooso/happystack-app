@@ -141,7 +141,7 @@ final class ClientComponentStatusChangedTest extends TestCase
 
         $notifiable = Client::factory()->make([
             'notified_at' => null,
-            'via_mail'    => false,
+            'via_mail' => false,
         ]);
 
         $result = (new ClientComponentStatusChanged(
@@ -160,7 +160,7 @@ final class ClientComponentStatusChangedTest extends TestCase
 
         $notifiable = Client::factory()->make([
             'notified_at' => null,
-            'via_mail'    => true,
+            'via_mail' => true,
         ]);
 
         $result = (new ClientComponentStatusChanged(

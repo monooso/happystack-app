@@ -10,8 +10,6 @@ interface GoogleCloudFetcher
 {
     /**
      * Fetch the status
-     *
-     * @return Crawler
      */
     public function fetch(): Crawler;
 }

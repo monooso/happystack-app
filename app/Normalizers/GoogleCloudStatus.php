@@ -14,10 +14,10 @@ final class GoogleCloudStatus implements StatusNormalizer
     public static function normalize($externalStatus): string
     {
         $map = [
-            'available'   => Status::OKAY,
+            'available' => Status::OKAY,
             'information' => Status::OKAY,
-            'disruption'  => Status::WARN,
-            'outage'      => Status::DOWN,
+            'disruption' => Status::WARN,
+            'outage' => Status::DOWN,
         ];
 
         $status = collect($map)->first(

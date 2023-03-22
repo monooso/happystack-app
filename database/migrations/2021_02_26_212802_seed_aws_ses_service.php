@@ -5,16 +5,16 @@ declare(strict_types=1);
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
-final class SeedAwsSesService extends Migration
+return new class extends Migration
 {
     public function up()
     {
         DB::table('services')->insert([
-            'name'        => 'AWS SES',
+            'name' => 'AWS SES',
             'description' => 'Amazon Simple Email Service',
-            'handle'      => 'aws-ses',
-            'created_at'  => now(),
-            'updated_at'  => now(),
+            'handle' => 'aws-ses',
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
     }
 
@@ -22,4 +22,4 @@ final class SeedAwsSesService extends Migration
     {
         DB::table('services')->where('handle', 'aws-ses')->delete();
     }
-}
+};

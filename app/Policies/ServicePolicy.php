@@ -14,13 +14,8 @@ final class ServicePolicy
 
     public function view(User $user, Service $service): bool
     {
-        $gods = [
-            'stephen@happystack.app',
-            'stephen@manifest.uk.com',
-        ];
-
         return $service->isRestricted()
-            ? in_array($user->email, $gods)
+            ? in_array($user->email, config('happystack.super_users'))
             : true;
     }
 }

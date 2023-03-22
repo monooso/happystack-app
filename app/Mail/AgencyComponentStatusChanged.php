@@ -21,7 +21,7 @@ final class AgencyComponentStatusChanged extends Mailable
     ) {
     }
 
-    public function build()
+    public function build(): self
     {
         return $this->markdown('emails.status.agency');
     }

@@ -7,6 +7,7 @@ namespace App\Constants;
 final class ServiceVisibility
 {
     public const PUBLIC = 'public';
+
     public const RESTRICTED = 'restricted';
 
     public static function all(): array

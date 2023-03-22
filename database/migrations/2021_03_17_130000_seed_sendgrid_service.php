@@ -5,16 +5,16 @@ declare(strict_types=1);
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
-final class SeedSendGridService extends Migration
+return new class extends Migration
 {
     public function up()
     {
         DB::table('services')->insert([
-            'name'        => 'SendGrid',
+            'name' => 'SendGrid',
             'description' => 'Transactional email provider',
-            'handle'      => 'sendgrid',
-            'created_at'  => now(),
-            'updated_at'  => now(),
+            'handle' => 'sendgrid',
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
     }
 
@@ -22,4 +22,4 @@ final class SeedSendGridService extends Migration
     {
         DB::table('services')->where('handle', 'sendgrid')->delete();
     }
-}
+};

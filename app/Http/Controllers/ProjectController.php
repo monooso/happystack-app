@@ -17,10 +17,6 @@ final class ProjectController extends Controller
 
     /**
      * Display a list of team projects
-     *
-     * @param Request $request
-     *
-     * @return Response
      */
     public function index(Request $request): Response
     {
@@ -33,8 +29,6 @@ final class ProjectController extends Controller
 
     /**
      * Display the "create project" form
-     *
-     * @return Response
      */
     public function create(): Response
     {
@@ -43,10 +37,6 @@ final class ProjectController extends Controller
 
     /**
      * Display the "edit project" form
-     *
-     * @param Project $project
-     *
-     * @return Response
      */
     public function edit(Project $project): Response
     {

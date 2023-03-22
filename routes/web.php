@@ -8,28 +8,29 @@ use Illuminate\Support\Facades\Route;
 // Application routes
 Route::middleware([
     'auth:sanctum',
+    config('jetstream.auth_session'),
     'verified',
     'has-team',
-    'subscribed',
 ])->group(function () {
-    Route::resource('projects', ProjectController::class, [
-        'only' => ['create', 'edit', 'index']
-    ]);
-
+    Route::resource('projects', ProjectController::class, ['only' => ['create', 'edit', 'index']]);
     Route::redirect('/dashboard', route('projects.index'))->name('dashboard');
     Route::redirect('/', route('projects.index'))->name('home');
 });
 
 Route::middleware([
     'auth:sanctum',
+    config('jetstream.auth_session'),
     'verified',
     'missing-team',
 ])->group(function () {
-    Route::get('/create-first-team', CreateFirstTeamController::class)
-        ->name('teams.create-first');
+    Route::get('/create-first-team', CreateFirstTeamController::class)->name('teams.create-first');
 });
 
-Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+])->group(function () {
     Route::get('/join-team', JoinTeamController::class)->name('teams.join');
 });
 

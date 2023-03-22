@@ -23,7 +23,7 @@ final class FetchSmtpStatusTest extends TestCase
 
         $component = Component::whereHandle('mailgun::smtp')->firstOrFail();
 
-        FetchSmtpStatus::dispatchNow($component);
+        FetchSmtpStatus::dispatchSync($component);
 
         Event::assertDispatched(function (StatusFetched $event) use ($component) {
             return $event->component->id === $component->id

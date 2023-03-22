@@ -13,11 +13,6 @@ interface AwsParser
     /**
      * Extract the status of the specified component from the given payload
      *
-     * @param string            $componentId
-     * @param ResponseInterface $payload
-     *
-     * @return string
-     *
      * @throws UnknownComponentException
      * @throws UnknownStatusException
      */

@@ -13,10 +13,6 @@ final class UpdateProjectValidator extends ProjectValidator
 {
     /**
      * Make a validator instance
-     *
-     * @param array $input
-     *
-     * @return Validator
      */
     public static function make(array $input): Validator
     {

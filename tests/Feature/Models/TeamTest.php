@@ -76,14 +76,14 @@ final class TeamTest extends TestCase
 
         $this->assertDatabaseHas('component_project', [
             'component_id' => $component->id,
-            'project_id'   => $project->id,
+            'project_id' => $project->id,
         ]);
 
         $team->purge();
 
         $this->assertDatabaseMissing('component_project', [
             'component_id' => $component->id,
-            'project_id'   => $project->id,
+            'project_id' => $project->id,
         ]);
     }
 
@@ -95,14 +95,14 @@ final class TeamTest extends TestCase
 
         $this->assertDatabaseHas('team_user', [
             'team_id' => $team->id,
-            'user_id' => $user->id
+            'user_id' => $user->id,
         ]);
 
         $team->purge();
 
         $this->assertDatabaseMissing('team_user', [
             'team_id' => $team->id,
-            'user_id' => $user->id
+            'user_id' => $user->id,
         ]);
     }
 

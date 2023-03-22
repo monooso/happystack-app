@@ -91,7 +91,7 @@ final class ClientTest extends TestCase
         $client->notify(null);
 
         $this->assertDatabaseHas('clients', [
-            'id'          => $client->id,
+            'id' => $client->id,
             'notified_at' => Carbon::now(),
         ]);
 
@@ -131,7 +131,7 @@ final class ClientTest extends TestCase
         $client->notifyNow(null);
 
         $this->assertDatabaseHas('clients', [
-            'id'          => $client->id,
+            'id' => $client->id,
             'notified_at' => Carbon::now(),
         ]);
 

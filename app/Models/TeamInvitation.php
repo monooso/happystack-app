@@ -13,6 +13,9 @@ class TeamInvitation extends JetstreamTeamInvitation
 
     protected $fillable = ['email', 'role'];
 
+    /**
+     * Get the team that the invitation belongs to.
+     */
     public function team(): BelongsTo
     {
         return $this->belongsTo(Jetstream::teamModel());

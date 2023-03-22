@@ -30,8 +30,8 @@ abstract class SeedComponentsMigration extends Migration
         foreach ($this->getComponents() as $handle => $name) {
             DB::table('components')->insert([
                 'service_id' => $serviceId,
-                'name'       => $name,
-                'handle'     => $handle,
+                'name' => $name,
+                'handle' => $handle,
                 'created_at' => $now,
                 'updated_at' => $now,
             ]);
@@ -58,8 +58,6 @@ abstract class SeedComponentsMigration extends Migration
     /**
      * Get the service ID from the database
      *
-     * @return null|int
-     *
      * @throws InvalidArgumentException
      */
     protected function getServiceId(): ?int
@@ -73,8 +71,6 @@ abstract class SeedComponentsMigration extends Migration
      * Get an associative array of all supported components
      *
      * ['service-key::component-key' => 'Component label']
-     *
-     * @return array
      */
     abstract protected function getComponents(): array;
 
@@ -82,8 +78,6 @@ abstract class SeedComponentsMigration extends Migration
      * Get the service key
      *
      * For example, "aws-sns".
-     *
-     * @return string
      */
     abstract protected function getServiceKey(): string;
 }

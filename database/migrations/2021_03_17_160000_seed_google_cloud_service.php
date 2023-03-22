@@ -5,16 +5,16 @@ declare(strict_types=1);
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
-final class SeedGoogleCloudService extends Migration
+return new class extends Migration
 {
     public function up()
     {
         DB::table('services')->insert([
-            'name'        => 'Google Cloud',
+            'name' => 'Google Cloud',
             'description' => 'Google cloud computing services',
-            'handle'      => 'google-cloud',
-            'created_at'  => now(),
-            'updated_at'  => now(),
+            'handle' => 'google-cloud',
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
     }
 
@@ -22,4 +22,4 @@ final class SeedGoogleCloudService extends Migration
     {
         DB::table('services')->where('handle', 'google-cloud')->delete();
     }
-}
+};

@@ -70,7 +70,7 @@ return [
      */
     'handlers' => [
         'exception' => true,
-        'error'     => true,
+        'error' => true,
     ],
 
     /**
@@ -79,8 +79,8 @@ return [
      */
     'client' => [
         'timeout' => 0,
-        'proxy'   => [],
-        'verify'  => env('HONEYBADGER_VERIFY_SSL', true),
+        'proxy' => [],
+        'verify' => env('HONEYBADGER_VERIFY_SSL', true),
     ],
 
     /**

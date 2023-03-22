@@ -8,7 +8,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-final class CreateStatusUpdatesTable extends Migration
+return new class extends Migration
 {
     public function up()
     {
@@ -24,4 +24,4 @@ final class CreateStatusUpdatesTable extends Migration
     {
         Schema::dropIfExists('status_updates');
     }
-}
+};
