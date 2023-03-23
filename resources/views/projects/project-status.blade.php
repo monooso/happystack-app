@@ -70,7 +70,7 @@
 
             <x-slot name="footer">
                 <x-secondary-button wire:click="$toggle('confirmingProjectDeletion')" wire:loading.attr="disabled">
-                    {{ __('Nevermind') }}
+                    {{ __('Cancel') }}
                 </x-secondary-button>
 
                 <x-danger-button class="ml-2" wire:click="deleteProject" wire:loading.attr="disabled">

@@ -201,7 +201,7 @@
 
         <x-slot name="footer">
             <x-secondary-button wire:click="stopManagingRole" wire:loading.attr="disabled">
-                {{ __('Nevermind') }}
+                {{ __('Cancel') }}
             </x-secondary-button>
 
             <x-button class="ml-2" wire:click="updateRole" wire:loading.attr="disabled">
@@ -222,7 +222,7 @@
 
         <x-slot name="footer">
             <x-secondary-button wire:click="$toggle('confirmingLeavingTeam')" wire:loading.attr="disabled">
-                {{ __('Nevermind') }}
+                {{ __('Cancel') }}
             </x-secondary-button>
 
             <x-danger-button class="ml-2" wire:click="leaveTeam" wire:loading.attr="disabled">
@@ -243,7 +243,7 @@
 
         <x-slot name="footer">
             <x-secondary-button wire:click="$toggle('confirmingTeamMemberRemoval')" wire:loading.attr="disabled">
-                {{ __('Nevermind') }}
+                {{ __('Cancel') }}
             </x-secondary-button>
 
             <x-danger-button class="ml-2" wire:click="removeTeamMember" wire:loading.attr="disabled">
