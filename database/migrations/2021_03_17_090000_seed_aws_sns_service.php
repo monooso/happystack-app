@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
-    public function up()
+    public function up(): void
     {
         DB::table('services')->insert([
             'name' => 'AWS SNS',
@@ -18,7 +18,7 @@ return new class extends Migration
         ]);
     }
 
-    public function down()
+    public function down(): void
     {
         DB::table('services')->where('handle', 'aws-sns')->delete();
     }

@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
-    public function up()
+    public function up(): void
     {
         DB::table('services')->insert([
             'name' => 'Test Canary',
@@ -20,7 +20,7 @@ return new class extends Migration
         ]);
     }
 
-    public function down()
+    public function down(): void
     {
         DB::table('services')->where('handle', 'test-canary')->delete();
     }
