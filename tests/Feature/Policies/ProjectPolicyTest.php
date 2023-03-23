@@ -19,7 +19,7 @@ final class ProjectPolicyTest extends TestCase
     /** @test */
     public function createReturnsTrueIfTheUserHasAddPrivilegesOnTheirCurrentTeam()
     {
-        Jetstream::role('overlord', 'Overlord', ['project:add']);
+        Jetstream::role('overlord', 'Overlord', ['project:add'])->description('King');
 
         $team = Team::factory()->create();
         $user = User::factory()->create();
@@ -33,7 +33,7 @@ final class ProjectPolicyTest extends TestCase
     /** @test */
     public function createReturnsFalseIfTheUserDoesNotHaveAddPrivilegesOnTheirCurrentTeam()
     {
-        Jetstream::role('minion', 'Minion', []);
+        Jetstream::role('minion', 'Minion', [])->description('Underling');
 
         $team = Team::factory()->create();
         $user = User::factory()->create();
@@ -47,7 +47,7 @@ final class ProjectPolicyTest extends TestCase
     /** @test */
     public function deleteReturnsTrueIfTheUserHasDeletePrivilegesOnTheProjectTeam()
     {
-        Jetstream::role('overlord', 'Overlord', ['project:delete']);
+        Jetstream::role('overlord', 'Overlord', ['project:delete'])->description('King');
 
         $project = Project::factory()->create();
         $user = User::factory()->create();
@@ -61,7 +61,7 @@ final class ProjectPolicyTest extends TestCase
     /** @test */
     public function deleteReturnsFalseIfTheUserDoesNotHaveDeletePrivilegesOnTheProjectTeam()
     {
-        Jetstream::role('minion', 'Minion', []);
+        Jetstream::role('minion', 'Minion', [])->description('Underling');
 
         $project = Project::factory()->create();
         $user = User::factory()->create();
@@ -75,7 +75,7 @@ final class ProjectPolicyTest extends TestCase
     /** @test */
     public function updateReturnsTrueIfTheUserHasEditPrivilegesOnTheProjectTeam()
     {
-        Jetstream::role('overlord', 'Overlord', ['project:edit']);
+        Jetstream::role('overlord', 'Overlord', ['project:edit'])->description('King');
 
         $project = Project::factory()->create();
         $user = User::factory()->create();
@@ -89,7 +89,7 @@ final class ProjectPolicyTest extends TestCase
     /** @test */
     public function updateReturnsFalseIfTheUserDoesNotHaveEditPrivilegesOnTheProjectTeam()
     {
-        Jetstream::role('minion', 'Minion', []);
+        Jetstream::role('minion', 'Minion', [])->description('Underling');
 
         $project = Project::factory()->create();
         $user = User::factory()->create();
@@ -103,7 +103,7 @@ final class ProjectPolicyTest extends TestCase
     /** @test */
     public function viewReturnsTrueIfTheUserHasReadPrivilegesOnTheProjectTeam()
     {
-        Jetstream::role('overlord', 'Overlord', ['project:read']);
+        Jetstream::role('overlord', 'Overlord', ['project:read'])->description('King');
 
         $project = Project::factory()->create();
         $user = User::factory()->create();
@@ -117,7 +117,7 @@ final class ProjectPolicyTest extends TestCase
     /** @test */
     public function viewReturnsFalseIfTheUserDoesNotHaveReadPrivilegesOnTheProjectTeam()
     {
-        Jetstream::role('minion', 'Minion', []);
+        Jetstream::role('minion', 'Minion', [])->description('Underling');
 
         $project = Project::factory()->create();
         $user = User::factory()->create();
@@ -131,7 +131,7 @@ final class ProjectPolicyTest extends TestCase
     /** @test */
     public function viewAnyReturnsTrueIfTheUserHasBrowsePrivilegesOnTheirCurrentTeam()
     {
-        Jetstream::role('overlord', 'Overlord', ['project:browse']);
+        Jetstream::role('overlord', 'Overlord', ['project:browse'])->description('King');
 
         $team = Team::factory()->create();
         $user = User::factory()->create();
@@ -145,7 +145,7 @@ final class ProjectPolicyTest extends TestCase
     /** @test */
     public function viewAnyReturnsFalseIfTheUserDoesNotHaveBrowsePrivilegesOnTheirCurrentTeam()
     {
-        Jetstream::role('minion', 'Minion', []);
+        Jetstream::role('minion', 'Minion', [])->description('Underling');
 
         $team = Team::factory()->create();
         $user = User::factory()->create();

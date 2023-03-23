@@ -5,21 +5,21 @@ declare(strict_types=1);
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
-final class SeedArcustechService extends Migration
+return new class extends Migration
 {
-    public function up()
+    public function up(): void
     {
         DB::table('services')->insert([
-            'name'        => 'Arcustech',
+            'name' => 'Arcustech',
             'description' => 'Managed VPS hosting',
-            'handle'      => 'arcustech',
-            'created_at'  => now(),
-            'updated_at'  => now(),
+            'handle' => 'arcustech',
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
     }
 
-    public function down()
+    public function down(): void
     {
         DB::table('services')->where('handle', 'arcustech')->delete();
     }
-}
+};

@@ -10,21 +10,25 @@ class Handler extends ExceptionHandler
     protected $dontReport = [];
 
     /**
-     * A list of the inputs that are never flashed for validation exceptions.
+     * A list of the inputs that are never flashed to the session on validation exceptions.
      *
-     * @var array
+     * @var array<int, string>
      */
-    protected $dontFlash = ['password', 'password_confirmation'];
+    protected $dontFlash = ['current_password', 'password', 'password_confirmation'];
+
+    /**
+     * A list of exception types with their corresponding custom log levels.
+     *
+     * @var array<class-string<\Throwable>, \Psr\Log\LogLevel::*>
+     */
+    protected $levels = [];
 
     /**
      * Register the exception handling callbacks for the application.
-     *
-     * @return void
      */
-    public function register()
+    public function register(): void
     {
         $this->reportable(function (Throwable $e) {
-            //
         });
     }
 

@@ -12,10 +12,6 @@ final class FetchJobResolver
     /**
      * Get the class name of the "fetch" job associated with the given handle
      *
-     * @param string $handle The component handle
-     *
-     * @return string The fully-qualified class name
-     *
      * @throws FetchJobResolutionException
      */
     public static function resolve(string $handle): string
@@ -28,11 +24,11 @@ final class FetchJobResolver
         }
 
         $service = Str::studly($parts[0]);
-        $component = Str::studly('fetch-' . $parts[1] . '-status');
+        $component = Str::studly('fetch-'.$parts[1].'-status');
 
-        $className = '\\App\\Jobs\\' . $service . '\\' . $component;
+        $className = '\\App\\Jobs\\'.$service.'\\'.$component;
 
-        if (!class_exists($className)) {
+        if (! class_exists($className)) {
             $message = "Unable to resolve job class '${className}'";
             throw new FetchJobResolutionException($message);
         }

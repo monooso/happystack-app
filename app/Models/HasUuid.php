@@ -12,10 +12,10 @@ trait HasUuid
     /**
      * Automatically generate a UUID when creating a model
      */
-    protected static function bootHasUuid()
+    protected static function bootHasUuid(): void
     {
         static::creating(function (Model $model) {
-            if (!$model->uuid) {
+            if (! $model->uuid) {
                 $model->uuid = Str::uuid()->toString();
             }
         });
@@ -23,8 +23,6 @@ trait HasUuid
 
     /**
      * Use the UUID field for route-model binding
-     *
-     * @return string
      */
     public function getRouteKeyName(): string
     {

@@ -12,8 +12,6 @@ interface AwsFetcher
     /**
      * Fetch the status
      *
-     * @return ResponseInterface
-     *
      * @throws GuzzleException
      */
     public function fetch(): ResponseInterface;

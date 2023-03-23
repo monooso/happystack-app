@@ -11,9 +11,6 @@ interface DeletesProjects
 {
     /**
      * Deletes the given project
-     *
-     * @param User    $user
-     * @param Project $project
      */
     public function delete(User $user, Project $project): void;
 }

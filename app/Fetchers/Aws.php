@@ -10,21 +10,13 @@ use Psr\Http\Message\ResponseInterface;
 
 final class Aws implements AwsFetcher
 {
-    private ClientInterface $client;
-
-    /**
-     * Constructor
-     *
-     * @param ClientInterface $client
-     */
-    public function __construct(ClientInterface $client)
+    public function __construct(private ClientInterface $client)
     {
-        $this->client = $client;
     }
 
     public function fetch(): ResponseInterface
     {
-        $url = "https://status.aws.amazon.com/data.json";
+        $url = 'https://status.aws.amazon.com/data.json';
 
         return $this->client->request('GET', $url);
     }

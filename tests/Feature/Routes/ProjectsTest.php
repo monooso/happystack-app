@@ -22,7 +22,7 @@ final class ProjectsTest extends TestCase
     }
 
     /** @test */
-    public function indexDisplaysTheProjectsListIfTheTeamIsOnATrial()
+    public function indexDisplaysTheProjectsList()
     {
         $team = Team::factory()->create();
 
@@ -34,32 +34,7 @@ final class ProjectsTest extends TestCase
     }
 
     /** @test */
-    public function indexDisplaysTheProjectsListIfTheTeamIsSubscribed()
-    {
-        $planId = $this->faker->randomNumber();
-        $team = Team::factory()->withActiveSubscription($planId)->create();
-
-        $this->actingAs($team->owner);
-
-        $response = $this->get(route('projects.index'));
-
-        $response->assertStatus(200);
-    }
-
-    /** @test */
-    public function indexRedirectsToTheBillingPageIfTheTeamIsNotOnATrialOrSubscribed()
-    {
-        $team = Team::factory()->withExpiredTrial()->create();
-
-        $this->actingAs($team->owner);
-
-        $response = $this->get(route('projects.index'));
-
-        $response->assertRedirect('/billing/team');
-    }
-
-    /** @test */
-    public function createDisplaysTheCreateProjectFormIfTheTeamIsOnATrial()
+    public function createDisplaysTheCreateProjectForm()
     {
         $team = Team::factory()->create();
 
@@ -71,32 +46,7 @@ final class ProjectsTest extends TestCase
     }
 
     /** @test */
-    public function createDisplaysTheCreateProjectFormIfTheTeamIsSubscribed()
-    {
-        $planId = $this->faker->randomNumber();
-        $team = Team::factory()->withActiveSubscription($planId)->create();
-
-        $this->actingAs($team->owner);
-
-        $response = $this->get(route('projects.create'));
-
-        $response->assertStatus(200);
-    }
-
-    /** @test */
-    public function createRedirectsToTheBillingPageIfTheTeamIsNotOnATrialOrSubscribed()
-    {
-        $team = Team::factory()->withExpiredTrial()->create();
-
-        $this->actingAs($team->owner);
-
-        $response = $this->get(route('projects.create'));
-
-        $response->assertRedirect('/billing/team');
-    }
-
-    /** @test */
-    public function editDisplaysTheEditProjectFormIfTheTeamIsOnATrial()
+    public function editDisplaysTheEditProjectForm()
     {
         $team = Team::factory()->create();
         $project = Project::factory()->for($team)->create();
@@ -106,32 +56,5 @@ final class ProjectsTest extends TestCase
         $response = $this->get(route('projects.edit', [$project]));
 
         $response->assertStatus(200);
-    }
-
-    /** @test */
-    public function editDisplaysTheEditProjectFormIfTheTeamIsSubscribed()
-    {
-        $planId = $this->faker->randomNumber();
-        $team = Team::factory()->withActiveSubscription($planId)->create();
-        $project = Project::factory()->for($team)->create();
-
-        $this->actingAs($team->owner);
-
-        $response = $this->get(route('projects.edit', [$project]));
-
-        $response->assertStatus(200);
-    }
-
-    /** @test */
-    public function editRedirectsToTheBillingPageIfTheTeamIsNotOnATrialOrSubscribed()
-    {
-        $team = Team::factory()->withExpiredTrial()->create();
-        $project = Project::factory()->for($team)->create();
-
-        $this->actingAs($team->owner);
-
-        $response = $this->get(route('projects.edit', [$project]));
-
-        $response->assertRedirect('/billing/team');
     }
 }

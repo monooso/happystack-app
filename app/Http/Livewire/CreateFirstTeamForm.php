@@ -20,12 +20,8 @@ final class CreateFirstTeamForm extends Component
 
     /**
      * Create the user's first team
-     *
-     * @param CreatesTeams $creator
-     *
-     * @return RedirectResponse|Redirector
      */
-    public function createTeam(CreatesTeams $creator): RedirectResponse | Redirector
+    public function createTeam(CreatesTeams $creator): RedirectResponse|Redirector
     {
         $this->resetErrorBag();
 
@@ -36,8 +32,6 @@ final class CreateFirstTeamForm extends Component
 
     /**
      * Render the component
-     *
-     * @return View
      */
     public function render(): View
     {

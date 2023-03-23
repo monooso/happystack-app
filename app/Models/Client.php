@@ -13,7 +13,6 @@ use Illuminate\Support\Carbon;
 final class Client extends Model
 {
     use HasFactory;
-
     use Notifiable {
         notify as traitNotify;
         notifyNow as traitNotifyNow;
@@ -30,8 +29,6 @@ final class Client extends Model
 
     /**
      * Get the parent project
-     *
-     * @return BelongsTo
      */
     public function project(): BelongsTo
     {
@@ -42,8 +39,6 @@ final class Client extends Model
      * Can we notify this client of a component status change?
      *
      * We notify clients once every 24 hours, at most.
-     *
-     * @return bool
      */
     public function canBeNotified(): bool
     {
@@ -56,8 +51,6 @@ final class Client extends Model
 
     /**
      * Get the notification email
-     *
-     * @return string
      */
     public function routeNotificationForMail(): string
     {
@@ -66,10 +59,8 @@ final class Client extends Model
 
     /**
      * Update the "notified_at" timestamp when notifying a client
-     *
-     * @param  mixed  $instance
      */
-    public function notify($instance)
+    public function notify(mixed $instance): void
     {
         $this->traitNotify($instance);
 
@@ -79,11 +70,8 @@ final class Client extends Model
 
     /**
      * Update the "notified_at" timestamp when notifying a client
-     *
-     * @param  mixed  $instance
-     * @param  array|null  $channels
      */
-    public function notifyNow($instance, array $channels = null)
+    public function notifyNow(mixed $instance, ?array $channels = null): void
     {
         $this->traitNotifyNow($instance, $channels);
 

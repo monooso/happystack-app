@@ -15,31 +15,29 @@ class AwsTest extends TestCase
      * Generate a response body
      *
      * Only includes the fields we care about
-     *
-     * @return string
      */
     private function makeResponseBody(): string
     {
         $archive = [
             [
                 'service' => 's3-us-standard',
-                'status'  => 2,
-                'date'    => Carbon::now()->subDays(3)->getTimestamp(),
+                'status' => 2,
+                'date' => Carbon::now()->subDays(3)->getTimestamp(),
             ],
             [
                 'service' => 's3-us-standard',
-                'status'  => 1,
-                'date'    => Carbon::now()->subDays(2)->getTimestamp(),
+                'status' => 1,
+                'date' => Carbon::now()->subDays(2)->getTimestamp(),
             ],
             [
                 'service' => 's3-us-east-2',
-                'status'  => 3,
-                'date'    => Carbon::now()->subDays(1)->getTimestamp(),
+                'status' => 3,
+                'date' => Carbon::now()->subDays(1)->getTimestamp(),
             ],
             [
                 'service' => 'rogue-component',
-                'status'  => 0,
-                'date'    => Carbon::now()->getTimestamp(),
+                'status' => 0,
+                'date' => Carbon::now()->getTimestamp(),
             ],
         ];
 

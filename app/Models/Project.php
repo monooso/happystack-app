@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 /**
  * Project
  *
- * @package App\Models
  *
  * @property-read Agency $agency
  * @property-read Client $client
@@ -29,8 +28,6 @@ class Project extends Model
 
     /**
      * Get the project agency
-     *
-     * @return HasOne
      */
     public function agency(): HasOne
     {
@@ -39,8 +36,6 @@ class Project extends Model
 
     /**
      * Get the project client
-     *
-     * @return HasOne
      */
     public function client(): HasOne
     {
@@ -49,8 +44,6 @@ class Project extends Model
 
     /**
      * Get the components this project is monitoring
-     *
-     * @return BelongsToMany
      */
     public function components(): BelongsToMany
     {
@@ -59,8 +52,6 @@ class Project extends Model
 
     /**
      * Get the team which owns this project
-     *
-     * @return BelongsTo
      */
     public function team(): BelongsTo
     {
@@ -71,8 +62,6 @@ class Project extends Model
      * Get the project status
      *
      * The project status is the same as the "worst" component status.
-     *
-     * @return string
      */
     public function getStatusAttribute(): string
     {

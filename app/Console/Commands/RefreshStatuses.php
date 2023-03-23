@@ -26,12 +26,13 @@ final class RefreshStatuses extends Command
                 $action->refresh($component);
             } catch (Exception $e) {
                 // @todo log exceptions with extreme prejudice
-                $message = "Error updating ${handle}: " . $e->getMessage();
-                $this->error('⚠️ ' . $message);
+                $message = "Error updating ${handle}: ".$e->getMessage();
+                $this->error('⚠️ '.$message);
+
                 return;
             }
 
-            $this->info('⚡️ Updating ' . $handle);
+            $this->info('⚡️ Updating '.$handle);
         });
 
         $this->info('💪 All done');

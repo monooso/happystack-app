@@ -13,11 +13,6 @@ interface UpdatesProjects
     /**
      * Updates the given project
      *
-     * @param User    $user
-     * @param Project $project
-     * @param array   $input
-     *
-     * @return Project
      * @throws ValidationException
      */
     public function update(User $user, Project $project, array $input): Project;

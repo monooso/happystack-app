@@ -23,7 +23,7 @@ Route::get('agency-mail', function () {
 });
 
 Route::get('client-mail', function () {
-    $message = <<<MESSAGE
+    $message = <<<'MESSAGE'
 Hi Jimbob,
 
 The world is on fire. This is fine.
@@ -37,35 +37,35 @@ MESSAGE;
 
 Route::get('update-status/arcustech/platform', function () {
     $component = Component::where('handle', 'arcustech::v2-platform-eu-nl')->firstOrFail();
-    FetchV2PlatformEuNlStatus::dispatchNow($component);
+    FetchV2PlatformEuNlStatus::dispatchSync($component);
 });
 
 Route::get('update-status/aws-s3/us-east-1', function () {
     $component = Component::where('handle', 'aws-s3::us-east-1')->firstOrFail();
-    FetchUsEast1Status::dispatchNow($component);
+    FetchUsEast1Status::dispatchSync($component);
 });
 
 Route::get('update-status/aws-s3/ap-south-1', function () {
     $component = Component::where('handle', 'aws-s3::ap-south-1')->firstOrFail();
-    FetchUsEast1Status::dispatchNow($component);
+    FetchUsEast1Status::dispatchSync($component);
 });
 
 Route::get('update-status/digitalocean/droplets', function () {
     $component = Component::where('handle', 'digitalocean::droplets')->firstOrFail();
-    FetchDropletsStatus::dispatchNow($component);
+    FetchDropletsStatus::dispatchSync($component);
 });
 
 Route::get('update-status/google-cloud/compute-engine', function () {
     $component = Component::where('handle', 'google-cloud::compute-engine')->firstOrFail();
-    FetchComputeEngineStatus::dispatchNow($component);
+    FetchComputeEngineStatus::dispatchSync($component);
 });
 
 Route::get('update-status/mailgun/smtp', function () {
     $component = Component::where('handle', 'mailgun::smtp')->firstOrFail();
-    FetchSmtpStatus::dispatchNow($component);
+    FetchSmtpStatus::dispatchSync($component);
 });
 
 Route::get('update-status/sendgrid/parse-api', function () {
     $component = Component::where('handle', 'sendgrid::parse-api')->firstOrFail();
-    FetchParseApiStatus::dispatchNow($component);
+    FetchParseApiStatus::dispatchSync($component);
 });

@@ -15,7 +15,7 @@ final class ClientComponentStatusChanged extends Mailable
     {
     }
 
-    public function build()
+    public function build(): self
     {
         return $this->text('emails.status.client');
     }

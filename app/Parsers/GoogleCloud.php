@@ -24,10 +24,6 @@ final class GoogleCloud implements GoogleCloudParser
 
     /**
      * Extract the "status" table rows from the DOM
-     *
-     * @param Crawler $crawler
-     *
-     * @return array
      */
     private function getServiceStatusRows(Crawler $crawler): array
     {
@@ -41,10 +37,6 @@ final class GoogleCloud implements GoogleCloudParser
      *
      * Returns a tuple containing the service key and status. For example:
      * ['google-cloud-storage', 'okay']
-     *
-     * @param Crawler $row
-     *
-     * @return array|null
      */
     private function parseRow(Crawler $row): ?array
     {
@@ -67,10 +59,6 @@ final class GoogleCloud implements GoogleCloudParser
      *
      * Example:
      * ' Google Cloud SQL ' -> 'google-cloud-sql'
-     *
-     * @param string $name
-     *
-     * @return string
      */
     private function convertServiceNameToKey(string $name): string
     {

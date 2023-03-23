@@ -18,10 +18,6 @@ final class CreateProject implements CreatesProjects
     /**
      * Create a new project for the given user
      *
-     * @param User  $user
-     * @param array $input
-     *
-     * @return Project
      * @throws ValidationException
      */
     public function create(User $user, array $input): Project
@@ -46,9 +42,6 @@ final class CreateProject implements CreatesProjects
     /**
      * Validate the project attributes
      *
-     * @param array $input
-     *
-     * @return array
      * @throws ValidationException
      */
     private function validate(array $input): array
@@ -58,44 +51,35 @@ final class CreateProject implements CreatesProjects
 
     /**
      * Associate the selected components with the project
-     *
-     * @param Project $project
-     * @param array   $input
      */
-    private function createComponents(Project $project, array $input)
+    private function createComponents(Project $project, array $input): void
     {
         $project->components()->sync($input['components']);
     }
 
     /**
      * Create the project agency
-     *
-     * @param Project $project
-     * @param array   $input
      */
-    private function createAgency(Project $project, array $input)
+    private function createAgency(Project $project, array $input): void
     {
         $agency = $input['agency'];
 
         $project->agency()->create([
-            'via_mail'   => $agency['via_mail'] === ToggleValue::ENABLED,
+            'via_mail' => $agency['via_mail'] === ToggleValue::ENABLED,
             'mail_route' => $agency['mail_route'] ?? '',
         ]);
     }
 
     /**
      * Create the project client
-     *
-     * @param Project $project
-     * @param array   $input
      */
-    private function createClient(Project $project, array $input)
+    private function createClient(Project $project, array $input): void
     {
         $client = $input['client'];
 
         $project->client()->create([
-            'via_mail'     => $client['via_mail'] === ToggleValue::ENABLED,
-            'mail_route'   => $client['mail_route'] ?? '',
+            'via_mail' => $client['via_mail'] === ToggleValue::ENABLED,
+            'mail_route' => $client['mail_route'] ?? '',
             'mail_message' => $client['mail_message'] ?? '',
         ]);
     }

@@ -8,10 +8,11 @@ use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Closure;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 final class EnsureUserHasTeam
 {
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next): Response
     {
         $user = $request->user();
 
@@ -19,7 +20,7 @@ final class EnsureUserHasTeam
             return redirect(RouteServiceProvider::HOME);
         }
 
-        if (!$user->belongsToATeam()) {
+        if (! $user->belongsToATeam()) {
             return redirect()->route('teams.create-first');
         }
 
@@ -30,8 +31,6 @@ final class EnsureUserHasTeam
 
     /**
      * Ensure the active user has a valid "current team"
-     *
-     * @param User $user
      */
     private function ensureUserHasCurrentTeam(User $user): void
     {

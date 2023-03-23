@@ -10,16 +10,8 @@ use Psr\Http\Message\ResponseInterface;
 
 final class StatusPage implements StatusPageFetcher
 {
-    private ClientInterface $client;
-
-    /**
-     * Constructor
-     *
-     * @param ClientInterface $client
-     */
-    public function __construct(ClientInterface $client)
+    public function __construct(private ClientInterface $client)
     {
-        $this->client = $client;
     }
 
     public function fetch(string $pageId): ResponseInterface

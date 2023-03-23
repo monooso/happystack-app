@@ -8,9 +8,9 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-final class CreateStatusUpdatesTable extends Migration
+return new class extends Migration
 {
-    public function up()
+    public function up(): void
     {
         Schema::create('status_updates', function (Blueprint $table) {
             $table->id();
@@ -20,8 +20,8 @@ final class CreateStatusUpdatesTable extends Migration
         });
     }
 
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('status_updates');
     }
-}
+};

@@ -13,11 +13,6 @@ interface GoogleCloudParser
     /**
      * Extract the status of the specified component using the given crawler
      *
-     * @param string  $componentId
-     * @param Crawler $crawler
-     *
-     * @return string
-     *
      * @throws UnknownComponentException
      * @throws UnknownStatusException
      */

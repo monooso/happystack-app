@@ -34,7 +34,7 @@ final class AgencyComponentStatusChangedTest extends TestCase
 
         $mailable = new AgencyComponentStatusChanged($project, $component);
 
-        $expected = $component->service->name . ' ' . $component->name;
+        $expected = $component->service->name.' '.$component->name;
 
         $mailable->assertSeeInHtml($expected);
         $mailable->assertSeeInText($expected);

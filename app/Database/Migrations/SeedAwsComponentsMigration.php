@@ -10,15 +10,13 @@ abstract class SeedAwsComponentsMigration extends SeedComponentsMigration
 {
     /**
      * Get an array of all supported components (services and regions)
-     *
-     * @return array
      */
     protected function getComponents(): array
     {
         $regions = AwsRegion::map();
-        $prefix = $this->getServiceKey() . '::';
+        $prefix = $this->getServiceKey().'::';
 
-        $keys = array_map(fn ($key) => $prefix . $key, array_keys($regions));
+        $keys = array_map(fn ($key) => $prefix.$key, array_keys($regions));
 
         return array_combine($keys, array_values($regions));
     }

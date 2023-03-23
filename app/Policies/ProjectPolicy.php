@@ -14,10 +14,6 @@ final class ProjectPolicy
 
     /**
      * Determine whether the user can create a new project
-     *
-     * @param User $user
-     *
-     * @return bool
      */
     public function create(User $user): bool
     {
@@ -26,11 +22,6 @@ final class ProjectPolicy
 
     /**
      * Determine whether the user can delete the project
-     *
-     * @param User    $user
-     * @param Project $project
-     *
-     * @return bool
      */
     public function delete(User $user, Project $project): bool
     {
@@ -39,11 +30,6 @@ final class ProjectPolicy
 
     /**
      * Determine whether the user can update the project
-     *
-     * @param User    $user
-     * @param Project $project
-     *
-     * @return bool
      */
     public function update(User $user, Project $project): bool
     {
@@ -52,11 +38,6 @@ final class ProjectPolicy
 
     /**
      * Determine whether the user can view the project
-     *
-     * @param User    $user
-     * @param Project $project
-     *
-     * @return bool
      */
     public function view(User $user, Project $project): bool
     {
@@ -65,10 +46,6 @@ final class ProjectPolicy
 
     /**
      * Determine whether the user can view a list of projects
-     *
-     * @param User $user
-     *
-     * @return bool
      */
     public function viewAny(User $user): bool
     {

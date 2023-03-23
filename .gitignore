@@ -1,25 +1,19 @@
-# Packages
-node_modules/
-vendor/
-!/resources/views/vendor/
-
-# Temporary
+/.phpunit.cache
+/node_modules
+/public/build
 /public/hot
 /public/storage
-
-# Environment-specific
 /storage/*.key
-auth.json
+/vendor
 .env
 .env.backup
-.php_cs
-
-# Development-specific
-_ide_helper.php
-.php_cs.cache
-.phpstorm.meta.php
+.env.production
 .phpunit.result.cache
+Homestead.json
+Homestead.yaml
+auth.json
 npm-debug.log
-supervisord.log
-supervisord.pid
 yarn-error.log
+/.fleet
+/.idea
+/.vscode

@@ -16,8 +16,6 @@ final class StatusUpdate extends Model
 
     /**
      * Get the component associated with this status
-     *
-     * @return BelongsTo
      */
     public function component(): BelongsTo
     {

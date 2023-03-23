@@ -17,23 +17,12 @@ abstract class FetchAwsStatus
     use Queueable;
     use SerializesModels;
 
-    public Component $component;
-
-    /**
-     * Constructor
-     *
-     * @param Component $component
-     */
-    public function __construct(Component $component)
+    public function __construct(public Component $component)
     {
-        $this->component = $component;
     }
 
     /**
      * Execute the job
-     *
-     * @param AwsFetcher $fetcher
-     * @param AwsParser  $parser
      *
      * @throws GuzzleException
      */
@@ -48,8 +37,6 @@ abstract class FetchAwsStatus
 
     /**
      * Get the AWS component ID
-     *
-     * @return string
      */
     abstract protected function getExternalComponentId(): string;
 }

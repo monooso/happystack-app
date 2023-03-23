@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 use App\Database\Migrations\SeedComponentsMigration;
 
-final class SeedTestCanaryComponents extends SeedComponentsMigration
+return new class extends SeedComponentsMigration
 {
     protected function getComponents(): array
     {
         return [
-            'test-canary::alfa'    => 'Alfa',
-            'test-canary::bravo'   => 'Bravo',
+            'test-canary::alfa' => 'Alfa',
+            'test-canary::bravo' => 'Bravo',
             'test-canary::charlie' => 'Charlie',
         ];
     }
@@ -19,4 +19,4 @@ final class SeedTestCanaryComponents extends SeedComponentsMigration
     {
         return 'test-canary';
     }
-}
+};

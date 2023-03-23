@@ -19,21 +19,19 @@ class StatusPageTest extends TestCase
      * Generate a response body
      *
      * Only includes the fields we care about
-     *
-     * @return string
      */
     private function makeResponseBody(): string
     {
         $components = [
             [
-                'id'         => 'operational-component',
-                'status'     => 'operational',
+                'id' => 'operational-component',
+                'status' => 'operational',
                 'created_at' => $this->faker->dateTimeThisDecade()->format(DateTime::ISO8601),
                 'updated_at' => $this->faker->dateTimeThisMonth()->format(DateTime::ISO8601),
             ],
             [
-                'id'         => 'rogue-component',
-                'status'     => 'invalid-status',
+                'id' => 'rogue-component',
+                'status' => 'invalid-status',
                 'created_at' => $this->faker->dateTimeThisDecade()->format(DateTime::ISO8601),
                 'updated_at' => $this->faker->dateTimeThisMonth()->format(DateTime::ISO8601),
             ],

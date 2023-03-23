@@ -9,8 +9,6 @@ use App\Contracts\CreatesProjects;
 use App\Contracts\UpdatesProjects;
 use App\Models\Project;
 use App\Models\Service;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -20,16 +18,16 @@ use Livewire\Redirector;
 
 final class CreateUpdateForm extends Component
 {
-    /** @var array $agency The project agency notifications */
+    // The project agency notifications
     public array $agency = [];
 
-    /** @var array $client The project client notifications */
+    // The project client notifications
     public array $client = [];
 
-    /** @var array The components to monitor */
+    // The components to monitor
     public array $components = [];
 
-    /** @var string $name The project name */
+    // $name The project name
     public string $name = '';
 
     /** @var Project The project */
@@ -37,10 +35,8 @@ final class CreateUpdateForm extends Component
 
     /**
      * Initialise the available services
-     *
-     * @param Project $project
      */
-    public function mount(Project $project)
+    public function mount(Project $project): void
     {
         $this->project = $project;
 
@@ -52,8 +48,6 @@ final class CreateUpdateForm extends Component
 
     /**
      * Reset the project components
-     *
-     * @return array
      */
     private function resetComponents(): array
     {
@@ -62,8 +56,6 @@ final class CreateUpdateForm extends Component
 
     /**
      * Reset the project agency
-     *
-     * @return array
      */
     private function resetAgency(): array
     {
@@ -72,20 +64,18 @@ final class CreateUpdateForm extends Component
         if (is_null($agency)) {
             return [
                 'mail_route' => user()->email,
-                'via_mail'   => ToggleValue::ENABLED,
+                'via_mail' => ToggleValue::ENABLED,
             ];
         }
 
         return [
             'mail_route' => $agency->mail_route,
-            'via_mail'   => $agency->via_mail === true ? ToggleValue::ENABLED : ToggleValue::DISABLED,
+            'via_mail' => $agency->via_mail === true ? ToggleValue::ENABLED : ToggleValue::DISABLED,
         ];
     }
 
     /**
      * Reset the project client
-     *
-     * @return array
      */
     private function resetClient(): array
     {
@@ -96,16 +86,14 @@ final class CreateUpdateForm extends Component
         ]);
 
         return [
-            'via_mail'     => $client?->via_mail === true ? ToggleValue::ENABLED : ToggleValue::DISABLED,
-            'mail_route'   => $client?->mail_route ?? '',
+            'via_mail' => $client?->via_mail === true ? ToggleValue::ENABLED : ToggleValue::DISABLED,
+            'mail_route' => $client?->mail_route ?? '',
             'mail_message' => $client?->mail_message ?? $message,
         ];
     }
 
     /**
      * Computed property `notifyClient`
-     *
-     * @return bool
      */
     public function getNotifyClientProperty(): bool
     {
@@ -115,10 +103,6 @@ final class CreateUpdateForm extends Component
 
     /**
      * Return the selected components which belong to the given service
-     *
-     * @param Service $service
-     *
-     * @return Collection
      */
     public function selectedServiceComponents(Service $service): Collection
     {
@@ -132,10 +116,6 @@ final class CreateUpdateForm extends Component
     /**
      * Creates or updates a project
      *
-     * @param CreatesProjects $creator
-     * @param UpdatesProjects $updater
-     *
-     * @return Redirector
      * @throws ValidationException
      */
     public function save(CreatesProjects $creator, UpdatesProjects $updater): Redirector
@@ -145,10 +125,10 @@ final class CreateUpdateForm extends Component
         $user = Auth::user();
 
         $payload = [
-            'name'       => $this->name,
+            'name' => $this->name,
             'components' => $this->components,
-            'agency'     => $this->agency,
-            'client'     => $this->client,
+            'agency' => $this->agency,
+            'client' => $this->client,
         ];
 
         $this->project->exists
@@ -160,10 +140,8 @@ final class CreateUpdateForm extends Component
 
     /**
      * Render the component
-     *
-     * @return Application|Factory|View
      */
-    public function render()
+    public function render(): View
     {
         return view('projects.create-update-form', [
             'services' => Service::with('components')->get()->sortBy('name'),

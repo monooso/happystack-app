@@ -1,1 +1,0 @@
-<x-jet-application-logo />

@@ -37,7 +37,7 @@
     <x-table.body-cell class="whitespace-nowrap">{{ trans_choice('app.component_errors', $project->components()->down()->count()) }}</x-table.body-cell>
 
     <x-table.body-cell class="text-right">
-        <x-jet-dropdown width="w-32">
+        <x-dropdown width="w-32">
             <x-slot name="trigger">
                 <x-dropdown-trigger-button>
                     {{ __('Actions') }}
@@ -46,9 +46,9 @@
 
             <x-slot name="content">
                 <div class="text-left">
-                    <x-jet-dropdown-link href="{{ route('projects.edit', [$project]) }}">
+                    <x-dropdown-link href="{{ route('projects.edit', [$project]) }}">
                         {{ __('Edit') }}
-                    </x-jet-dropdown-link>
+                    </x-dropdown-link>
 
                     <x-dropdown-link-button
                         @click.prevent="open = false"
@@ -59,9 +59,9 @@
                     </x-dropdown-link-button>
                 </div>
             </x-slot>
-        </x-jet-dropdown>
+        </x-dropdown>
 
-        <x-jet-confirmation-modal :id="$project->uuid" wire:model="confirmingProjectDeletion">
+        <x-confirmation-modal :id="$project->uuid" wire:model="confirmingProjectDeletion">
             <x-slot name="title">{{ __('Delete project') }}</x-slot>
 
             <x-slot name="content">
@@ -69,14 +69,14 @@
             </x-slot>
 
             <x-slot name="footer">
-                <x-jet-secondary-button wire:click="$toggle('confirmingProjectDeletion')" wire:loading.attr="disabled">
-                    {{ __('Nevermind') }}
-                </x-jet-secondary-button>
+                <x-secondary-button wire:click="$toggle('confirmingProjectDeletion')" wire:loading.attr="disabled">
+                    {{ __('Cancel') }}
+                </x-secondary-button>
 
-                <x-jet-danger-button class="ml-2" wire:click="deleteProject" wire:loading.attr="disabled">
+                <x-danger-button class="ml-2" wire:click="deleteProject" wire:loading.attr="disabled">
                     {{ __('Delete project') }}
-                </x-jet-danger-button>
+                </x-danger-button>
             </x-slot>
-        </x-jet-confirmation-modal>
+        </x-confirmation-modal>
     </x-table.body-cell>
 </tr>

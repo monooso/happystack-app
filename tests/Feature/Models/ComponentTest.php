@@ -68,7 +68,7 @@ final class ComponentTest extends TestCase
         $component->updateStatus(Status::OKAY);
 
         $this->assertDatabaseHas('components', [
-            'id'     => $component->id,
+            'id' => $component->id,
             'status' => Status::OKAY,
         ]);
     }
@@ -85,7 +85,7 @@ final class ComponentTest extends TestCase
         $component->updateStatus($this->faker->randomElement(Status::all()));
 
         $this->assertDatabaseHas('components', [
-            'id'                => $component->id,
+            'id' => $component->id,
             'status_updated_at' => Carbon::now(),
         ]);
 
@@ -104,8 +104,8 @@ final class ComponentTest extends TestCase
 
         $this->assertDatabaseHas('status_updates', [
             'component_id' => $component->id,
-            'status'       => $status,
-            'updated_at'   => Carbon::now(),
+            'status' => $status,
+            'updated_at' => Carbon::now(),
         ]);
 
         $this->travelBack();

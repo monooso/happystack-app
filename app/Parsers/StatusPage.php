@@ -22,10 +22,6 @@ final class StatusPage implements StatusPageParser
 
     /**
      * Extract and parse the body of the given response
-     *
-     * @param ResponseInterface $response
-     *
-     * @return array
      */
     private function getResponseBody(ResponseInterface $response): array
     {
@@ -34,11 +30,6 @@ final class StatusPage implements StatusPageParser
 
     /**
      * Extract the component with the given ID from the response body
-     *
-     * @param string $componentId
-     * @param array  $responseBody
-     *
-     * @return array
      *
      * @throws UnknownComponentException
      */

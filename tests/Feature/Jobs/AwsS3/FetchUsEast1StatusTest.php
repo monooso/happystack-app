@@ -23,7 +23,7 @@ final class FetchUsEast1StatusTest extends TestCase
 
         $component = Component::whereHandle('aws-s3::us-east-1')->firstOrFail();
 
-        FetchUsEast1Status::dispatchNow($component);
+        FetchUsEast1Status::dispatchSync($component);
 
         Event::assertDispatched(function (StatusFetched $event) use ($component) {
             return $event->component->id === $component->id

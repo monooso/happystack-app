@@ -13,18 +13,7 @@ final class StatusFetched
     use Dispatchable;
     use SerializesModels;
 
-    public Component $component;
-    public string $status;
-
-    /**
-     * Constructor
-     *
-     * @param Component $component
-     * @param string    $status
-     */
-    public function __construct(Component $component, string $status)
+    public function __construct(public Component $component, public string $status)
     {
-        $this->component = $component;
-        $this->status = $status;
     }
 }

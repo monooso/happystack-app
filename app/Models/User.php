@@ -35,8 +35,6 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Does the user belongs to at least one team?
-     *
-     * @return bool
      */
     public function belongsToATeam(): bool
     {
@@ -45,8 +43,6 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Does the user have a profile photo?
-     *
-     * @return bool
      */
     public function getHasProfilePhotoAttribute(): bool
     {

@@ -7,14 +7,15 @@ namespace App\Constants;
 abstract class Status
 {
     public const DOWN = 'down';
+
     public const OKAY = 'okay';
+
     public const UNKNOWN = 'unknown';
+
     public const WARN = 'warn';
 
     /**
      * Get an array of all statuses
-     *
-     * @return string[]
      */
     public static function all(): array
     {
@@ -23,11 +24,9 @@ abstract class Status
 
     /**
      * Get an array of all known statuses
-     *
-     * @return array
      */
     public static function known(): array
     {
-        return array_diff(self::all(), [self::UNKNOWN]);
+        return [self::OKAY, self::WARN, self::DOWN];
     }
 }

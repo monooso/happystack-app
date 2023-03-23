@@ -1,11 +1,13 @@
 const colors = require('tailwindcss/colors')
 const defaultTheme = require('tailwindcss/defaultTheme')
 
+/** @type {import('tailwindcss').Config} */
 module.exports = {
-    purge: [
-        './resources/views/**/*.blade.php',
+    content: [
+        './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
+        './vendor/laravel/jetstream/**/*.blade.php',
         './storage/framework/views/*.php',
-        './vendor/laravel/spark-paddle/resources/js/**/*.vue',
+        './resources/views/**/*.blade.php',
     ],
 
     theme: {
@@ -13,7 +15,7 @@ module.exports = {
             current: 'currentColor',
             transparent: 'transparent',
             black: colors.black,
-            gray: colors.warmGray,
+            gray: colors.stone,
             green: colors.green,
             indigo: colors.indigo,
             red: colors.red,
@@ -39,3 +41,4 @@ module.exports = {
         require('@tailwindcss/typography'),
     ],
 };
+

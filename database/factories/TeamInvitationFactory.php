@@ -16,8 +16,8 @@ final class TeamInvitationFactory extends Factory
     {
         return [
             'team_id' => Team::factory(),
-            'email'   => $this->faker->email(),
-            'role'    => $this->faker->randomElement(['admin', 'member']),
+            'email' => $this->faker->email(),
+            'role' => $this->faker->randomElement(['admin', 'member']),
         ];
     }
 }
