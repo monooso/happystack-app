@@ -1,11 +1,12 @@
 {
-    "name": "laravel/laravel",
+    "name": "monooso/happystack-app",
     "type": "project",
-    "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
-    "license": "MIT",
+    "description": "A web application that monitors the services your website depends on.",
+    "keywords": ["alpine.js", "laravel", "livewire", "monitoring", "tailwindcss"],
+    "license": "AGPL3",
+    "homepage": "https://github.com/monooso/happystack-app",
     "require": {
-        "php": "^8.1",
+        "php": "^8.2",
         "blade-ui-kit/blade-icons": "^1.5",
         "blade-ui-kit/blade-zondicons": "^1.4",
         "fabpot/goutte": "^4.0",
